@@ -1,0 +1,112 @@
+{
+  "pdf-apti": [
+    "apti.pdf"
+  ],
+  "pdf-apti_solutions": [
+    "apti_solutions.pdf"
+  ],
+  "pdf-maths": [
+    "PrepFusion_Engineering_Mathematics.pdf"
+  ],
+  "pdf-maths_calculus_solutions": [
+    "maths_calculus_solutions.pdf"
+  ],
+  "pdf-maths_complex_solutions": [
+    "maths_complex_solutions.pdf"
+  ],
+  "pdf-maths_differential_equations_solutions": [
+    "maths_differential_equations_solutions.pdf"
+  ],
+  "pdf-maths_linear_solutions": [
+    "maths_linear_solutions.pdf"
+  ],
+  "pdf-maths_numerical_solutions": [
+    "maths_numerical_solutions.pdf"
+  ],
+  "pdf-maths_probability_solutions": [
+    "maths_probability_solutions.pdf"
+  ],
+  "pdf-maths_transform_theory_solutions": [
+    "maths_transform_theory_solutions.pdf"
+  ],
+  "pdf-maths_vector_solutions": [
+    "maths_vector_solutions.pdf"
+  ],
+  "pdf-nexusx": [],
+  "pdf-nexusx_analog_ec_solutions": [
+    "nexusx_analog_ec_solutions.pdf"
+  ],
+  "pdf-nexusx_analog_ee_solutions": [
+    "nexusx_analog_ee_solutions.pdf"
+  ],
+  "pdf-nexusx_analog_in_solutions": [
+    "nexusx_analog_in_solutions.pdf"
+  ],
+  "pdf-nexusx_control_ee_solutions": [
+    "nexusx_control_ee_solutions.pdf"
+  ],
+  "pdf-nexusx_control_in_solutions": [
+    "nexusx_control_in_solutions.pdf"
+  ],
+  "pdf-nexusx_control_systems_ec_solutions": [
+    "nexusx_control_systems_ec_solutions.pdf"
+  ],
+  "pdf-nexusx_digital_ec_solutions": [
+    "nexusx_digital_ec_solutions.pdf"
+  ],
+  "pdf-nexusx_digital_ee_solutions": [
+    "nexusx_digital_ee_solutions.pdf"
+  ],
+  "pdf-nexusx_digital_in_solutions": [
+    "nexusx_digital_in_solutions.pdf"
+  ],
+  "pdf-nexusx_gate_ec_nw_sol": [
+    "nexusx_gate_ec_nw_sol.pdf"
+  ],
+  "pdf-nexusx_network_theory_ee_solutions": [
+    "nexusx_network_theory_ee_solutions.pdf"
+  ],
+  "pdf-nexusx_network_theory_in_solutions": [
+    "nexusx_network_theory_in_solutions.pdf"
+  ],
+  "pdf-nexusx_signals_ec_solutions": [
+    "nexusx_signals_ec_solutions.pdf"
+  ],
+  "pdf-nexusx_signals_ee_solutions": [
+    "nexusx_signals_ee_solutions.pdf"
+  ],
+  "pdf-powerx": [],
+  "pdf-powerx_emft_ee_solutions": [
+    "powerx_emft_ee_solutions.pdf"
+  ],
+  "pdf-powerx_emft_in_solutions": [
+    "powerx_emft_in_solutions.pdf"
+  ],
+  "pdf-powerx_machines_ee_solutions": [
+    "powerx_machines_ee_solutions.pdf"
+  ],
+  "pdf-powerx_machines_in_solutions": [
+    "powerx_machines_in_solutions.pdf"
+  ],
+  "pdf-powerx_measurements_ee_solutions": [
+    "powerx_measurements_ee_solutions.pdf"
+  ],
+  "pdf-powerx_power_electronics_ee_solutions": [
+    "powerx_power_electronics_ee_solutions.pdf"
+  ],
+  "pdf-powerx_power_systems_ee_solutions": [
+    "powerx_power_systems_ee_solutions.pdf"
+  ],
+  "pdf-siliconx": [
+    "siliconx.pdf"
+  ],
+  "pdf-siliconx_communications_ec_solutions": [
+    "siliconx_communications_ec_solutions.pdf"
+  ],
+  "pdf-siliconx_edc_ec_solutions": [
+    "siliconx_edc_ec_solutions.pdf"
+  ],
+  "pdf-siliconx_emft_ec_solutions": [
+    "siliconx_emft_ec_solutions.pdf"
+  ]
+}
