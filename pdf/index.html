@@ -130,7 +130,8 @@ a{color:var(--brand)}
 /* Coverage pill — outlined so it reads as secondary to the solid cycle pill. */
 .coverage{border:1.5px solid var(--line-strong);padding:2px 9px;border-radius:6px;
   letter-spacing:.12em;color:var(--ink-soft);white-space:nowrap}
-.hero h1{font:800 clamp(34px,6vw,78px)/1.08 "Sora",sans-serif;letter-spacing:-.04em;margin:0 0 26px;max-width:20ch}
+.hero h1{font:800 clamp(34px,6vw,78px)/1.08 "Sora",sans-serif;letter-spacing:-.04em;margin:0 0 26px;max-width:20ch;
+  animation:rise .6s cubic-bezier(.22,1,.36,1) both}
 .hero h1 em{font-style:normal;position:relative;display:inline-block;z-index:0}
 .hero h1 em::after{content:"";position:absolute;left:-.04em;right:-.04em;bottom:.09em;height:.3em;
   background:var(--accent);z-index:-1;border-radius:3px}
@@ -195,7 +196,9 @@ main{padding-bottom:60px}
 .card:nth-child(4){animation-delay:.15s}
 .card:nth-child(5){animation-delay:.2s}
 .card:nth-child(n+6){animation-delay:.25s}
-@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+/* translateX is deliberately small (10px) — enough to read as a left-to-right
+   drift alongside the lift, not a slide that fights the grid's own layout. */
+@keyframes rise{from{opacity:0;transform:translate(-10px,18px)}to{opacity:1;transform:none}}
 .card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lift);border-color:var(--line-strong)}
 .cover{height:215px;position:relative;overflow:hidden;display:flex;flex-direction:column;
   padding:20px 20px 16px 30px;color:#fff}
@@ -338,14 +341,15 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   .card,.card:hover,.chip:hover,.btn:hover{transition:none;transform:none}
   /* opacity:1 is not optional here — the rise animation starts the card at
      zero, so killing the animation without restoring it hides the shelf. */
-  .card{animation:none;opacity:1}
+  .card,.hero h1{animation:none;opacity:1}
   .soon-dot::after{animation:none;display:none}
 }
 @media print{
   .bar,.tools,.tt,.result-line,footer{display:none}
   /* Same trap as reduced-motion: never let the entry animation leave a card
      at opacity 0 on paper. */
-  .card{break-inside:avoid;box-shadow:none;animation:none;opacity:1}
+  .card{break-inside:avoid;box-shadow:none}
+  .card,.hero h1{animation:none;opacity:1}
 }
 </style>
 </head>
