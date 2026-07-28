@@ -238,6 +238,31 @@ main{padding-bottom:60px}
 :root[data-theme="dark"] .btn.tint{background:rgba(255,255,255,.07);border-color:var(--sc-d);color:var(--sc-d)}
 :root[data-theme="dark"] .btn.tint:hover{background:rgba(255,255,255,.12)}
 
+/* ---------- coming-soon curtain (SITE_LIVE=false) ---------- */
+/* The shell stays; everything that implies a browsable catalogue goes. */
+body.soon .tools,body.soon .result-line,body.soon .statbox{display:none}
+body.soon .hero-grid{grid-template-columns:1fr}
+.soon-panel{max-width:640px;margin:26px 0 70px;padding:44px 0 0}
+.soon-badge{display:inline-flex;align-items:center;gap:7px;font:600 11px "IBM Plex Mono",monospace;
+  letter-spacing:.14em;text-transform:uppercase;padding:5px 12px 5px 10px;border-radius:999px;
+  background:var(--soon-bg);color:var(--soon-ink);margin-bottom:22px}
+.soon-panel h2{font:800 clamp(26px,3.6vw,38px)/1.12 "Sora",sans-serif;letter-spacing:-.035em;
+  margin:0 0 14px;border:0;padding:0}
+.soon-panel p{color:var(--ink-soft);font-size:17px;margin:0 0 26px;max-width:52ch}
+.soon-cta{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--on-ink);
+  text-decoration:none;font:600 14.5px "Inter",sans-serif;padding:13px 22px;border-radius:12px;
+  transition:transform .15s}
+.soon-cta:hover{transform:translateY(-1px)}
+/* A row of blank spines — reads as "a shelf being filled", not an error. */
+.soon-shelf{display:flex;gap:10px;align-items:flex-end;margin-top:56px;
+  padding-top:26px;border-top:2px solid var(--line);opacity:.5}
+.soon-shelf span{flex:1;max-width:52px;border-radius:5px 5px 0 0;background:var(--line-strong)}
+.soon-shelf span:nth-child(1){height:56px}
+.soon-shelf span:nth-child(2){height:78px}
+.soon-shelf span:nth-child(3){height:44px}
+.soon-shelf span:nth-child(4){height:68px}
+.soon-shelf span:nth-child(5){height:60px}
+
 /* ---------- empty state / footer ---------- */
 .empty{display:none;text-align:center;padding:70px 20px;color:var(--ink-soft)}
 .empty h3{font:800 22px "Sora",sans-serif;color:var(--ink);margin:0 0 6px}
@@ -305,13 +330,13 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 }
 </style>
 </head>
-<body>
+<body class="">
 
 <header class="bar">
   <div class="bar-in">
     <a class="logo" href="#top" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
     <nav class="nav">
-      <span class="nav-soon" title="Search every GATE question by subject, topic and year.">Global Search<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span><span class="nav-soon" title="Printed editions of every series, delivered.">Bookstore<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span>
+      <a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in.">Courses<span class="ext" aria-hidden="true">↗</span></a><span class="nav-soon" title="Search every GATE question by subject, topic and year.">Global Search<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span><span class="nav-soon" title="Printed editions of every series, delivered.">Bookstore<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span>
     </nav>
     <button id="themeToggle" class="tt" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
       <svg class="i-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
@@ -777,6 +802,9 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 <script>
 (function(){
   var q = document.getElementById('q');
+  /* Coming-soon mode emits no toolbar and no cards. Skip straight to the
+     theme toggle rather than wiring up filters against absent elements. */
+  if (!q) { initTheme(); return; }
   var chips = Array.prototype.slice.call(document.querySelectorAll('#chips .chip'));
   var segBtns = Array.prototype.slice.call(document.querySelectorAll('#seg button'));
   var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
@@ -835,31 +863,37 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
     if (e.key === '/' && document.activeElement !== q){ e.preventDefault(); q.focus(); }
   });
 
-  /* ---------- dark / light mode ---------- */
-  var rootEl = document.documentElement;
-  var toggle = document.getElementById('themeToggle');
-  var pdfLinks = Array.prototype.slice.call(document.querySelectorAll('a[data-dark-twin]'));
+  initTheme();
 
-  function currentTheme(){
-    return rootEl.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-  }
-  /* Point every button that has a dark edition at the right PDF. Buttons
-     without a dark twin keep their normal (light) PDF always. */
-  function applyPdfTheme(){
-    var dark = currentTheme() === 'dark';
-    pdfLinks.forEach(function(a){
-      a.setAttribute('href', dark ? a.getAttribute('data-dark') : a.getAttribute('data-light'));
+  /* ---------- dark / light mode ----------
+     A function declaration, so it is hoisted and the early return above
+     (coming-soon mode) can call it before this point in the source. */
+  function initTheme(){
+    var rootEl = document.documentElement;
+    var toggle = document.getElementById('themeToggle');
+    var pdfLinks = Array.prototype.slice.call(document.querySelectorAll('a[data-dark-twin]'));
+
+    function currentTheme(){
+      return rootEl.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    }
+    /* Point every button that has a dark edition at the right PDF. Buttons
+       without a dark twin keep their normal (light) PDF always. */
+    function applyPdfTheme(){
+      var dark = currentTheme() === 'dark';
+      pdfLinks.forEach(function(a){
+        a.setAttribute('href', dark ? a.getAttribute('data-dark') : a.getAttribute('data-light'));
+      });
+    }
+    function setTheme(t){
+      rootEl.setAttribute('data-theme', t);
+      try{ localStorage.setItem('pf-theme', t); }catch(e){}
+      applyPdfTheme();
+    }
+    if (toggle) toggle.addEventListener('click', function(){
+      setTheme(currentTheme() === 'dark' ? 'light' : 'dark');
     });
-  }
-  function setTheme(t){
-    rootEl.setAttribute('data-theme', t);
-    try{ localStorage.setItem('pf-theme', t); }catch(e){}
     applyPdfTheme();
   }
-  toggle.addEventListener('click', function(){
-    setTheme(currentTheme() === 'dark' ? 'light' : 'dark');
-  });
-  applyPdfTheme();
 })();
 </script>
 </body>
