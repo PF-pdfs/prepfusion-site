@@ -123,9 +123,13 @@ a{color:var(--brand)}
 /* ---------- hero ---------- */
 .hero{padding:80px 0 18px}
 .eyebrow{font:600 12px/1 "IBM Plex Mono",monospace;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--ink-soft);margin:0 0 22px;display:flex;align-items:center;gap:12px}
-.eyebrow::after{content:"";height:1px;flex:1;max-width:180px;background:var(--line-strong)}
+  color:var(--ink-soft);margin:0 0 22px;display:flex;align-items:center;gap:12px;
+  flex-wrap:wrap;row-gap:9px}
+.eyebrow::after{content:"";height:1px;flex:1;min-width:40px;max-width:180px;background:var(--line-strong)}
 .cycle{background:var(--ink);color:var(--paper);padding:3px 9px;border-radius:6px;letter-spacing:.14em}
+/* Coverage pill — outlined so it reads as secondary to the solid cycle pill. */
+.coverage{border:1.5px solid var(--line-strong);padding:2px 9px;border-radius:6px;
+  letter-spacing:.12em;color:var(--ink-soft);white-space:nowrap}
 .hero h1{font:800 clamp(34px,6vw,78px)/1.08 "Sora",sans-serif;letter-spacing:-.04em;margin:0 0 26px;max-width:20ch}
 .hero h1 em{font-style:normal;position:relative;display:inline-block;z-index:0}
 .hero h1 em::after{content:"";position:absolute;left:-.04em;right:-.04em;bottom:.09em;height:.3em;
@@ -181,7 +185,17 @@ main{padding-bottom:60px}
 /* ---------- cards ---------- */
 .card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);overflow:hidden;
   box-shadow:var(--shadow);display:flex;flex-direction:column;
-  transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s,border-color .2s}
+  transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s,border-color .2s;
+  animation:rise .5s cubic-bezier(.22,1,.36,1) both}
+/* Cards lift in as the shelf paints. nth-child restarts inside every .grid, so
+   each shelf cascades on its own instead of one delay ramp running the whole
+   page — and it caps at 6 so no card on a long shelf is left waiting. */
+.card:nth-child(2){animation-delay:.05s}
+.card:nth-child(3){animation-delay:.1s}
+.card:nth-child(4){animation-delay:.15s}
+.card:nth-child(5){animation-delay:.2s}
+.card:nth-child(n+6){animation-delay:.25s}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lift);border-color:var(--line-strong)}
 .cover{height:215px;position:relative;overflow:hidden;display:flex;flex-direction:column;
   padding:20px 20px 16px 30px;color:#fff}
@@ -322,11 +336,16 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .card,.card:hover,.chip:hover,.btn:hover{transition:none;transform:none}
+  /* opacity:1 is not optional here — the rise animation starts the card at
+     zero, so killing the animation without restoring it hides the shelf. */
+  .card{animation:none;opacity:1}
   .soon-dot::after{animation:none;display:none}
 }
 @media print{
   .bar,.tools,.tt,.result-line,footer{display:none}
-  .card{break-inside:avoid;box-shadow:none}
+  /* Same trap as reduced-motion: never let the entry animation leave a card
+     at opacity 0 on paper. */
+  .card{break-inside:avoid;box-shadow:none;animation:none;opacity:1}
 }
 </style>
 </head>
@@ -346,7 +365,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 </header>
 
 <section class="wrap hero" id="top">
-  <p class="eyebrow"><span class="cycle">GATE 2027</span> PDF Library</p>
+  <p class="eyebrow"><span class="cycle">GATE 2027</span> PDF Library <span class="coverage">PYQ 1987–2026 (40 Years)</span></p>
   <div class="hero-grid">
     <div>
       <h1>Every question, every solution — <em>on one shelf.</em></h1>

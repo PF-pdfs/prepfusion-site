@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>PrepFusion PDF Viewer</title>
+<link rel="icon" href="assets/favicon.png">
+<script>
+  /* Match the library's theme before first paint so the reader never flashes. */
+  try{
+    var t = localStorage.getItem('pf-theme');
+    document.documentElement.setAttribute('data-theme', (t==='dark'||t==='light') ? t : 'light');
+  }catch(e){ document.documentElement.setAttribute('data-theme','light'); }
+  try{
+    if(localStorage.getItem('pf-reader-night') === '1')
+      document.documentElement.setAttribute('data-night','1');
+  }catch(e){}
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+/* A display rule on a class beats the UA's [hidden]{display:none}, so the
+   Contents button stayed visible on PDFs with no outline. Restore it. */
+[hidden]{display:none !important}
+:root{
+  --paper:#f7f8fa; --card:#fff; --ink:#0f172a; --ink-soft:#4f6080;
+  --line:#e2e6ee; --line-strong:#cbd3e1; --accent:#facc15; --shell:#eef1f6;
+}
+/* Night mode darkens the whole viewer, not just the pages. Inverting the
+   paper while leaving a white toolbar above it is exactly the glare the
+   reader is meant to remove, so night forces the dark tokens on regardless
+   of which theme the library itself is in. */
+:root[data-theme="dark"],
+:root[data-night="1"]{
+  --paper:#0b1020; --card:#141b2e; --ink:#e8edf7; --ink-soft:#9aa8c4;
+  --line:#233049; --line-strong:#33415f; --shell:#070b16;
+}
+html,body{margin:0;padding:0}
+body{background:var(--shell);color:var(--ink);
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-text-size-adjust:100%}
+
+/* ---------- top bar ---------- */
+/* Bar and drawer stick as one unit. Sticking only the bar and letting the
+   drawer sit in normal flow meant that opening Contents from halfway down a
+   book rendered it off-screen above you — the one moment you actually need
+   it. Wrapping them avoids hard-coding a top offset, which would break
+   anyway as soon as the toolbar wraps to two rows on a phone. */
+.rtop{position:sticky;top:0;z-index:20}
+.rbar{display:flex;align-items:center;gap:12px;
+  padding:10px 16px;background:var(--card);border-bottom:1.5px solid var(--line);
+  flex-wrap:wrap;row-gap:8px}
+.rbar a.back{display:inline-flex;align-items:center;gap:7px;color:var(--ink);
+  text-decoration:none;font-weight:650;font-size:14px;padding:7px 12px;
+  border:1.5px solid var(--line-strong);border-radius:9px;white-space:nowrap}
+.rbar a.back:hover{border-color:var(--ink)}
+.rtitle{font-weight:700;font-size:14px;min-width:0;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;flex:1}
+/* BETA rides inside the Night button — the inversion is the beta part, not
+   the viewer, and putting the badge anywhere else implied otherwise. */
+.beta{font:700 9px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;
+  padding:3px 5px;border-radius:4px;background:var(--accent);color:#0f172a;margin-left:3px}
+.brand{font-weight:600;font-size:13px;color:var(--ink-soft);white-space:nowrap;flex:none}
+.brand b{color:var(--ink);font-weight:700}
+.spacer{flex:1}
+
+/* ---------- contents drawer ---------- */
+/* Pushes the pages down rather than floating over them: an overlay panel on a
+   phone covers the very text you opened it to find. */
+.tocpanel{max-height:min(50vh,420px);overflow:auto;background:var(--card);
+  border-bottom:1.5px solid var(--line);padding:8px 10px}
+.tocpanel ol{list-style:none;margin:0;padding:0}
+.tocpanel button{display:block;width:100%;text-align:left;background:none;border:0;
+  color:var(--ink);font:inherit;font-size:13.5px;line-height:1.45;padding:7px 9px;
+  border-radius:7px;cursor:pointer}
+.tocpanel button:hover{background:var(--shell)}
+.tocpanel .d1{padding-left:26px;font-size:13px;color:var(--ink-soft)}
+.tocpanel .d2{padding-left:44px;font-size:12.5px;color:var(--ink-soft)}
+.rbtn{display:inline-flex;align-items:center;gap:7px;font:650 13px/1 inherit;
+  padding:8px 12px;border-radius:9px;border:1.5px solid var(--line-strong);
+  background:transparent;color:var(--ink);cursor:pointer;white-space:nowrap}
+.rbtn:hover{border-color:var(--ink)}
+.rbtn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.count{font:600 12px/1 "IBM Plex Mono",monospace;color:var(--ink-soft);
+  white-space:nowrap;flex:none}
+
+/* ---------- caveat strip ---------- */
+.caveat{display:none;padding:9px 16px;font-size:12.5px;color:var(--ink-soft);
+  background:var(--card);border-bottom:1.5px solid var(--line);line-height:1.5}
+:root[data-night="1"] .caveat{display:block}
+
+/* ---------- pages ---------- */
+main{padding:20px 10px 60px;display:flex;flex-direction:column;
+  align-items:center;gap:16px}
+.pg{background:#fff;box-shadow:0 2px 14px rgba(15,23,42,.14);border-radius:2px;
+  width:100%;max-width:1100px;display:flex;align-items:center;justify-content:center;
+  color:#94a3b8;font:600 12px/1 "IBM Plex Mono",monospace;min-height:120px;
+  /* Jumping from Contents aligns the page with the viewport top, which the
+     sticky toolbar would then sit on top of. --barh is measured live at jump
+     time because the toolbar is one row on a desktop and two on a phone, so
+     no fixed value is correct for both. */
+  scroll-margin-top:calc(var(--barh, 118px) + 12px)}
+.pg canvas{display:block;max-width:100%;height:auto;border-radius:2px}
+/* Night mode. invert() alone swings every hue to its opposite (blue -> orange);
+   the hue-rotate swings them back, so a blue circuit trace stays blue-ish.
+   It genuinely helps line art. It cannot rescue photographs. */
+:root[data-night="1"] main{filter:invert(.92) hue-rotate(180deg)}
+:root[data-night="1"] .pg{box-shadow:none}
+
+/* ---------- messages ---------- */
+.msg{max-width:560px;margin:60px auto;padding:0 20px;text-align:center;
+  color:var(--ink-soft);line-height:1.65;font-size:15px}
+.msg h2{color:var(--ink);font-size:19px;margin:0 0 10px}
+.msg a{color:var(--ink);font-weight:650}
+@media(max-width:860px){ .brand{display:none} }
+@media(max-width:560px){
+  .rtitle{order:5;flex-basis:100%;white-space:normal}
+  main{padding:12px 6px 40px}
+}
+</style>
+</head>
+<body>
+
+<div class="rtop">
+<header class="rbar">
+  <a class="back" href="./index.html">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
+    </svg>Library</a>
+  <span class="brand"><b>PrepFusion</b> PDF Viewer</span>
+  <span class="rtitle" id="rtitle">Loading…</span>
+  <span class="spacer"></span>
+  <span class="count" id="count"></span>
+  <!-- Revealed only when the PDF actually carries an outline. -->
+  <button class="rbtn" id="toc" type="button" aria-pressed="false" aria-controls="tocpanel" hidden>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/>
+    </svg>Contents
+  </button>
+  <button class="rbtn" id="night" type="button" aria-pressed="false"
+          title="Night mode inverts the page. Text reads well; diagrams, graphs and photos may look like negatives.">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+    </svg>Night<span class="beta">BETA</span>
+  </button>
+  <a class="rbtn" id="dl" href="#" download>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/>
+    </svg>Download
+  </a>
+</header>
+<nav class="tocpanel" id="tocpanel" hidden aria-label="Contents"><ol id="toclist"></ol></nav>
+</div>
+
+<p class="caveat">Night mode is a colour inversion — diagrams, graphs and photographs may look
+like negatives. Download the file to read it exactly as printed.</p>
+
+<main id="pages"></main>
+<div class="msg" id="msg" hidden></div>
+
+<script type="module">
+const $ = (id) => document.getElementById(id);
+const root = document.documentElement;
+
+function fail(title, body, href){
+  $('pages').remove();
+  const m = $('msg');
+  m.hidden = false;
+  m.innerHTML = '<h2></h2><p></p>';
+  m.querySelector('h2').textContent = title;
+  m.querySelector('p').textContent = body;
+  if(href){
+    const a = document.createElement('a');
+    a.href = href; a.textContent = 'Download the PDF instead'; a.setAttribute('download','');
+    m.appendChild(a);
+  }
+}
+
+/* Only ever fetch a relative path inside this folder. The parameter is
+   attacker-controllable via a crafted link, so absolute URLs, scheme-relative
+   URLs and traversal are all refused rather than sanitised. */
+function safeRel(p){
+  if(!p) return null;
+  if(/^[a-z][a-z0-9+.\-]*:/i.test(p)) return null;
+  if(p.startsWith('/') || p.startsWith('\\') || p.startsWith('//')) return null;
+  if(p.split(/[\/\\]/).some(s => s === '..')) return null;
+  return p;
+}
+
+const qs  = new URLSearchParams(location.search);
+const rel = safeRel(qs.get('f'));
+const ver = qs.get('v') || '';
+
+if(!rel){
+  fail('Nothing to read', 'That link is missing a valid file reference. Head back to the library and pick a book.');
+} else {
+  const url   = './' + rel.split('/').map(encodeURIComponent).join('/') + (ver ? '?v=' + encodeURIComponent(ver) : '');
+  const name  = decodeURIComponent(rel.split('/').pop() || '').replace(/\.pdf$/i,'').replace(/[_-]+/g,' ');
+  $('rtitle').textContent = name;
+  document.title = name + ' — PrepFusion PDF Viewer';
+  $('dl').href = url;
+
+  /* ---- night toggle ---- */
+  const nightBtn = $('night');
+  const setNight = (on) => {
+    root.setAttribute('data-night', on ? '1' : '0');
+    nightBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    try{ localStorage.setItem('pf-reader-night', on ? '1' : '0'); }catch(e){}
+  };
+  setNight(root.getAttribute('data-night') === '1');
+  nightBtn.addEventListener('click', () =>
+    setNight(nightBtn.getAttribute('aria-pressed') !== 'true'));
+
+  /* ---- render ---- */
+  let pdfjsLib;
+  try{
+    pdfjsLib = await import('./assets/pdfjs/pdf.mjs');
+  }catch(e){
+    fail('The reader could not start',
+         'The PDF engine failed to load. You can still read this book in your browser or app.', url);
+    throw e;
+  }
+  pdfjsLib.GlobalWorkerOptions.workerSrc = './assets/pdfjs/pdf.worker.mjs';
+
+  const holder = $('pages');
+  let doc, scale = 1;
+
+  const io = new IntersectionObserver((entries) => {
+    for(const e of entries){
+      if(!e.isIntersecting) continue;
+      const el = e.target;
+      if(el.dataset.done) continue;
+      el.dataset.done = '1';
+      io.unobserve(el);
+      draw(Number(el.dataset.n), el);
+    }
+  }, { rootMargin: '900px 0px' });
+
+  async function draw(n, el){
+    try{
+      const page = await doc.getPage(n);
+      const vp   = page.getViewport({ scale });
+      const dpr  = Math.min(window.devicePixelRatio || 1, 2);
+      const c    = document.createElement('canvas');
+      c.width  = Math.floor(vp.width  * dpr);
+      c.height = Math.floor(vp.height * dpr);
+      c.style.width  = vp.width  + 'px';
+      c.style.height = vp.height + 'px';
+      await page.render({
+        canvasContext: c.getContext('2d', { alpha:false }),
+        viewport: vp,
+        transform: dpr !== 1 ? [dpr,0,0,dpr,0,0] : null
+      }).promise;
+      el.textContent = '';
+      el.style.minHeight = '';
+      el.appendChild(c);
+    }catch(e){
+      el.textContent = 'Page ' + n + ' could not be drawn';
+    }
+  }
+
+  try{
+    /* disableAutoFetch keeps a 60 MB book from downloading in full before
+       page one appears — pdf.js range-requests only what is on screen.
+
+       wasmUrl and standardFontDataUrl matter more than they look for this
+       library: previous-year papers are frequently scans, and scans lean on
+       the JBIG2/JPEG2000 decoders in wasm/. standard_fonts/ covers PDFs that
+       never embedded their base-14 fonts. Both are fetched only when a file
+       actually needs them, so a clean digital PDF pays nothing for them. */
+    doc = await pdfjsLib.getDocument({
+      url,
+      disableAutoFetch:true,
+      disableStream:false,
+      wasmUrl: './assets/pdfjs/wasm/',
+      standardFontDataUrl: './assets/pdfjs/standard_fonts/'
+    }).promise;
+  }catch(e){
+    fail('This book could not be opened',
+         'The file may still be uploading, or your connection dropped part-way.', url);
+    throw e;
+  }
+
+  $('count').textContent = doc.numPages + (doc.numPages === 1 ? ' page' : ' pages');
+
+  const first = await doc.getPage(1);
+  const base  = first.getViewport({ scale:1 });
+  const fit   = () => Math.max(.25, (Math.min(holder.clientWidth, 1100) - 12) / base.width);
+  scale = fit();
+
+  /* One placeholder per page, sized from page one. Near-uniform in practice,
+     and it means we never touch pages the reader has not scrolled to. */
+  for(let n = 1; n <= doc.numPages; n++){
+    const el = document.createElement('div');
+    el.className = 'pg';
+    el.dataset.n = n;
+    el.style.minHeight = Math.round(base.height * scale) + 'px';
+    el.textContent = n;
+    holder.appendChild(el);
+    io.observe(el);
+  }
+
+  /* ---- contents ----
+     The same thing Chrome's viewer calls bookmarks: the outline the PDF was
+     authored with. Plenty of scanned papers have none, so the button stays
+     hidden rather than opening an empty drawer. */
+  (async () => {
+    let outline = null;
+    try{ outline = await doc.getOutline(); }catch(e){}
+    if(!outline || !outline.length) return;
+
+    const list = $('toclist'), panel = $('tocpanel'), btn = $('toc');
+
+    /* An outline entry points at an internal destination, not a page number —
+       it has to be resolved through the document to find the page. */
+    async function pageOf(dest){
+      try{
+        const d = typeof dest === 'string' ? await doc.getDestination(dest) : dest;
+        if(!Array.isArray(d)) return null;
+        const ref = d[0];
+        if(ref && typeof ref === 'object') return (await doc.getPageIndex(ref)) + 1;
+        if(typeof ref === 'number') return ref + 1;
+      }catch(e){}
+      return null;
+    }
+
+    (function add(items, depth){
+      for(const it of items){
+        const li = document.createElement('li');
+        const b  = document.createElement('button');
+        b.type = 'button';
+        b.textContent = it.title || '(untitled)';
+        if(depth) b.className = 'd' + Math.min(depth, 2);
+        b.addEventListener('click', async () => {
+          const n = await pageOf(it.dest);
+          const el = n && holder.querySelector('.pg[data-n="' + n + '"]');
+          if(!el) return;
+          /* Close on pick. On a phone the drawer covers most of the screen,
+             so leaving it open hides the page you just jumped to. */
+          panel.hidden = true;
+          btn.setAttribute('aria-pressed', 'false');
+          /* Read the bar's height after the drawer has closed — this forces
+             the reflow, so the value is the one the scroll will actually
+             land against. */
+          root.style.setProperty('--barh',
+            document.querySelector('.rtop').getBoundingClientRect().height + 'px');
+          el.scrollIntoView({ behavior:'smooth', block:'start' });
+        });
+        li.appendChild(b);
+        list.appendChild(li);
+        if(it.items && it.items.length) add(it.items, depth + 1);
+      }
+    })(outline, 0);
+
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', open ? 'true' : 'false');
+      panel.hidden = !open;
+    });
+  })();
+
+  /* Re-fit on rotate/resize: clear everything and let the observer redraw. */
+  let t;
+  addEventListener('resize', () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      const next = fit();
+      if(Math.abs(next - scale) < .01) return;
+      scale = next;
+      for(const el of holder.children){
+        el.dataset.done = '';
+        el.textContent  = el.dataset.n;
+        el.style.minHeight = Math.round(base.height * scale) + 'px';
+        io.observe(el);
+      }
+    }, 200);
+  });
+}
+</script>
+</body>
+</html>
