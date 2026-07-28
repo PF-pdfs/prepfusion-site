@@ -240,11 +240,28 @@ if(!rel){
     }
   }, { rootMargin: '900px 0px' });
 
+  // Mobile Safari (and some Android WebViews) refuse to allocate a canvas
+  // past ~4096px on a side — go over this and the canvas silently comes back
+  // blank instead of erroring, which is worse than the blur it would replace.
+  const MAX_CANVAS_DIM = 4096;
+
   async function draw(n, el){
     try{
       const page = await doc.getPage(n);
       const vp   = page.getViewport({ scale });
-      const dpr  = Math.min(window.devicePixelRatio || 1, 2);
+
+      // Most phones today are 3x, some display panels 4x. The previous cap
+      // of 2 rendered visibly softer than the screen could show — capping
+      // too low was the actual cause of the blur being reported, not pdf.js.
+      // Still clamp against MAX_CANVAS_DIM so a wide page at 4x on a small
+      // phone can't ask for a canvas the browser will refuse.
+      const wantDpr = Math.min(window.devicePixelRatio || 1, 3);
+      const dpr = Math.max(1, Math.min(
+        wantDpr,
+        MAX_CANVAS_DIM / vp.width,
+        MAX_CANVAS_DIM / vp.height
+      ));
+
       const c    = document.createElement('canvas');
       c.width  = Math.floor(vp.width  * dpr);
       c.height = Math.floor(vp.height * dpr);
