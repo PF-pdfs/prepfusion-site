@@ -60,8 +60,18 @@ body{background:var(--shell);color:var(--ink);
    the viewer, and putting the badge anywhere else implied otherwise. */
 .beta{font:700 9px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;
   padding:3px 5px;border-radius:4px;background:var(--accent);color:#0f172a;margin-left:3px}
-.brand{font-weight:600;font-size:13px;color:var(--ink-soft);white-space:nowrap;flex:none}
-.brand b{color:var(--ink);font-weight:700}
+/* Same brand_wordmark() markup as the library page (a real logo.* under
+   assets/, or a circular "P" monogram when there isn't one) — .bm/.bm-logo/
+   .bm-mono/.bm-text classes duplicated here because the reader ships its own
+   standalone stylesheet rather than sharing the library's. */
+.brand{display:flex;align-items:center;gap:9px;white-space:nowrap;flex:none}
+.bm{display:inline-flex;align-items:center;gap:8px;color:inherit}
+.bm-logo{width:22px;height:22px;border-radius:50%;object-fit:cover;display:block;flex-shrink:0}
+.bm-mono{display:grid;place-items:center;font:800 12px "Sora",sans-serif;
+  background:var(--ink);color:var(--paper)}
+.bm-text{font:700 14px "Sora",sans-serif;letter-spacing:-.02em}
+.bm-text b{font-weight:800}
+.brand-suffix{font-weight:600;font-size:13px;color:var(--ink-soft)}
 .spacer{flex:1}
 
 /* ---------- contents drawer ---------- */
@@ -89,17 +99,44 @@ body{background:var(--shell);color:var(--ink);
   background:var(--card);border-bottom:1.5px solid var(--line);line-height:1.5}
 :root[data-night="1"] .caveat{display:block}
 
+/* ---------- initial loader ----------
+   Bridges the gap between navigating here and the first page appearing —
+   without this the whole viewer is a blank rectangle while the PDF's
+   header/xref is fetched, which reads as broken rather than loading. */
+.loader{display:flex;flex-direction:column;align-items:center;gap:14px;
+  padding:110px 20px 60px;color:var(--ink-soft)}
+.spinner{width:32px;height:32px;border-radius:50%;flex:none;
+  border:3px solid var(--line-strong);border-top-color:var(--ink);
+  animation:pfspin .8s linear infinite}
+@keyframes pfspin{to{transform:rotate(360deg)}}
+.loader-text{font:600 12.5px/1 "IBM Plex Mono",monospace;letter-spacing:.02em;margin:0}
+.loader-bar{width:220px;max-width:60vw;height:6px;border-radius:99px;
+  background:var(--line);overflow:hidden;position:relative}
+.loader-fill{height:100%;width:0;background:var(--ink);border-radius:99px;
+  transition:width .25s ease}
+/* Total size isn't always known up front (no Content-Length, or the request
+   is still negotiating) — an indeterminate sweep still says "working",
+   which is the whole point, without inventing a percentage we don't have. */
+.loader-bar.indeterminate .loader-fill{width:30%!important;position:absolute;
+  animation:pfsweep 1.1s ease-in-out infinite}
+@keyframes pfsweep{0%{left:-35%}100%{left:105%}}
+
 /* ---------- pages ---------- */
 main{padding:20px 10px 60px;display:flex;flex-direction:column;
   align-items:center;gap:16px}
 .pg{background:#fff;box-shadow:0 2px 14px rgba(15,23,42,.14);border-radius:2px;
   width:100%;max-width:1100px;display:flex;align-items:center;justify-content:center;
-  color:#94a3b8;font:600 12px/1 "IBM Plex Mono",monospace;min-height:120px;
+  gap:9px;color:#94a3b8;font:600 12px/1 "IBM Plex Mono",monospace;min-height:120px;
   /* Jumping from Contents aligns the page with the viewport top, which the
      sticky toolbar would then sit on top of. --barh is measured live at jump
      time because the toolbar is one row on a desktop and two on a phone, so
      no fixed value is correct for both. */
   scroll-margin-top:calc(var(--barh, 118px) + 12px)}
+/* Same spinner, smaller — shown per-page while it waits its turn to render,
+   so scrolling ahead of the lazy loader doesn't look stuck either. */
+.pg-spin{width:15px;height:15px;border-radius:50%;flex:none;
+  border:2px solid var(--line-strong);border-top-color:#94a3b8;
+  animation:pfspin .8s linear infinite}
 .pg canvas{display:block;max-width:100%;height:auto;border-radius:2px}
 /* Night mode. invert() alone swings every hue to its opposite (blue -> orange);
    the hue-rotate swings them back, so a blue circuit trace stays blue-ish.
@@ -117,6 +154,10 @@ main{padding:20px 10px 60px;display:flex;flex-direction:column;
   .rtitle{order:5;flex-basis:100%;white-space:normal}
   main{padding:12px 6px 40px}
 }
+@media(prefers-reduced-motion:reduce){
+  .spinner,.pg-spin{animation:none;border-top-color:var(--line-strong)}
+  .loader-fill{transition:none;animation:none!important}
+}
 </style>
 </head>
 <body>
@@ -128,7 +169,7 @@ main{padding:20px 10px 60px;display:flex;flex-direction:column;
          stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
     </svg>Library</a>
-  <span class="brand"><b>PrepFusion</b> PDF Viewer</span>
+  <span class="brand"><span class="bm"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="brand-suffix">PDF Viewer</span></span>
   <span class="rtitle" id="rtitle">Loading…</span>
   <span class="spacer"></span>
   <span class="count" id="count"></span>
@@ -159,6 +200,11 @@ main{padding:20px 10px 60px;display:flex;flex-direction:column;
 <p class="caveat">Night mode is a colour inversion — diagrams, graphs and photographs may look
 like negatives. Download the file to read it exactly as printed.</p>
 
+<div class="loader" id="loader" role="status" aria-live="polite">
+  <div class="spinner" aria-hidden="true"></div>
+  <p class="loader-text" id="loaderText">Loading PDF…</p>
+  <div class="loader-bar" id="loaderBar"><div class="loader-fill" id="loaderFill"></div></div>
+</div>
 <main id="pages"></main>
 <div class="msg" id="msg" hidden></div>
 
@@ -168,6 +214,8 @@ const root = document.documentElement;
 
 function fail(title, body, href){
   $('pages').remove();
+  const ldr = $('loader');
+  if(ldr) ldr.remove();
   const m = $('msg');
   m.hidden = false;
   m.innerHTML = '<h2></h2><p></p>';
@@ -194,12 +242,19 @@ function safeRel(p){
 const qs  = new URLSearchParams(location.search);
 const rel = safeRel(qs.get('f'));
 const ver = qs.get('v') || '';
+const titleParam = (qs.get('t') || '').trim();
 
 if(!rel){
   fail('Nothing to read', 'That link is missing a valid file reference. Head back to the library and pick a book.');
 } else {
   const url   = './' + rel.split('/').map(encodeURIComponent).join('/') + (ver ? '?v=' + encodeURIComponent(ver) : '');
-  const name  = decodeURIComponent(rel.split('/').pop() || '').replace(/\.pdf$/i,'').replace(/[_-]+/g,' ');
+  // The clean "<Subject> — <Branch>" title is computed server-side (see
+  // reader_title() in build_site.py), which already knows the subject and
+  // branch for this exact file rather than guessing from its filename. The
+  // raw-filename cleanup below only ever runs if that param is missing or
+  // empty — e.g. an old bookmarked link from before this existed.
+  const name = titleParam ||
+    decodeURIComponent(rel.split('/').pop() || '').replace(/\.pdf$/i,'').replace(/[_-]+/g,' ');
   $('rtitle').textContent = name;
   document.title = name + ' — PrepFusion PDF Viewer';
   $('dl').href = url;
@@ -280,6 +335,21 @@ if(!rel){
     }
   }
 
+  /* ---- initial loading state ----
+     From here to the first page appearing is otherwise a blank rectangle —
+     indistinguishable from broken, especially on a slow mobile connection
+     opening a large scanned book. onProgress fires while pdf.js is still
+     negotiating the file; a real percentage when the server sent a
+     Content-Length (GitHub Pages always does), an honest "still working"
+     sweep with the bytes-so-far when it hasn't. */
+  const loaderText = $('loaderText'), loaderBar = $('loaderBar'), loaderFill = $('loaderFill');
+  function humanSize(n){
+    if(!n) return '0 B';
+    const u = ['B','KB','MB','GB']; let i = 0;
+    while(n >= 1024 && i < u.length - 1){ n /= 1024; i++; }
+    return (i === 0 ? Math.round(n) : n.toFixed(1)) + ' ' + u[i];
+  }
+
   try{
     /* disableAutoFetch keeps a 60 MB book from downloading in full before
        page one appears — pdf.js range-requests only what is on screen.
@@ -289,25 +359,43 @@ if(!rel){
        the JBIG2/JPEG2000 decoders in wasm/. standard_fonts/ covers PDFs that
        never embedded their base-14 fonts. Both are fetched only when a file
        actually needs them, so a clean digital PDF pays nothing for them. */
-    doc = await pdfjsLib.getDocument({
+    const task = pdfjsLib.getDocument({
       url,
       disableAutoFetch:true,
       disableStream:false,
       wasmUrl: './assets/pdfjs/wasm/',
       standardFontDataUrl: './assets/pdfjs/standard_fonts/'
-    }).promise;
+    });
+    task.onProgress = ({ loaded, total }) => {
+      if(total){
+        loaderBar.classList.remove('indeterminate');
+        const pct = Math.min(100, Math.round((loaded / total) * 100));
+        loaderFill.style.width = pct + '%';
+        loaderText.textContent = 'Loading… ' + pct + '%';
+      } else {
+        loaderBar.classList.add('indeterminate');
+        loaderText.textContent = 'Loading… ' + humanSize(loaded);
+      }
+    };
+    doc = await task.promise;
   }catch(e){
     fail('This book could not be opened',
          'The file may still be uploading, or your connection dropped part-way.', url);
     throw e;
   }
 
+  $('loader').remove();
   $('count').textContent = doc.numPages + (doc.numPages === 1 ? ' page' : ' pages');
 
   const first = await doc.getPage(1);
   const base  = first.getViewport({ scale:1 });
   const fit   = () => Math.max(.25, (Math.min(holder.clientWidth, 1100) - 12) / base.width);
   scale = fit();
+
+  // Small spinner + label rather than a bare page number, so a page waiting
+  // its turn to render reads as "loading" instead of "empty".
+  const pendingHTML = (n) =>
+    '<span class="pg-spin" aria-hidden="true"></span><span>Page ' + n + '</span>';
 
   /* One placeholder per page, sized from page one. Near-uniform in practice,
      and it means we never touch pages the reader has not scrolled to. */
@@ -316,7 +404,7 @@ if(!rel){
     el.className = 'pg';
     el.dataset.n = n;
     el.style.minHeight = Math.round(base.height * scale) + 'px';
-    el.textContent = n;
+    el.innerHTML = pendingHTML(n);
     holder.appendChild(el);
     io.observe(el);
   }
@@ -391,7 +479,7 @@ if(!rel){
       scale = next;
       for(const el of holder.children){
         el.dataset.done = '';
-        el.textContent  = el.dataset.n;
+        el.innerHTML = pendingHTML(el.dataset.n);
         el.style.minHeight = Math.round(base.height * scale) + 'px';
         io.observe(el);
       }
