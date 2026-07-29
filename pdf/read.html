@@ -262,6 +262,10 @@ if(!rel){
   $('rtitle').textContent = name;
   document.title = name + ' — PrepFusion PDF Viewer';
   $('dl').href = url;
+  // Same rule as clean_filename() server-side: what's saved to disk matches
+  // what's shown on screen, not the raw "network_theory_ec.pdf" filename.
+  const safeName = name.replace(/[<>:"/\\|?*\x00-\x1f]/g, '').trim();
+  $('dl').setAttribute('download', (safeName || 'download') + '.pdf');
 
   /* ---- night toggle ---- */
   const nightBtn = $('night');
