@@ -42,6 +42,13 @@
   --ink-faint:#4f6080;      /*  5.4:1 on chip */
   --line:#dde4f0; --line-strong:#c3cddf;
   --brand:#14307f; --accent:#ffcf2d;
+  /* The "Fusion" half of the wordmark. NOT --brand: that token is a muted
+     navy for links and focus rings, and against --ink it measures 1.59:1 —
+     the two-tone effect was technically applied but invisible. This is a
+     vivid blue that reads as a genuinely different colour beside the ink
+     (3.6:1 apart) while still clearing AA on paper and card on its own.
+     Deliberately not #2563EB — that's NexusX's series colour. */
+  --wordmark:#1668d6;
   /* --accent as TEXT on this theme's backgrounds is ~1.4:1 — nearly
      invisible (the same class of bug already fixed once for Aptitude's
      amber). --accent-ink is a darkened shade that clears AAA (7.4:1+) on
@@ -62,6 +69,8 @@
   --ink-faint:#94a4c4;      /*  5.8:1 on chip */
   --line:#2a3854; --line-strong:#3c4d70;
   --brand:#9db6ff; --accent:#ffd54a;
+  /* Same reasoning as light mode: --brand vs --ink is only 1.84:1 here. */
+  --wordmark:#4d92ff;
   /* This theme's --accent is already 11-13:1 on dark backgrounds as text —
      no darkening needed, so accent-ink is just accent again. */
   --accent-ink:#ffd54a;
@@ -88,6 +97,10 @@ a{color:var(--brand)}
 .is-hidden{display:none !important}
 
 /* ---------- brand wordmark ---------- */
+/* Both header and footer wrap the wordmark in <a class="logo">, and the
+   global a{color:var(--brand)} rule would paint "Prep" navy — leaving a navy
+   + blue pair instead of the intended ink + blue. Pin it back to ink. */
+.logo{color:var(--ink);text-decoration:none}
 .bm{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit}
 .bm-logo{width:26px;height:26px;border-radius:50%;object-fit:cover;display:block;flex-shrink:0;
   background:var(--card);border:1.5px solid rgba(255,255,255,.35)}
@@ -97,11 +110,11 @@ a{color:var(--brand)}
   color:var(--card);font:800 13px "Sora",sans-serif}
 /* NEVER text-transform this — the mark is "PrepFusion", not "PREPFUSION". */
 .bm-text{font:600 15px "Sora",sans-serif;letter-spacing:-.02em;text-transform:none;white-space:nowrap}
-/* "Fusion" in brand blue, "Prep" in whatever ink the context provides (via
-   .bm{color:inherit}) — header, footer, and nowhere else: the cover-brand
-   override right below keeps cover artwork monotone against its own
-   per-series gradient, where the fixed brand blue would clash. */
-.bm-text b{font-weight:800;color:var(--brand)}
+/* "Fusion" in the wordmark blue, "Prep" in whatever ink the context provides
+   (via .bm{color:inherit}) — header, footer, and nowhere else: the
+   cover-brand override right below keeps cover artwork monotone against its
+   own per-series gradient, where a fixed blue would clash. */
+.bm-text b{font-weight:800;color:var(--wordmark)}
 .bm-lg .bm-logo{width:38px;height:38px;border-radius:11px;border:0}
 .bm-lg .bm-mono::after,.bm-lg .bm-mono{font-size:19px;border-radius:11px}
 .bm-lg .bm-text{font:700 20px "Sora",sans-serif;letter-spacing:-.03em}
@@ -119,6 +132,12 @@ a{color:var(--brand)}
 .nav a,.nav .nav-soon{color:var(--ink-soft);text-decoration:none;font-size:14px;font-weight:500;
   padding:8px 13px;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
 .nav a:hover{color:var(--ink);background:var(--chipbg)}
+/* The section you're on. Deliberately a quiet highlight rather than a "Live"
+   badge: a LIVE pill beside the amber "Soon" pills would imply the library
+   could stop being live (it's the page you're reading), and Courses is
+   equally live without one — so the badge would raise a question instead of
+   answering the "where am I?" one that actually matters. */
+.nav a.nav-current{color:var(--ink);background:var(--chipbg);font-weight:650}
 .nav .ext{opacity:.55;font-size:11px}
 .nav .nav-soon{opacity:.7;cursor:default}
 .soon-tag{display:inline-flex;align-items:center;gap:5px;font:600 10px "IBM Plex Mono",monospace;
@@ -325,6 +344,11 @@ body.soon .hero-grid{grid-template-columns:1fr}
 footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px}
 .footer-inner{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
   padding:34px 24px;max-width:1180px;margin:0 auto;color:var(--ink-soft);font-size:13.5px}
+.feedback-btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+  color:var(--ink);border:1.5px solid var(--line-strong);border-radius:10px;
+  padding:9px 15px;font:650 13px "Inter",sans-serif;white-space:nowrap;
+  transition:border-color .18s,transform .18s}
+.feedback-btn:hover{border-color:var(--ink);transform:translateY(-1px)}
 
 /* ---------- responsive: laptop -> tablet -> phone -> small phone ---------- */
 @media(max-width:1000px){
@@ -395,7 +419,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   <div class="bar-in">
     <a class="logo" href="#top" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
     <nav class="nav">
-      <a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in.">Courses<span class="ext" aria-hidden="true">↗</span></a><span class="nav-soon" title="Search every GATE question by subject, topic and year.">Global Search<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span><span class="nav-soon" title="Printed editions of every series, delivered.">Bookstore<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span>
+      <a class="nav-current" href="#top" aria-current="page" title="You&#x27;re here — every previous-year paper, free to read.">Library</a><a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in.">Courses<span class="ext" aria-hidden="true">↗</span></a><span class="nav-soon" title="Search every GATE question by subject, topic and year.">Global Search<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span><span class="nav-soon" title="Printed editions of every series, delivered.">Bookstore<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span>
     </nav>
     <button id="themeToggle" class="tt" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
       <svg class="i-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
@@ -457,6 +481,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 <footer>
   <div class="footer-inner">
     <a class="logo" href="#top" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
+    <a class="feedback-btn" href="https://forms.gle/KjeJHFvppH4TDoLu6" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-4-.9L3 21l1.9-4.5A8.4 8.4 0 0 1 4 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8 8.4Z"/></svg>Share feedback</a>
     <span>© 2026 PrepFusion · All rights reserved</span>
   </div>
 </footer>

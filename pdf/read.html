@@ -26,6 +26,9 @@
   --paper:#f7f8fa; --card:#fff; --ink:#0f172a; --ink-soft:#4f6080;
   --line:#e2e6ee; --line-strong:#cbd3e1; --accent:#facc15; --shell:#eef1f6;
   --brand:#14307f;
+  /* See the library stylesheet: --brand against --ink is only ~1.6:1, so the
+     two-tone wordmark needs its own vivid blue to actually be visible. */
+  --wordmark:#1668d6;
 }
 /* Night mode darkens the whole viewer, not just the pages. Inverting the
    paper while leaving a white toolbar above it is exactly the glare the
@@ -36,6 +39,7 @@
   --paper:#0b1020; --card:#141b2e; --ink:#e8edf7; --ink-soft:#9aa8c4;
   --line:#233049; --line-strong:#33415f; --shell:#070b16;
   --brand:#9db6ff;
+  --wordmark:#4d92ff;
 }
 html,body{margin:0;padding:0}
 body{background:var(--shell);color:var(--ink);
@@ -72,9 +76,9 @@ body{background:var(--shell);color:var(--ink);
 .bm-mono{display:grid;place-items:center;font:800 12px "Sora",sans-serif;
   background:var(--ink);color:var(--paper)}
 .bm-text{font:700 14px "Sora",sans-serif;letter-spacing:-.02em}
-/* "Fusion" in brand blue, "Prep" in the ordinary ink — restores the
-   two-tone wordmark used on the library page's header/footer. */
-.bm-text b{font-weight:800;color:var(--brand)}
+/* "Fusion" in the wordmark blue, "Prep" in the ordinary ink — matches the
+   two-tone wordmark on the library page's header/footer. */
+.bm-text b{font-weight:800;color:var(--wordmark)}
 .brand-suffix{font-weight:600;font-size:13px;color:var(--ink-soft)}
 .spacer{flex:1}
 
