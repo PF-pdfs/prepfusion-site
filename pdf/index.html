@@ -3,13 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Deliberately NOT GATE 2027 here (unlike the hero eyebrow and card covers,
-     where "GATE 2027" is a prep-target label sitting next to other context).
-     This tag is everything outside the page itself sees — a browser tab, a
-     search result, a bookmark — with no COVERAGE_NOTE beside it to say the
-     library actually spans 40 years of PYQs. A specific year here reads as
-     "this covers only that exam", which is wrong. -->
-<title>PrepFusion Library — GATE Previous Year Questions &amp; Solutions</title>
+<title>PrepFusion Library — GATE 2027 Questions &amp; Solutions</title>
 <meta name="description" content="Free GATE preparation PDFs — NexusX, SiliconX, PowerX, Maths and Aptitude series. Previous year questions and detailed solutions.">
 <link rel="icon" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,19 +36,6 @@
   --ink-faint:#4f6080;      /*  5.4:1 on chip */
   --line:#dde4f0; --line-strong:#c3cddf;
   --brand:#14307f; --accent:#ffcf2d;
-  /* The "Fusion" half of the wordmark. NOT --brand: that token is a muted
-     navy for links and focus rings, and against --ink it measures 1.59:1 —
-     the two-tone effect was technically applied but invisible. This is a
-     vivid blue that reads as a genuinely different colour beside the ink
-     (3.6:1 apart) while still clearing AA on paper and card on its own.
-     Deliberately not #2563EB — that's NexusX's series colour. */
-  --wordmark:#1668d6;
-  /* --accent as TEXT on this theme's backgrounds is ~1.4:1 — nearly
-     invisible (the same class of bug already fixed once for Aptitude's
-     amber). --accent-ink is a darkened shade that clears AAA (7.4:1+) on
-     paper/card/chipbg, for anywhere the accent colours a letter or word
-     rather than a small dot/background. */
-  --accent-ink:#7a4200;
   --chipbg:#e9eef7; --on-ink:#ffffff;
   --soon-bg:#FFF9E6; --soon-ink:#735D14;    /* 6.0:1 on --soon-bg */
   --radius:18px;
@@ -69,11 +50,6 @@
   --ink-faint:#94a4c4;      /*  5.8:1 on chip */
   --line:#2a3854; --line-strong:#3c4d70;
   --brand:#9db6ff; --accent:#ffd54a;
-  /* Same reasoning as light mode: --brand vs --ink is only 1.84:1 here. */
-  --wordmark:#4d92ff;
-  /* This theme's --accent is already 11-13:1 on dark backgrounds as text —
-     no darkening needed, so accent-ink is just accent again. */
-  --accent-ink:#ffd54a;
   --chipbg:#1e2942; --on-ink:#0a1020;
   --soon-bg:#3F403A; --soon-ink:#ffd54a;    /* 7.4:1 on --soon-bg */
   --shadow:0 1px 2px rgba(0,0,0,.45),0 10px 30px -14px rgba(0,0,0,.75);
@@ -97,10 +73,6 @@ a{color:var(--brand)}
 .is-hidden{display:none !important}
 
 /* ---------- brand wordmark ---------- */
-/* Both header and footer wrap the wordmark in <a class="logo">, and the
-   global a{color:var(--brand)} rule would paint "Prep" navy — leaving a navy
-   + blue pair instead of the intended ink + blue. Pin it back to ink. */
-.logo{color:var(--ink);text-decoration:none}
 .bm{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit}
 .bm-logo{width:26px;height:26px;border-radius:50%;object-fit:cover;display:block;flex-shrink:0;
   background:var(--card);border:1.5px solid rgba(255,255,255,.35)}
@@ -110,11 +82,7 @@ a{color:var(--brand)}
   color:var(--card);font:800 13px "Sora",sans-serif}
 /* NEVER text-transform this — the mark is "PrepFusion", not "PREPFUSION". */
 .bm-text{font:600 15px "Sora",sans-serif;letter-spacing:-.02em;text-transform:none;white-space:nowrap}
-/* "Fusion" in the wordmark blue, "Prep" in whatever ink the context provides
-   (via .bm{color:inherit}) — header, footer, and nowhere else: the
-   cover-brand override right below keeps cover artwork monotone against its
-   own per-series gradient, where a fixed blue would clash. */
-.bm-text b{font-weight:800;color:var(--wordmark)}
+.bm-text b{font-weight:800}
 .bm-lg .bm-logo{width:38px;height:38px;border-radius:11px;border:0}
 .bm-lg .bm-mono::after,.bm-lg .bm-mono{font-size:19px;border-radius:11px}
 .bm-lg .bm-text{font:700 20px "Sora",sans-serif;letter-spacing:-.03em}
@@ -132,12 +100,6 @@ a{color:var(--brand)}
 .nav a,.nav .nav-soon{color:var(--ink-soft);text-decoration:none;font-size:14px;font-weight:500;
   padding:8px 13px;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
 .nav a:hover{color:var(--ink);background:var(--chipbg)}
-/* The section you're on. Deliberately a quiet highlight rather than a "Live"
-   badge: a LIVE pill beside the amber "Soon" pills would imply the library
-   could stop being live (it's the page you're reading), and Courses is
-   equally live without one — so the badge would raise a question instead of
-   answering the "where am I?" one that actually matters. */
-.nav a.nav-current{color:var(--ink);background:var(--chipbg);font-weight:650}
 .nav .ext{opacity:.55;font-size:11px}
 .nav .nav-soon{opacity:.7;cursor:default}
 .soon-tag{display:inline-flex;align-items:center;gap:5px;font:600 10px "IBM Plex Mono",monospace;
@@ -161,15 +123,10 @@ a{color:var(--brand)}
 /* ---------- hero ---------- */
 .hero{padding:80px 0 18px}
 .eyebrow{font:600 12px/1 "IBM Plex Mono",monospace;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--ink-soft);margin:0 0 22px;display:flex;align-items:center;gap:12px;
-  flex-wrap:wrap;row-gap:9px}
-.eyebrow::after{content:"";height:1px;flex:1;min-width:40px;max-width:180px;background:var(--line-strong)}
+  color:var(--ink-soft);margin:0 0 22px;display:flex;align-items:center;gap:12px}
+.eyebrow::after{content:"";height:1px;flex:1;max-width:180px;background:var(--line-strong)}
 .cycle{background:var(--ink);color:var(--paper);padding:3px 9px;border-radius:6px;letter-spacing:.14em}
-/* Coverage pill — outlined so it reads as secondary to the solid cycle pill. */
-.coverage{border:1.5px solid var(--line-strong);padding:2px 9px;border-radius:6px;
-  letter-spacing:.12em;color:var(--ink-soft);white-space:nowrap}
-.hero h1{font:800 clamp(34px,6vw,78px)/1.08 "Sora",sans-serif;letter-spacing:-.04em;margin:0 0 26px;max-width:20ch;
-  animation:rise .6s cubic-bezier(.22,1,.36,1) both}
+.hero h1{font:800 clamp(34px,6vw,78px)/1.08 "Sora",sans-serif;letter-spacing:-.04em;margin:0 0 26px;max-width:20ch}
 .hero h1 em{font-style:normal;position:relative;display:inline-block;z-index:0}
 .hero h1 em::after{content:"";position:absolute;left:-.04em;right:-.04em;bottom:.09em;height:.3em;
   background:var(--accent);z-index:-1;border-radius:3px}
@@ -180,17 +137,6 @@ a{color:var(--brand)}
 .statbox div+div{border-left:1.5px solid var(--line-strong)}
 .statbox b{display:block;font:800 28px "Sora",sans-serif;letter-spacing:-.03em;line-height:1}
 .statbox span{font:500 11px "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
-
-/* NexusX / SiliconX / PowerX — the trailing X picked out in accent amber,
-   wherever the series name renders as text (chip, shelf heading, cover
-   badge). --accent-ink, not --accent: see the contrast note where it's
-   defined — raw --accent as text is nearly invisible on these backgrounds. */
-.brand-x{color:var(--accent-ink)}
-/* An active/selected chip already turns solid-coloured with white text
-   (.chip[aria-pressed="true"]); a highlighted amber letter inside that
-   would read as a rendering glitch, not a flourish, so let it go plain
-   white there like the rest of the chip's text. */
-.chip[aria-pressed="true"] .brand-x{color:inherit}
 
 /* ---------- toolbar ---------- */
 .tools{display:flex;flex-wrap:wrap;gap:11px;align-items:center;padding:38px 0 6px}
@@ -235,19 +181,7 @@ main{padding-bottom:60px}
 /* ---------- cards ---------- */
 .card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);overflow:hidden;
   box-shadow:var(--shadow);display:flex;flex-direction:column;
-  transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s,border-color .2s;
-  animation:rise .5s cubic-bezier(.22,1,.36,1) both}
-/* Cards lift in as the shelf paints. nth-child restarts inside every .grid, so
-   each shelf cascades on its own instead of one delay ramp running the whole
-   page — and it caps at 6 so no card on a long shelf is left waiting. */
-.card:nth-child(2){animation-delay:.05s}
-.card:nth-child(3){animation-delay:.1s}
-.card:nth-child(4){animation-delay:.15s}
-.card:nth-child(5){animation-delay:.2s}
-.card:nth-child(n+6){animation-delay:.25s}
-/* translateX is deliberately small (10px) — enough to read as a left-to-right
-   drift alongside the lift, not a slide that fights the grid's own layout. */
-@keyframes rise{from{opacity:0;transform:translate(-10px,18px)}to{opacity:1;transform:none}}
+  transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s,border-color .2s}
 .card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lift);border-color:var(--line-strong)}
 .cover{height:215px;position:relative;overflow:hidden;display:flex;flex-direction:column;
   padding:20px 20px 16px 30px;color:#fff}
@@ -269,13 +203,6 @@ main{padding-bottom:60px}
 .qs.s{background:var(--accent);border-color:var(--accent);color:#3a2c00}
 .cover-series{font:600 10.5px "IBM Plex Mono",monospace;letter-spacing:.2em;text-transform:uppercase;
   opacity:.92;position:relative}
-/* Checked, not assumed: --accent as text against the Solutions covers'
-   brighter base gradient measures ~3.2-3.9:1 on several series — under the
-   4.5:1 minimum. Cover backgrounds vary per series AND per kind (10
-   combinations total), so unlike the chip/heading there's no single fixed
-   colour that's safe everywhere here. Same call already made for the brand
-   mark in this same cover-foot area: let it inherit rather than clash. */
-.cover-series .brand-x{color:inherit}
 .cover-rule{width:30px;height:2.5px;background:var(--accent);margin:11px 0 12px;position:relative;
   border-radius:2px;display:block}
 .cover-title{font:800 25px/1.13 "Sora",sans-serif;letter-spacing:-.03em;position:relative;
@@ -283,10 +210,10 @@ main{padding-bottom:60px}
 .cover-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;
   position:relative;gap:8px}
 .cover-brand .bm-text{font-size:12.5px;opacity:.92}
-.cover-brand .bm-text b{color:inherit}   /* stays white on the gradient — brand blue would clash per series */
 .cover-brand .bm-logo{width:20px;height:20px}
 .cover-brand .bm-mono{background:rgba(255,255,255,.9)}
 .cover-brand .bm-mono::after{color:var(--cv2);font-size:11px}
+.cover-cycle{font:600 9.5px "IBM Plex Mono",monospace;letter-spacing:.16em;text-transform:uppercase;opacity:.8}
 
 .card-body{padding:17px 19px 19px;display:flex;flex-direction:column;gap:11px;flex:1}
 .card-kind{margin:0;font:600 10px "IBM Plex Mono",monospace;letter-spacing:.16em;text-transform:uppercase;
@@ -344,11 +271,6 @@ body.soon .hero-grid{grid-template-columns:1fr}
 footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px}
 .footer-inner{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
   padding:34px 24px;max-width:1180px;margin:0 auto;color:var(--ink-soft);font-size:13.5px}
-.feedback-btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;
-  color:var(--ink);border:1.5px solid var(--line-strong);border-radius:10px;
-  padding:9px 15px;font:650 13px "Inter",sans-serif;white-space:nowrap;
-  transition:border-color .18s,transform .18s}
-.feedback-btn:hover{border-color:var(--ink);transform:translateY(-1px)}
 
 /* ---------- responsive: laptop -> tablet -> phone -> small phone ---------- */
 @media(max-width:1000px){
@@ -395,21 +317,16 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   .glyph{font-size:92px}
   .card-meta{font-size:11px}
   .btn{font-size:12.5px;padding:10px 9px}
+  .cover-foot .cover-cycle{display:none}
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .card,.card:hover,.chip:hover,.btn:hover{transition:none;transform:none}
-  /* opacity:1 is not optional here — the rise animation starts the card at
-     zero, so killing the animation without restoring it hides the shelf. */
-  .card,.hero h1{animation:none;opacity:1}
   .soon-dot::after{animation:none;display:none}
 }
 @media print{
   .bar,.tools,.tt,.result-line,footer{display:none}
-  /* Same trap as reduced-motion: never let the entry animation leave a card
-     at opacity 0 on paper. */
   .card{break-inside:avoid;box-shadow:none}
-  .card,.hero h1{animation:none;opacity:1}
 }
 </style>
 </head>
@@ -419,7 +336,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   <div class="bar-in">
     <a class="logo" href="#top" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
     <nav class="nav">
-      <a class="nav-current" href="#top" aria-current="page" title="You&#x27;re here — every previous-year paper, free to read.">Library</a><a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in.">Courses<span class="ext" aria-hidden="true">↗</span></a><span class="nav-soon" title="Search every GATE question by subject, topic and year.">Global Search<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span><span class="nav-soon" title="Printed editions of every series, delivered.">Bookstore<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span>
+      <a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in.">Courses<span class="ext" aria-hidden="true">↗</span></a><span class="nav-soon" title="Search every GATE question by subject, topic and year.">Global Search<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span><span class="nav-soon" title="Printed editions of every series, delivered.">Bookstore<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span>
     </nav>
     <button id="themeToggle" class="tt" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
       <svg class="i-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
@@ -429,15 +346,16 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 </header>
 
 <section class="wrap hero" id="top">
-  <p class="eyebrow"><span class="cycle">GATE 2027</span> PDF Library <span class="coverage">PYQ 1987–2026 (40 Years)</span></p>
+  <p class="eyebrow"><span class="cycle">GATE 2027</span> PDF Library</p>
   <div class="hero-grid">
     <div>
       <h1>Every question, every solution — <em>on one shelf.</em></h1>
       <p class="lede">Previous-year questions and detailed solutions across every series — free to read, free to download, no sign-up.</p>
     </div>
     <div class="statbox">
-      <div><b>5</b><span>Series</span></div>
-      <div><b>39</b><span>PDFs</span></div>
+      <div><b>1</b><span>Books</span></div>
+      <div><b>1</b><span>PDFs</span></div>
+      <div><b>1</b><span>Series</span></div>
     </div>
   </div>
   <div class="tools">
@@ -481,7 +399,6 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 <footer>
   <div class="footer-inner">
     <a class="logo" href="#top" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
-    <a class="feedback-btn" href="https://forms.gle/KjeJHFvppH4TDoLu6" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-4-.9L3 21l1.9-4.5A8.4 8.4 0 0 1 4 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8 8.4Z"/></svg>Share feedback</a>
     <span>© 2026 PrepFusion · All rights reserved</span>
   </div>
 </footer>
