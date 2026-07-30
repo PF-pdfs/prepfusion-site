@@ -88,12 +88,31 @@ body{background:var(--shell);color:var(--ink);
 .tocpanel{max-height:min(50vh,420px);overflow:auto;background:var(--card);
   border-bottom:1.5px solid var(--line);padding:8px 10px}
 .tocpanel ol{list-style:none;margin:0;padding:0}
-.tocpanel button{display:block;width:100%;text-align:left;background:none;border:0;
+/* Children live in a real nested list, indented and collapsible — a shelf
+   book can carry a thousand-entry outline (the NexusX master has 1,363),
+   and a flat always-open list at that size IS the whole screen. */
+.tocpanel ol ol{padding-left:20px}
+.toc-tools{display:flex;gap:8px;justify-content:flex-end;padding:2px 4px 8px}
+.toc-tools button{font:600 11px "IBM Plex Mono",monospace;letter-spacing:.05em;
+  color:var(--ink-soft);background:none;border:1.5px solid var(--line-strong);
+  border-radius:7px;padding:5px 10px;cursor:pointer}
+.toc-tools button:hover{color:var(--ink);border-color:var(--ink)}
+.toc-row{display:flex;align-items:center;gap:2px}
+.toc-jump{flex:1;min-width:0;display:block;text-align:left;background:none;border:0;
   color:var(--ink);font:inherit;font-size:13.5px;line-height:1.45;padding:7px 9px;
   border-radius:7px;cursor:pointer}
-.tocpanel button:hover{background:var(--shell)}
-.tocpanel .d1{padding-left:26px;font-size:13px;color:var(--ink-soft)}
-.tocpanel .d2{padding-left:44px;font-size:12.5px;color:var(--ink-soft)}
+.toc-jump:hover{background:var(--shell)}
+.tocpanel ol ol .toc-jump{font-size:13px;color:var(--ink-soft)}
+.tocpanel ol ol ol .toc-jump{font-size:12.5px}
+/* The chevron only toggles children — jumping stays on the title, so a
+   mis-tap can't teleport you while you're just browsing the tree. */
+.toc-tgl{flex:none;width:26px;height:26px;display:grid;place-items:center;
+  background:none;border:0;border-radius:7px;color:var(--ink-soft);cursor:pointer}
+.toc-tgl:hover{background:var(--shell);color:var(--ink)}
+.toc-tgl svg{transition:transform .15s}
+.toc-tgl[aria-expanded="true"] svg{transform:rotate(90deg)}
+/* Leaf rows get the same left offset so titles line up with siblings. */
+.toc-pad{flex:none;width:26px}
 .rbtn{display:inline-flex;align-items:center;gap:7px;font:650 13px/1 inherit;
   padding:8px 12px;border-radius:9px;border:1.5px solid var(--line-strong);
   background:transparent;color:var(--ink);cursor:pointer;white-space:nowrap}
@@ -202,7 +221,13 @@ main{padding:20px 10px 60px;display:flex;flex-direction:column;
     </svg>Download
   </a>
 </header>
-<nav class="tocpanel" id="tocpanel" hidden aria-label="Contents"><ol id="toclist"></ol></nav>
+<nav class="tocpanel" id="tocpanel" hidden aria-label="Contents">
+  <div class="toc-tools" id="tocTools" hidden>
+    <button type="button" id="tocExpand">Expand all</button>
+    <button type="button" id="tocCollapse">Collapse all</button>
+  </div>
+  <ol id="toclist"></ol>
+</nav>
 </div>
 
 <p class="caveat">Night mode is a colour inversion — diagrams, graphs and photographs may look
@@ -445,33 +470,91 @@ if(!rel){
       return null;
     }
 
-    (function add(items, depth){
+    function jumpTo(it){
+      return async () => {
+        const n = await pageOf(it.dest);
+        const el = n && holder.querySelector('.pg[data-n="' + n + '"]');
+        if(!el) return;
+        /* Close on pick. On a phone the drawer covers most of the screen,
+           so leaving it open hides the page you just jumped to. */
+        panel.hidden = true;
+        btn.setAttribute('aria-pressed', 'false');
+        /* Read the bar's height after the drawer has closed — this forces
+           the reflow, so the value is the one the scroll will actually
+           land against. */
+        root.style.setProperty('--barh',
+          document.querySelector('.rtop').getBoundingClientRect().height + 'px');
+        el.scrollIntoView({ behavior:'smooth', block:'start' });
+      };
+    }
+
+    /* A real tree, not a flat indented list. Everything deeper than the top
+       level starts COLLAPSED: a shelf book can carry a four-figure outline,
+       and opening the drawer onto all of it at once is a wall, not a map.
+       The chevron toggles children; the title always jumps. */
+    let hasChildren = false;
+    (function add(items, parentOl){
       for(const it of items){
-        const li = document.createElement('li');
-        const b  = document.createElement('button');
+        const li  = document.createElement('li');
+        const row = document.createElement('div');
+        row.className = 'toc-row';
+
+        const kids = it.items && it.items.length ? it.items : null;
+        if(kids){
+          hasChildren = true;
+          const tgl = document.createElement('button');
+          tgl.type = 'button';
+          tgl.className = 'toc-tgl';
+          tgl.setAttribute('aria-expanded', 'false');
+          tgl.setAttribute('aria-label', 'Expand section');
+          tgl.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" '
+            + 'stroke="currentColor" stroke-width="2.6" stroke-linecap="round" '
+            + 'stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>';
+          row.appendChild(tgl);
+        } else {
+          const pad = document.createElement('span');
+          pad.className = 'toc-pad';
+          row.appendChild(pad);
+        }
+
+        const b = document.createElement('button');
         b.type = 'button';
+        b.className = 'toc-jump';
         b.textContent = it.title || '(untitled)';
-        if(depth) b.className = 'd' + Math.min(depth, 2);
-        b.addEventListener('click', async () => {
-          const n = await pageOf(it.dest);
-          const el = n && holder.querySelector('.pg[data-n="' + n + '"]');
-          if(!el) return;
-          /* Close on pick. On a phone the drawer covers most of the screen,
-             so leaving it open hides the page you just jumped to. */
-          panel.hidden = true;
-          btn.setAttribute('aria-pressed', 'false');
-          /* Read the bar's height after the drawer has closed — this forces
-             the reflow, so the value is the one the scroll will actually
-             land against. */
-          root.style.setProperty('--barh',
-            document.querySelector('.rtop').getBoundingClientRect().height + 'px');
-          el.scrollIntoView({ behavior:'smooth', block:'start' });
-        });
-        li.appendChild(b);
-        list.appendChild(li);
-        if(it.items && it.items.length) add(it.items, depth + 1);
+        b.addEventListener('click', jumpTo(it));
+        row.appendChild(b);
+        li.appendChild(row);
+
+        if(kids){
+          const sub = document.createElement('ol');
+          sub.hidden = true;
+          add(kids, sub);
+          li.appendChild(sub);
+          row.firstChild.addEventListener('click', () => {
+            const open = sub.hidden;
+            sub.hidden = !open;
+            row.firstChild.setAttribute('aria-expanded', open ? 'true' : 'false');
+            row.firstChild.setAttribute('aria-label',
+              open ? 'Collapse section' : 'Expand section');
+          });
+        }
+        parentOl.appendChild(li);
       }
-    })(outline, 0);
+    })(outline, list);
+
+    /* Expand/Collapse all — only offered when there is actually a tree. */
+    if(hasChildren){
+      const setAll = (open) => {
+        for(const sub of panel.querySelectorAll('ol ol')) sub.hidden = !open;
+        for(const t of panel.querySelectorAll('.toc-tgl')){
+          t.setAttribute('aria-expanded', open ? 'true' : 'false');
+          t.setAttribute('aria-label', open ? 'Collapse section' : 'Expand section');
+        }
+      };
+      $('tocTools').hidden = false;
+      $('tocExpand').addEventListener('click', () => setAll(true));
+      $('tocCollapse').addEventListener('click', () => setAll(false));
+    }
 
     btn.hidden = false;
     btn.addEventListener('click', () => {
