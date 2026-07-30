@@ -362,7 +362,19 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 }
 @media(max-width:760px){
   .wrap,.bar-in,.footer-inner{padding-left:16px;padding-right:16px}
-  .nav{display:none}
+  /* This used to be .nav{display:none}, which silently cost phone visitors
+     the entire section list — Library (the you-are-here marker), Courses,
+     and the two "Soon" pills. Hiding navigation is not a responsive fix; it
+     just makes the mobile site a different product. Instead the nav drops to
+     its own full-width row and scrolls sideways, exactly the pattern .chips
+     already uses further down. order:3 keeps the logo and theme toggle
+     together on the first row despite the nav sitting between them in the
+     DOM. */
+  .bar-in{flex-wrap:wrap;gap:12px}
+  .nav{order:3;flex-basis:100%;margin-left:0;flex-wrap:nowrap;
+       overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .nav::-webkit-scrollbar{display:none}
+  .nav a,.nav .nav-soon{flex:0 0 auto;font-size:13px;padding:7px 11px}
   .tt{margin-left:auto}
   .hero{padding-top:44px}
   .search{flex:1 1 100%;max-width:none}
