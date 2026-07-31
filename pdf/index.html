@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PrepFusion Library — GATE 2027 Questions &amp; Solutions</title>
+<!-- Deliberately NOT GATE 2027 here (unlike the hero eyebrow and card covers,
+     where "GATE 2027" is a prep-target label sitting next to other context).
+     This tag is everything outside the page itself sees — a browser tab, a
+     search result, a bookmark — with no COVERAGE_NOTE beside it to say the
+     library actually spans 40 years of PYQs. A specific year here reads as
+     "this covers only that exam", which is wrong. -->
+<title>PrepFusion Library — GATE Previous Year Questions &amp; Solutions</title>
 <meta name="description" content="Free GATE preparation PDFs — NexusX, SiliconX, PowerX, Maths and Aptitude series. Previous year questions and detailed solutions.">
 <link rel="icon" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,6 +42,19 @@
   --ink-faint:#4f6080;      /*  5.4:1 on chip */
   --line:#dde4f0; --line-strong:#c3cddf;
   --brand:#14307f; --accent:#ffcf2d;
+  /* The "Fusion" half of the wordmark. NOT --brand: that token is a muted
+     navy for links and focus rings, and against --ink it measures 1.59:1 —
+     the two-tone effect was technically applied but invisible. This is a
+     vivid blue that reads as a genuinely different colour beside the ink
+     (3.6:1 apart) while still clearing AA on paper and card on its own.
+     Deliberately not #2563EB — that's NexusX's series colour. */
+  --wordmark:#1668d6;
+  /* --accent as TEXT on this theme's backgrounds is ~1.4:1 — nearly
+     invisible (the same class of bug already fixed once for Aptitude's
+     amber). --accent-ink is a darkened shade that clears AAA (7.4:1+) on
+     paper/card/chipbg, for anywhere the accent colours a letter or word
+     rather than a small dot/background. */
+  --accent-ink:#7a4200;
   --chipbg:#e9eef7; --on-ink:#ffffff;
   --soon-bg:#FFF9E6; --soon-ink:#735D14;    /* 6.0:1 on --soon-bg */
   --radius:18px;
@@ -50,6 +69,11 @@
   --ink-faint:#94a4c4;      /*  5.8:1 on chip */
   --line:#2a3854; --line-strong:#3c4d70;
   --brand:#9db6ff; --accent:#ffd54a;
+  /* Same reasoning as light mode: --brand vs --ink is only 1.84:1 here. */
+  --wordmark:#4d92ff;
+  /* This theme's --accent is already 11-13:1 on dark backgrounds as text —
+     no darkening needed, so accent-ink is just accent again. */
+  --accent-ink:#ffd54a;
   --chipbg:#1e2942; --on-ink:#0a1020;
   --soon-bg:#3F403A; --soon-ink:#ffd54a;    /* 7.4:1 on --soon-bg */
   --shadow:0 1px 2px rgba(0,0,0,.45),0 10px 30px -14px rgba(0,0,0,.75);
@@ -73,6 +97,10 @@ a{color:var(--brand)}
 .is-hidden{display:none !important}
 
 /* ---------- brand wordmark ---------- */
+/* Both header and footer wrap the wordmark in <a class="logo">, and the
+   global a{color:var(--brand)} rule would paint "Prep" navy — leaving a navy
+   + blue pair instead of the intended ink + blue. Pin it back to ink. */
+.logo{color:var(--ink);text-decoration:none}
 .bm{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:inherit}
 .bm-logo{width:26px;height:26px;border-radius:50%;object-fit:cover;display:block;flex-shrink:0;
   background:var(--card);border:1.5px solid rgba(255,255,255,.35)}
@@ -82,7 +110,11 @@ a{color:var(--brand)}
   color:var(--card);font:800 13px "Sora",sans-serif}
 /* NEVER text-transform this — the mark is "PrepFusion", not "PREPFUSION". */
 .bm-text{font:600 15px "Sora",sans-serif;letter-spacing:-.02em;text-transform:none;white-space:nowrap}
-.bm-text b{font-weight:800}
+/* "Fusion" in the wordmark blue, "Prep" in whatever ink the context provides
+   (via .bm{color:inherit}) — header, footer, and nowhere else: the
+   cover-brand override right below keeps cover artwork monotone against its
+   own per-series gradient, where a fixed blue would clash. */
+.bm-text b{font-weight:800;color:var(--wordmark)}
 .bm-lg .bm-logo{width:38px;height:38px;border-radius:11px;border:0}
 .bm-lg .bm-mono::after,.bm-lg .bm-mono{font-size:19px;border-radius:11px}
 .bm-lg .bm-text{font:700 20px "Sora",sans-serif;letter-spacing:-.03em}
@@ -100,6 +132,12 @@ a{color:var(--brand)}
 .nav a,.nav .nav-soon{color:var(--ink-soft);text-decoration:none;font-size:14px;font-weight:500;
   padding:8px 13px;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
 .nav a:hover{color:var(--ink);background:var(--chipbg)}
+/* The section you're on. Deliberately a quiet highlight rather than a "Live"
+   badge: a LIVE pill beside the amber "Soon" pills would imply the library
+   could stop being live (it's the page you're reading), and Courses is
+   equally live without one — so the badge would raise a question instead of
+   answering the "where am I?" one that actually matters. */
+.nav a.nav-current{color:var(--ink);background:var(--chipbg);font-weight:650}
 .nav .ext{opacity:.55;font-size:11px}
 .nav .nav-soon{opacity:.7;cursor:default}
 .soon-tag{display:inline-flex;align-items:center;gap:5px;font:600 10px "IBM Plex Mono",monospace;
@@ -123,13 +161,22 @@ a{color:var(--brand)}
 /* ---------- hero ---------- */
 .hero{padding:80px 0 18px}
 .eyebrow{font:600 12px/1 "IBM Plex Mono",monospace;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--ink-soft);margin:0 0 22px;display:flex;align-items:center;gap:12px}
-.eyebrow::after{content:"";height:1px;flex:1;max-width:180px;background:var(--line-strong)}
+  color:var(--ink-soft);margin:0 0 22px;display:flex;align-items:center;gap:12px;
+  flex-wrap:wrap;row-gap:9px}
+.eyebrow::after{content:"";height:1px;flex:1;min-width:40px;max-width:180px;background:var(--line-strong)}
 .cycle{background:var(--ink);color:var(--paper);padding:3px 9px;border-radius:6px;letter-spacing:.14em}
-.hero h1{font:800 clamp(34px,6vw,78px)/1.08 "Sora",sans-serif;letter-spacing:-.04em;margin:0 0 26px;max-width:20ch}
-.hero h1 em{font-style:normal;position:relative;display:inline-block;z-index:0}
-.hero h1 em::after{content:"";position:absolute;left:-.04em;right:-.04em;bottom:.09em;height:.3em;
-  background:var(--accent);z-index:-1;border-radius:3px}
+/* Coverage pill — outlined so it reads as secondary to the solid cycle pill. */
+.coverage{border:1.5px solid var(--line-strong);padding:2px 9px;border-radius:6px;
+  letter-spacing:.12em;color:var(--ink-soft);white-space:nowrap}
+.hero h1{font:800 clamp(34px,6vw,78px)/1.08 "Sora",sans-serif;letter-spacing:-.04em;margin:0 0 26px;max-width:20ch;
+  animation:rise .6s cubic-bezier(.22,1,.36,1) both}
+/* Coloured, not highlighted. The old treatment painted an --accent bar
+   BEHIND the text, which at display size sat across the descenders and made
+   the phrase hard to read. Straight yellow text isn't the fix either —
+   --accent measures ~1.4:1 on this background, i.e. invisible. --accent-ink
+   is the readable end of the same family: a deep amber in light mode (7.4:1)
+   and the actual bright yellow in dark, where it clears 13:1. */
+.hero h1 em{font-style:normal;color:var(--accent-ink)}
 .hero-grid{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end}
 .lede{max-width:46ch;color:var(--ink-soft);font-size:18px;margin:0}
 .statbox{display:flex;border:1.5px solid var(--line-strong);border-radius:16px;overflow:hidden;background:var(--card)}
@@ -137,6 +184,17 @@ a{color:var(--brand)}
 .statbox div+div{border-left:1.5px solid var(--line-strong)}
 .statbox b{display:block;font:800 28px "Sora",sans-serif;letter-spacing:-.03em;line-height:1}
 .statbox span{font:500 11px "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+
+/* NexusX / SiliconX / PowerX — the trailing X picked out in accent amber,
+   wherever the series name renders as text (chip, shelf heading, cover
+   badge). --accent-ink, not --accent: see the contrast note where it's
+   defined — raw --accent as text is nearly invisible on these backgrounds. */
+.brand-x{color:var(--accent-ink)}
+/* An active/selected chip already turns solid-coloured with white text
+   (.chip[aria-pressed="true"]); a highlighted amber letter inside that
+   would read as a rendering glitch, not a flourish, so let it go plain
+   white there like the rest of the chip's text. */
+.chip[aria-pressed="true"] .brand-x{color:inherit}
 
 /* ---------- toolbar ---------- */
 .tools{display:flex;flex-wrap:wrap;gap:11px;align-items:center;padding:38px 0 6px}
@@ -181,7 +239,19 @@ main{padding-bottom:60px}
 /* ---------- cards ---------- */
 .card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);overflow:hidden;
   box-shadow:var(--shadow);display:flex;flex-direction:column;
-  transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s,border-color .2s}
+  transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s,border-color .2s;
+  animation:rise .5s cubic-bezier(.22,1,.36,1) both}
+/* Cards lift in as the shelf paints. nth-child restarts inside every .grid, so
+   each shelf cascades on its own instead of one delay ramp running the whole
+   page — and it caps at 6 so no card on a long shelf is left waiting. */
+.card:nth-child(2){animation-delay:.05s}
+.card:nth-child(3){animation-delay:.1s}
+.card:nth-child(4){animation-delay:.15s}
+.card:nth-child(5){animation-delay:.2s}
+.card:nth-child(n+6){animation-delay:.25s}
+/* translateX is deliberately small (10px) — enough to read as a left-to-right
+   drift alongside the lift, not a slide that fights the grid's own layout. */
+@keyframes rise{from{opacity:0;transform:translate(-10px,18px)}to{opacity:1;transform:none}}
 .card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lift);border-color:var(--line-strong)}
 .cover{height:215px;position:relative;overflow:hidden;display:flex;flex-direction:column;
   padding:20px 20px 16px 30px;color:#fff}
@@ -203,17 +273,31 @@ main{padding-bottom:60px}
 .qs.s{background:var(--accent);border-color:var(--accent);color:#3a2c00}
 .cover-series{font:600 10.5px "IBM Plex Mono",monospace;letter-spacing:.2em;text-transform:uppercase;
   opacity:.92;position:relative}
+/* Checked, not assumed: --accent as text against the Solutions covers'
+   brighter base gradient measures ~3.2-3.9:1 on several series — under the
+   4.5:1 minimum. Cover backgrounds vary per series AND per kind (10
+   combinations total), so unlike the chip/heading there's no single fixed
+   colour that's safe everywhere here. Same call already made for the brand
+   mark in this same cover-foot area: let it inherit rather than clash. */
+.cover-series .brand-x{color:inherit}
 .cover-rule{width:30px;height:2.5px;background:var(--accent);margin:11px 0 12px;position:relative;
   border-radius:2px;display:block}
 .cover-title{font:800 25px/1.13 "Sora",sans-serif;letter-spacing:-.03em;position:relative;
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* Questions vs Solutions, readable from the shelf. position:relative so it
+   sits above the cover's absolutely-positioned glyph/halftone, same as every
+   other cover element. */
+/* Sized to be read from the shelf, not squinted at: one word, so it can sit
+   close to the title's weight without competing with it. */
+.cover-kind{display:block;position:relative;margin-top:6px;
+  font:800 25px/1.13 "Sora",sans-serif;letter-spacing:-.03em;opacity:1}
 .cover-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;
   position:relative;gap:8px}
 .cover-brand .bm-text{font-size:12.5px;opacity:.92}
+.cover-brand .bm-text b{color:inherit}   /* stays white on the gradient — brand blue would clash per series */
 .cover-brand .bm-logo{width:20px;height:20px}
 .cover-brand .bm-mono{background:rgba(255,255,255,.9)}
 .cover-brand .bm-mono::after{color:var(--cv2);font-size:11px}
-.cover-cycle{font:600 9.5px "IBM Plex Mono",monospace;letter-spacing:.16em;text-transform:uppercase;opacity:.8}
 
 .card-body{padding:17px 19px 19px;display:flex;flex-direction:column;gap:11px;flex:1}
 .card-kind{margin:0;font:600 10px "IBM Plex Mono",monospace;letter-spacing:.16em;text-transform:uppercase;
@@ -271,6 +355,11 @@ body.soon .hero-grid{grid-template-columns:1fr}
 footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px}
 .footer-inner{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
   padding:34px 24px;max-width:1180px;margin:0 auto;color:var(--ink-soft);font-size:13.5px}
+.feedback-btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+  color:var(--ink);border:1.5px solid var(--line-strong);border-radius:10px;
+  padding:9px 15px;font:650 13px "Inter",sans-serif;white-space:nowrap;
+  transition:border-color .18s,transform .18s}
+.feedback-btn:hover{border-color:var(--ink);transform:translateY(-1px)}
 
 /* ---------- responsive: laptop -> tablet -> phone -> small phone ---------- */
 @media(max-width:1000px){
@@ -284,7 +373,19 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 }
 @media(max-width:760px){
   .wrap,.bar-in,.footer-inner{padding-left:16px;padding-right:16px}
-  .nav{display:none}
+  /* This used to be .nav{display:none}, which silently cost phone visitors
+     the entire section list — Library (the you-are-here marker), Courses,
+     and the two "Soon" pills. Hiding navigation is not a responsive fix; it
+     just makes the mobile site a different product. Instead the nav drops to
+     its own full-width row and scrolls sideways, exactly the pattern .chips
+     already uses further down. order:3 keeps the logo and theme toggle
+     together on the first row despite the nav sitting between them in the
+     DOM. */
+  .bar-in{flex-wrap:wrap;gap:12px}
+  .nav{order:3;flex-basis:100%;margin-left:0;flex-wrap:nowrap;
+       overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .nav::-webkit-scrollbar{display:none}
+  .nav a,.nav .nav-soon{flex:0 0 auto;font-size:13px;padding:7px 11px}
   .tt{margin-left:auto}
   .hero{padding-top:44px}
   .search{flex:1 1 100%;max-width:none}
@@ -298,6 +399,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   .grid{grid-template-columns:repeat(2,1fr);gap:13px}
   .cover{height:176px;padding:15px 15px 13px 24px}
   .cover-title{font-size:17.5px}
+  .cover-kind{margin-top:7px;font-size:17.5px}
   .glyph{font-size:112px}
   .qs{width:26px;height:26px;font-size:13px;top:12px;right:12px}
   .shelf-head h2{font-size:26px}
@@ -314,19 +416,27 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   .grid{gap:11px}
   .cover{height:150px;padding:13px 13px 11px 21px}
   .cover-title{font-size:15.5px;-webkit-line-clamp:2}
+  /* Tightest case in the whole design: a 2-line title on the shortest cover
+     ("Electronic Devices & Circuits") left only 8px above the brand mark. */
+  .cover-kind{margin-top:5px;font-size:15.5px;letter-spacing:-.03em}
   .glyph{font-size:92px}
   .card-meta{font-size:11px}
   .btn{font-size:12.5px;padding:10px 9px}
-  .cover-foot .cover-cycle{display:none}
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .card,.card:hover,.chip:hover,.btn:hover{transition:none;transform:none}
+  /* opacity:1 is not optional here — the rise animation starts the card at
+     zero, so killing the animation without restoring it hides the shelf. */
+  .card,.hero h1{animation:none;opacity:1}
   .soon-dot::after{animation:none;display:none}
 }
 @media print{
   .bar,.tools,.tt,.result-line,footer{display:none}
+  /* Same trap as reduced-motion: never let the entry animation leave a card
+     at opacity 0 on paper. */
   .card{break-inside:avoid;box-shadow:none}
+  .card,.hero h1{animation:none;opacity:1}
 }
 </style>
 </head>
@@ -336,7 +446,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   <div class="bar-in">
     <a class="logo" href="#top" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
     <nav class="nav">
-      <a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in.">Courses<span class="ext" aria-hidden="true">↗</span></a><span class="nav-soon" title="Search every GATE question by subject, topic and year.">Global Search<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span><span class="nav-soon" title="Printed editions of every series, delivered.">Bookstore<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span>
+      <a class="nav-current" href="#top" aria-current="page" title="You&#x27;re here — every previous-year paper, free to read.">Library</a><a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in.">Courses<span class="ext" aria-hidden="true">↗</span></a><span class="nav-soon" title="Search, save and improve every GATE question and solution.">Study Hub<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span><span class="nav-soon" title="Printed editions of every series, delivered.">Bookstore<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span>
     </nav>
     <button id="themeToggle" class="tt" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
       <svg class="i-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
@@ -346,16 +456,15 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 </header>
 
 <section class="wrap hero" id="top">
-  <p class="eyebrow"><span class="cycle">GATE 2027</span> PDF Library</p>
+  <p class="eyebrow"><span class="cycle">GATE 2027</span> PDF Library <span class="coverage">PYQ 1987–2026 (40 Years)</span></p>
   <div class="hero-grid">
     <div>
       <h1>Every question, every solution — <em>on one shelf.</em></h1>
       <p class="lede">Previous-year questions and detailed solutions across every series — free to read, free to download, no sign-up.</p>
     </div>
     <div class="statbox">
-      <div><b>27</b><span>Books</span></div>
-      <div><b>40</b><span>PDFs</span></div>
       <div><b>5</b><span>Series</span></div>
+      <div><b>40</b><span>PDFs</span></div>
     </div>
   </div>
   <div class="tools">
@@ -366,7 +475,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
     </label>
     <div class="chips" id="chips">
       <button class="chip" type="button" aria-pressed="true" data-chip="All"><span class="dot"></span>All</button>
-      <button class="chip" type="button" aria-pressed="false" data-chip="NexusX" style="--sc:#2563EB;--sc-d:#81ABFF"><span class="dot"></span>NexusX<span class="chip-count">6</span></button><button class="chip" type="button" aria-pressed="false" data-chip="SiliconX" style="--sc:#7C3AED;--sc-d:#C096FF"><span class="dot"></span>SiliconX<span class="chip-count">4</span></button><button class="chip" type="button" aria-pressed="false" data-chip="PowerX" style="--sc:#E11D48;--sc-d:#FF83A0"><span class="dot"></span>PowerX<span class="chip-count">6</span></button><button class="chip" type="button" aria-pressed="false" data-chip="Maths" style="--sc:#047857;--sc-d:#6BBAA3"><span class="dot"></span>Maths<span class="chip-count">9</span></button><button class="chip" type="button" aria-pressed="false" data-chip="Aptitude" style="--sc:#B45309;--sc-d:#E09D68"><span class="dot"></span>Aptitude<span class="chip-count">2</span></button>
+      <button class="chip" type="button" aria-pressed="false" data-chip="NexusX" style="--sc:#2563EB;--sc-d:#81ABFF"><span class="dot"></span>Nexus<span class="brand-x">X</span><span class="chip-count">6</span></button><button class="chip" type="button" aria-pressed="false" data-chip="SiliconX" style="--sc:#7C3AED;--sc-d:#C096FF"><span class="dot"></span>Silicon<span class="brand-x">X</span><span class="chip-count">4</span></button><button class="chip" type="button" aria-pressed="false" data-chip="PowerX" style="--sc:#E11D48;--sc-d:#FF83A0"><span class="dot"></span>Power<span class="brand-x">X</span><span class="chip-count">6</span></button><button class="chip" type="button" aria-pressed="false" data-chip="Maths" style="--sc:#047857;--sc-d:#6BBAA3"><span class="dot"></span>Maths<span class="chip-count">9</span></button><button class="chip" type="button" aria-pressed="false" data-chip="Aptitude" style="--sc:#B45309;--sc-d:#E09D68"><span class="dot"></span>Aptitude<span class="chip-count">2</span></button>
     </div>
     <div class="seg" id="seg" role="group" aria-label="Filter by type">
       <button type="button" aria-pressed="true" data-type="all">All</button>
@@ -383,7 +492,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
              style="--sc-h:#2563EB;--sc-hd:#81ABFF">
       <header class="shelf-head">
         <span class="shelf-sq"></span>
-        <h2>NexusX</h2>
+        <h2>Nexus<span class="brand-x">X</span></h2>
         <p class="shelf-tagline">All common subjects — Network, Analog, Digital, Signals &amp; Control.</p>
         <span class="shelf-count">6 books</span>
       </header>
@@ -392,78 +501,78 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-search="complete questions nexusx complete book v1 nexusx.pdf nexusx_v1.pdf"
                data-series="NexusX"
                data-types="questions">
-        <div class="cover gen" style="--cv1:#18419B;--cv2:#10244F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs" title="Questions">Q</span><span class="cover-series">NexusX</span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#18419B;--cv2:#10244F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs" title="Questions">Q</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">GATE Questions · All Subjects</p>
           <h3 class="card-title">Complete Questions</h3>
-          <p class="card-meta"><span>507.1 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>507.1 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"></div>
-          <div class="actions"><a class="btn solid is-dl" href="https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-nexusx/nexusx.pdf" title="Download — nexusx.pdf (303.0 MB)" target="_blank" rel="noopener" download><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 20h16"/></svg>Complete Book</a><a class="btn solid is-dl" href="https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-nexusx_v1/nexusx_v1.pdf" title="Download — nexusx_v1.pdf (204.1 MB)" target="_blank" rel="noopener" download><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 20h16"/></svg>V1</a></div>
+          <div class="actions"><a class="btn solid is-dl" href="https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-nexusx/nexusx.pdf" title="Read — nexusx.pdf (303.0 MB) · saves to your device" target="_blank" rel="noopener" download="NexusX Questions.pdf"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Complete Book</a><a class="btn solid is-dl" href="https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-nexusx_v1/nexusx_v1.pdf" title="Read — nexusx_v1.pdf (204.1 MB) · saves to your device" target="_blank" rel="noopener" download="V1.pdf"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>V1</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#2563EB;--sc-d:#81ABFF;--sc-tint:#E9EFFD;--sc-edge:#ACC4F7"
                data-search="network theory nexusx ec ee in network theory network theory network theory nexusx_gate_ec_nw_sol.pdf nexusx_network_theory_ee_solutions.pdf nexusx_network_theory_in_solutions.pdf"
                data-series="NexusX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">NexusX</span><span class="cover-rule"></span><span class="cover-title">Network Theory</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Network Theory</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Network Theory</h3>
-          <p class="card-meta"><span>65.3 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
-          <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span></div>
-          <div class="actions"><a class="btn tint" href="NexusX/Solutions/nexusx_gate_ec_nw_sol.pdf?v=7c58eb62ff36" title="Read — nexusx_gate_ec_nw_sol.pdf (29.5 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EC</a><a class="btn tint" href="NexusX/Solutions/nexusx_network_theory_ee_solutions.pdf?v=1ddcac3e0300" title="Read — nexusx_network_theory_ee_solutions.pdf (29.9 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="NexusX/Solutions/nexusx_network_theory_in_solutions.pdf?v=a5f257ae7f7e" title="Read — nexusx_network_theory_in_solutions.pdf (5.9 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
+          <p class="card-meta"><span>65.3 MB</span><span class="sep">·</span><span>PYQ</span></p>
+          <div class="badges"></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_gate_ec_nw_sol.pdf&amp;v=7c58eb62ff36&amp;t=Network+Theory+%E2%80%94+EC" title="Read — nexusx_gate_ec_nw_sol.pdf (29.5 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EC</a><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_network_theory_ee_solutions.pdf&amp;v=1ddcac3e0300&amp;t=Network+Theory+%E2%80%94+EE" title="Read — nexusx_network_theory_ee_solutions.pdf (29.9 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_network_theory_in_solutions.pdf&amp;v=a5f257ae7f7e&amp;t=Network+Theory+%E2%80%94+IN" title="Read — nexusx_network_theory_in_solutions.pdf (5.9 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#2563EB;--sc-d:#81ABFF;--sc-tint:#E9EFFD;--sc-edge:#ACC4F7"
                data-search="analog electronics nexusx ec ee in analog electronics analog electronics analog electronics nexusx_analog_ec_solutions.pdf nexusx_analog_ee_solutions.pdf nexusx_analog_in_solutions.pdf"
                data-series="NexusX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">NexusX</span><span class="cover-rule"></span><span class="cover-title">Analog Electronics</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Analog Electronics</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Analog Electronics</h3>
-          <p class="card-meta"><span>112.3 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
-          <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span></div>
-          <div class="actions"><a class="btn tint" href="NexusX/Solutions/nexusx_analog_ec_solutions.pdf?v=d5837882742e" title="Download — nexusx_analog_ec_solutions.pdf (65.7 MB)" target="_blank" rel="noopener" download><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 20h16"/></svg>EC</a><a class="btn tint" href="NexusX/Solutions/nexusx_analog_ee_solutions.pdf?v=47b17f1403ca" title="Read — nexusx_analog_ee_solutions.pdf (21.8 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="NexusX/Solutions/nexusx_analog_in_solutions.pdf?v=9b110e0c857d" title="Read — nexusx_analog_in_solutions.pdf (24.8 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
+          <p class="card-meta"><span>112.3 MB</span><span class="sep">·</span><span>PYQ</span></p>
+          <div class="badges"></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_analog_ec_solutions.pdf&amp;v=d5837882742e&amp;t=Analog+Electronics+%E2%80%94+EC" title="Read — nexusx_analog_ec_solutions.pdf (65.7 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EC</a><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_analog_ee_solutions.pdf&amp;v=47b17f1403ca&amp;t=Analog+Electronics+%E2%80%94+EE" title="Read — nexusx_analog_ee_solutions.pdf (21.8 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_analog_in_solutions.pdf&amp;v=9b110e0c857d&amp;t=Analog+Electronics+%E2%80%94+IN" title="Read — nexusx_analog_in_solutions.pdf (24.8 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#2563EB;--sc-d:#81ABFF;--sc-tint:#E9EFFD;--sc-edge:#ACC4F7"
                data-search="digital electronics nexusx ec ee in digital electronics digital electronics digital electronics nexusx_digital_ec_solutions.pdf nexusx_digital_ee_solutions.pdf nexusx_digital_in_solutions.pdf"
                data-series="NexusX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">NexusX</span><span class="cover-rule"></span><span class="cover-title">Digital Electronics</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Digital Electronics</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Digital Electronics</h3>
-          <p class="card-meta"><span>31.1 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
-          <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span></div>
-          <div class="actions"><a class="btn tint" href="NexusX/Solutions/nexusx_digital_ec_solutions.pdf?v=24522c2e6810" title="Read — nexusx_digital_ec_solutions.pdf (11.4 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EC</a><a class="btn tint" href="NexusX/Solutions/nexusx_digital_ee_solutions.pdf?v=105dc6c0f19e" title="Read — nexusx_digital_ee_solutions.pdf (15.8 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="NexusX/Solutions/nexusx_digital_in_solutions.pdf?v=80caa7d88a96" title="Read — nexusx_digital_in_solutions.pdf (3.9 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
+          <p class="card-meta"><span>31.1 MB</span><span class="sep">·</span><span>PYQ</span></p>
+          <div class="badges"></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_digital_ec_solutions.pdf&amp;v=24522c2e6810&amp;t=Digital+Electronics+%E2%80%94+EC" title="Read — nexusx_digital_ec_solutions.pdf (11.4 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EC</a><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_digital_ee_solutions.pdf&amp;v=105dc6c0f19e&amp;t=Digital+Electronics+%E2%80%94+EE" title="Read — nexusx_digital_ee_solutions.pdf (15.8 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_digital_in_solutions.pdf&amp;v=80caa7d88a96&amp;t=Digital+Electronics+%E2%80%94+IN" title="Read — nexusx_digital_in_solutions.pdf (3.9 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#2563EB;--sc-d:#81ABFF;--sc-tint:#E9EFFD;--sc-edge:#ACC4F7"
                data-search="signals &amp; systems nexusx ec ee in signals &amp; systems signals &amp; systems signals &amp; systems nexusx_signals_ec_solutions.pdf nexusx_signals_ee_solutions.pdf nexusx_signals_in_solutions.pdf"
                data-series="NexusX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">NexusX</span><span class="cover-rule"></span><span class="cover-title">Signals &amp; Systems</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Signals &amp; Systems</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Signals &amp; Systems</h3>
-          <p class="card-meta"><span>8.5 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
-          <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span></div>
-          <div class="actions"><a class="btn tint" href="NexusX/Solutions/nexusx_signals_ec_solutions.pdf?v=f842fc7c8559" title="Read — nexusx_signals_ec_solutions.pdf (3.2 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EC</a><a class="btn tint" href="NexusX/Solutions/nexusx_signals_ee_solutions.pdf?v=f0e338b12b27" title="Read — nexusx_signals_ee_solutions.pdf (2.0 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="NexusX/Solutions/nexusx_signals_in_solutions.pdf?v=1d2424fec725" title="Read — nexusx_signals_in_solutions.pdf (3.4 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
+          <p class="card-meta"><span>8.5 MB</span><span class="sep">·</span><span>PYQ</span></p>
+          <div class="badges"></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_signals_ec_solutions.pdf&amp;v=f842fc7c8559&amp;t=Signals+%26+Systems+%E2%80%94+EC" title="Read — nexusx_signals_ec_solutions.pdf (3.2 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EC</a><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_signals_ee_solutions.pdf&amp;v=f0e338b12b27&amp;t=Signals+%26+Systems+%E2%80%94+EE" title="Read — nexusx_signals_ee_solutions.pdf (2.0 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_signals_in_solutions.pdf&amp;v=1d2424fec725&amp;t=Signals+%26+Systems+%E2%80%94+IN" title="Read — nexusx_signals_in_solutions.pdf (3.4 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#2563EB;--sc-d:#81ABFF;--sc-tint:#E9EFFD;--sc-edge:#ACC4F7"
                data-search="control systems nexusx ec ee in control systems control systems control systems nexusx_control_systems_ec_solutions.pdf nexusx_control_ee_solutions.pdf nexusx_control_in_solutions.pdf"
                data-series="NexusX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">NexusX</span><span class="cover-rule"></span><span class="cover-title">Control Systems</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Control Systems</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Control Systems</h3>
-          <p class="card-meta"><span>34.0 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
-          <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span></div>
-          <div class="actions"><a class="btn tint" href="NexusX/Solutions/nexusx_control_systems_ec_solutions.pdf?v=1e182afddff0" title="Read — nexusx_control_systems_ec_solutions.pdf (13.0 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EC</a><a class="btn tint" href="NexusX/Solutions/nexusx_control_ee_solutions.pdf?v=baf8afea4799" title="Read — nexusx_control_ee_solutions.pdf (14.6 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="NexusX/Solutions/nexusx_control_in_solutions.pdf?v=746f43d979fd" title="Read — nexusx_control_in_solutions.pdf (6.4 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
+          <p class="card-meta"><span>34.0 MB</span><span class="sep">·</span><span>PYQ</span></p>
+          <div class="badges"></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_control_systems_ec_solutions.pdf&amp;v=1e182afddff0&amp;t=Control+Systems+%E2%80%94+EC" title="Read — nexusx_control_systems_ec_solutions.pdf (13.0 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EC</a><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_control_ee_solutions.pdf&amp;v=baf8afea4799&amp;t=Control+Systems+%E2%80%94+EE" title="Read — nexusx_control_ee_solutions.pdf (14.6 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="read.html?f=NexusX%2FSolutions%2Fnexusx_control_in_solutions.pdf&amp;v=746f43d979fd&amp;t=Control+Systems+%E2%80%94+IN" title="Read — nexusx_control_in_solutions.pdf (6.4 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
         </div>
       </article>
       </div>
@@ -472,7 +581,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
              style="--sc-h:#7C3AED;--sc-hd:#C096FF">
       <header class="shelf-head">
         <span class="shelf-sq"></span>
-        <h2>SiliconX</h2>
+        <h2>Silicon<span class="brand-x">X</span></h2>
         <p class="shelf-tagline">Core electronics — EDC, EMFT &amp; Communication.</p>
         <span class="shelf-count">4 books</span>
       </header>
@@ -481,52 +590,52 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-search="complete questions siliconx complete book siliconx.pdf"
                data-series="SiliconX"
                data-types="questions">
-        <div class="cover gen" style="--cv1:#52269C;--cv2:#261A4F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs" title="Questions">Q</span><span class="cover-series">SiliconX</span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#52269C;--cv2:#261A4F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs" title="Questions">Q</span><span class="cover-series">Silicon<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">GATE Questions · All Subjects</p>
           <h3 class="card-title">Complete Questions</h3>
-          <p class="card-meta"><span>28.7 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>28.7 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"></div>
-          <div class="actions"><a class="btn solid" href="SiliconX/Questions/siliconx.pdf?v=e64e21366670" title="Read — siliconx.pdf (28.7 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn solid" href="read.html?f=SiliconX%2FQuestions%2Fsiliconx.pdf&amp;v=e64e21366670&amp;t=SiliconX+Questions" title="Read — siliconx.pdf (28.7 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#7C3AED;--sc-d:#C096FF;--sc-tint:#F2EBFD;--sc-edge:#CDB4F8"
                data-search="electronic devices &amp; circuits siliconx ec electronic devices &amp; circuits siliconx_edc_ec_solutions.pdf"
                data-series="SiliconX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#7C3AED;--cv2:#36216E"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs s" title="Solutions">S</span><span class="cover-series">SiliconX</span><span class="cover-rule"></span><span class="cover-title">Electronic Devices &amp; Circuits</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#7C3AED;--cv2:#36216E"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Silicon<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Electronic Devices &amp; Circuits</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Electronic Devices &amp; Circuits</h3>
-          <p class="card-meta"><span>1.6 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>1.6 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EC</span></div>
-          <div class="actions"><a class="btn tint" href="SiliconX/Solutions/siliconx_edc_ec_solutions.pdf?v=45c648f016b4" title="Read — siliconx_edc_ec_solutions.pdf (1.6 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=SiliconX%2FSolutions%2Fsiliconx_edc_ec_solutions.pdf&amp;v=45c648f016b4&amp;t=Electronic+Devices+%26+Circuits+%E2%80%94+EC" title="Read — siliconx_edc_ec_solutions.pdf (1.6 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#7C3AED;--sc-d:#C096FF;--sc-tint:#F2EBFD;--sc-edge:#CDB4F8"
                data-search="electromagnetic fields siliconx ec electromagnetic fields siliconx_emft_ec_solutions.pdf"
                data-series="SiliconX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#7C3AED;--cv2:#36216E"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs s" title="Solutions">S</span><span class="cover-series">SiliconX</span><span class="cover-rule"></span><span class="cover-title">Electromagnetic Fields</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#7C3AED;--cv2:#36216E"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Silicon<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Electromagnetic Fields</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Electromagnetic Fields</h3>
-          <p class="card-meta"><span>3.0 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>3.0 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EC</span></div>
-          <div class="actions"><a class="btn tint" href="SiliconX/Solutions/siliconx_emft_ec_solutions.pdf?v=4508d846822c" title="Read — siliconx_emft_ec_solutions.pdf (3.0 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=SiliconX%2FSolutions%2Fsiliconx_emft_ec_solutions.pdf&amp;v=4508d846822c&amp;t=Electromagnetic+Fields+%E2%80%94+EC" title="Read — siliconx_emft_ec_solutions.pdf (3.0 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#7C3AED;--sc-d:#C096FF;--sc-tint:#F2EBFD;--sc-edge:#CDB4F8"
                data-search="communication systems siliconx ec communication systems siliconx_communications_ec_solutions.pdf"
                data-series="SiliconX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#7C3AED;--cv2:#36216E"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs s" title="Solutions">S</span><span class="cover-series">SiliconX</span><span class="cover-rule"></span><span class="cover-title">Communication Systems</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#7C3AED;--cv2:#36216E"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Silicon<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Communication Systems</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Communication Systems</h3>
-          <p class="card-meta"><span>24.6 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>24.6 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EC</span></div>
-          <div class="actions"><a class="btn tint" href="SiliconX/Solutions/siliconx_communications_ec_solutions.pdf?v=a257c8025e73" title="Read — siliconx_communications_ec_solutions.pdf (24.6 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=SiliconX%2FSolutions%2Fsiliconx_communications_ec_solutions.pdf&amp;v=a257c8025e73&amp;t=Communication+Systems+%E2%80%94+EC" title="Read — siliconx_communications_ec_solutions.pdf (24.6 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       </div>
@@ -535,7 +644,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
              style="--sc-h:#E11D48;--sc-hd:#FF83A0">
       <header class="shelf-head">
         <span class="shelf-sq"></span>
-        <h2>PowerX</h2>
+        <h2>Power<span class="brand-x">X</span></h2>
         <p class="shelf-tagline">Core electrical — Machines, Power Systems, Power Electronics &amp; Measurements.</p>
         <span class="shelf-count">6 books</span>
       </header>
@@ -544,78 +653,78 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-search="complete questions powerx complete book powerx.pdf"
                data-series="PowerX"
                data-types="questions">
-        <div class="cover gen" style="--cv1:#941330;--cv2:#3F1226"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs" title="Questions">Q</span><span class="cover-series">PowerX</span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#941330;--cv2:#3F1226"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs" title="Questions">Q</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">GATE Questions · All Subjects</p>
           <h3 class="card-title">Complete Questions</h3>
-          <p class="card-meta"><span>114.9 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>114.9 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"></div>
-          <div class="actions"><a class="btn solid is-dl" href="https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-powerx/powerx.pdf" title="Download — powerx.pdf (114.9 MB)" target="_blank" rel="noopener" download><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 20h16"/></svg>Download</a></div>
+          <div class="actions"><a class="btn solid is-dl" href="https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-powerx/powerx.pdf" title="Read — powerx.pdf (114.9 MB) · saves to your device" target="_blank" rel="noopener" download="PowerX Questions.pdf"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#E11D48;--sc-d:#FF83A0;--sc-tint:#FCE8ED;--sc-edge:#F4A9B9"
                data-search="electrical machines powerx ee in electrical machines electrical machines powerx_machines_ee_solutions.pdf powerx_machines_in_solutions.pdf"
                data-series="PowerX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">PowerX</span><span class="cover-rule"></span><span class="cover-title">Electrical Machines</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Electrical Machines</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Electrical Machines</h3>
-          <p class="card-meta"><span>27.9 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
-          <div class="badges"><span class="badge">EE</span><span class="badge">IN</span></div>
-          <div class="actions"><a class="btn tint" href="PowerX/Solutions/powerx_machines_ee_solutions.pdf?v=de88a5c8b8a0" title="Read — powerx_machines_ee_solutions.pdf (26.9 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="PowerX/Solutions/powerx_machines_in_solutions.pdf?v=6efb9618dc52" title="Read — powerx_machines_in_solutions.pdf (1.0 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
+          <p class="card-meta"><span>27.9 MB</span><span class="sep">·</span><span>PYQ</span></p>
+          <div class="badges"></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=PowerX%2FSolutions%2Fpowerx_machines_ee_solutions.pdf&amp;v=de88a5c8b8a0&amp;t=Electrical+Machines+%E2%80%94+EE" title="Read — powerx_machines_ee_solutions.pdf (26.9 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="read.html?f=PowerX%2FSolutions%2Fpowerx_machines_in_solutions.pdf&amp;v=6efb9618dc52&amp;t=Electrical+Machines+%E2%80%94+IN" title="Read — powerx_machines_in_solutions.pdf (1.0 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#E11D48;--sc-d:#FF83A0;--sc-tint:#FCE8ED;--sc-edge:#F4A9B9"
                data-search="power systems powerx ee power systems powerx_power_systems_ee_solutions.pdf"
                data-series="PowerX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">PowerX</span><span class="cover-rule"></span><span class="cover-title">Power Systems</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Power Systems</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Power Systems</h3>
-          <p class="card-meta"><span>20.8 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>20.8 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EE</span></div>
-          <div class="actions"><a class="btn tint" href="PowerX/Solutions/powerx_power_systems_ee_solutions.pdf?v=df9af589e0d2" title="Read — powerx_power_systems_ee_solutions.pdf (20.8 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=PowerX%2FSolutions%2Fpowerx_power_systems_ee_solutions.pdf&amp;v=df9af589e0d2&amp;t=Power+Systems+%E2%80%94+EE" title="Read — powerx_power_systems_ee_solutions.pdf (20.8 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#E11D48;--sc-d:#FF83A0;--sc-tint:#FCE8ED;--sc-edge:#F4A9B9"
                data-search="power electronics powerx ee power electronics powerx_power_electronics_ee_solutions.pdf"
                data-series="PowerX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">PowerX</span><span class="cover-rule"></span><span class="cover-title">Power Electronics</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Power Electronics</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Power Electronics</h3>
-          <p class="card-meta"><span>7.6 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>7.6 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EE</span></div>
-          <div class="actions"><a class="btn tint" href="PowerX/Solutions/powerx_power_electronics_ee_solutions.pdf?v=fd1c3f6aea6d" title="Read — powerx_power_electronics_ee_solutions.pdf (7.6 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=PowerX%2FSolutions%2Fpowerx_power_electronics_ee_solutions.pdf&amp;v=fd1c3f6aea6d&amp;t=Power+Electronics+%E2%80%94+EE" title="Read — powerx_power_electronics_ee_solutions.pdf (7.6 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#E11D48;--sc-d:#FF83A0;--sc-tint:#FCE8ED;--sc-edge:#F4A9B9"
                data-search="electromagnetic fields powerx ee in electromagnetic fields electromagnetic fields powerx_emft_ee_solutions.pdf powerx_emft_in_solutions.pdf"
                data-series="PowerX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">PowerX</span><span class="cover-rule"></span><span class="cover-title">Electromagnetic Fields</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Electromagnetic Fields</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Electromagnetic Fields</h3>
-          <p class="card-meta"><span>8.3 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
-          <div class="badges"><span class="badge">EE</span><span class="badge">IN</span></div>
-          <div class="actions"><a class="btn tint" href="PowerX/Solutions/powerx_emft_ee_solutions.pdf?v=cbf4ccf5feac" title="Read — powerx_emft_ee_solutions.pdf (7.6 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="PowerX/Solutions/powerx_emft_in_solutions.pdf?v=61c17ae9fdf2" title="Read — powerx_emft_in_solutions.pdf (685 KB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
+          <p class="card-meta"><span>8.3 MB</span><span class="sep">·</span><span>PYQ</span></p>
+          <div class="badges"></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=PowerX%2FSolutions%2Fpowerx_emft_ee_solutions.pdf&amp;v=cbf4ccf5feac&amp;t=Electromagnetic+Fields+%E2%80%94+EE" title="Read — powerx_emft_ee_solutions.pdf (7.6 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>EE</a><a class="btn tint" href="read.html?f=PowerX%2FSolutions%2Fpowerx_emft_in_solutions.pdf&amp;v=61c17ae9fdf2&amp;t=Electromagnetic+Fields+%E2%80%94+IN" title="Read — powerx_emft_in_solutions.pdf (685 KB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>IN</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#E11D48;--sc-d:#FF83A0;--sc-tint:#FCE8ED;--sc-edge:#F4A9B9"
                data-search="measurements powerx ee measurements powerx_measurements_ee_solutions.pdf"
                data-series="PowerX"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">PowerX</span><span class="cover-rule"></span><span class="cover-title">Measurements</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Measurements</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Measurements</h3>
-          <p class="card-meta"><span>15.7 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>15.7 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EE</span></div>
-          <div class="actions"><a class="btn tint" href="PowerX/Solutions/powerx_measurements_ee_solutions.pdf?v=30efd398947d" title="Read — powerx_measurements_ee_solutions.pdf (15.7 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=PowerX%2FSolutions%2Fpowerx_measurements_ee_solutions.pdf&amp;v=30efd398947d&amp;t=Measurements+%E2%80%94+EE" title="Read — powerx_measurements_ee_solutions.pdf (15.7 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       </div>
@@ -633,117 +742,117 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-search="complete questions maths ec ee in cs me ce ch pi prepfusion engineering prepfusion_engineering_mathematics.pdf"
                data-series="Maths"
                data-types="questions">
-        <div class="cover gen" style="--cv1:#034F39;--cv2:#08292A"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs" title="Questions">Q</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#034F39;--cv2:#08292A"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs" title="Questions">Q</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">GATE Questions · All Topics</p>
           <h3 class="card-title">Complete Questions</h3>
-          <p class="card-meta"><span>16.5 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>16.5 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span><span class="badge">CS</span><span class="badge">ME</span><span class="badge">CE</span><span class="badge">CH</span><span class="badge">PI</span></div>
-          <div class="actions"><a class="btn solid" href="Maths/Questions/PrepFusion_Engineering_Mathematics.pdf?v=15e00f24ef57" title="Read — PrepFusion_Engineering_Mathematics.pdf (16.5 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn solid" href="read.html?f=Maths%2FQuestions%2FPrepFusion_Engineering_Mathematics.pdf&amp;v=15e00f24ef57&amp;t=Prepfusion+Engineering" title="Read — PrepFusion_Engineering_Mathematics.pdf (16.5 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#047857;--sc-d:#6BBAA3;--sc-tint:#E6F2EE;--sc-edge:#A0CCBF"
                data-search="linear algebra maths ec ee in cs me ce ch pi linear algebra maths_linear_solutions.pdf"
                data-series="Maths"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Linear Algebra</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Linear Algebra</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Linear Algebra</h3>
-          <p class="card-meta"><span>1.1 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>1.1 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span><span class="badge">CS</span><span class="badge">ME</span><span class="badge">CE</span><span class="badge">CH</span><span class="badge">PI</span></div>
-          <div class="actions"><a class="btn tint" href="Maths/Solutions/maths_linear_solutions.pdf?v=cc439be7bbe8" title="Read — maths_linear_solutions.pdf (1.1 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=Maths%2FSolutions%2Fmaths_linear_solutions.pdf&amp;v=cc439be7bbe8&amp;t=Linear+Algebra" title="Read — maths_linear_solutions.pdf (1.1 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#047857;--sc-d:#6BBAA3;--sc-tint:#E6F2EE;--sc-edge:#A0CCBF"
                data-search="calculus maths ec ee in cs me ce ch pi calculus maths_calculus_solutions.pdf"
                data-series="Maths"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Calculus</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Calculus</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Calculus</h3>
-          <p class="card-meta"><span>3.5 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>3.5 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span><span class="badge">CS</span><span class="badge">ME</span><span class="badge">CE</span><span class="badge">CH</span><span class="badge">PI</span></div>
-          <div class="actions"><a class="btn tint" href="Maths/Solutions/maths_calculus_solutions.pdf?v=53d41cf8c701" title="Read — maths_calculus_solutions.pdf (3.5 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=Maths%2FSolutions%2Fmaths_calculus_solutions.pdf&amp;v=53d41cf8c701&amp;t=Calculus" title="Read — maths_calculus_solutions.pdf (3.5 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#047857;--sc-d:#6BBAA3;--sc-tint:#E6F2EE;--sc-edge:#A0CCBF"
                data-search="probability &amp; statistics maths ec ee in cs me ce ch pi probability &amp; statistics maths_probability_solutions.pdf"
                data-series="Maths"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Probability &amp; Statistics</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Probability &amp; Statistics</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Probability &amp; Statistics</h3>
-          <p class="card-meta"><span>2.1 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>2.1 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span><span class="badge">CS</span><span class="badge">ME</span><span class="badge">CE</span><span class="badge">CH</span><span class="badge">PI</span></div>
-          <div class="actions"><a class="btn tint" href="Maths/Solutions/maths_probability_solutions.pdf?v=5800d0cb5a22" title="Read — maths_probability_solutions.pdf (2.1 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=Maths%2FSolutions%2Fmaths_probability_solutions.pdf&amp;v=5800d0cb5a22&amp;t=Probability+%26+Statistics" title="Read — maths_probability_solutions.pdf (2.1 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#047857;--sc-d:#6BBAA3;--sc-tint:#E6F2EE;--sc-edge:#A0CCBF"
                data-search="vector calculus maths ec ee me ce ch pi vector calculus maths_vector_solutions.pdf"
                data-series="Maths"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Vector Calculus</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Vector Calculus</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Vector Calculus</h3>
-          <p class="card-meta"><span>1.3 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>1.3 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">ME</span><span class="badge">CE</span><span class="badge">CH</span><span class="badge">PI</span></div>
-          <div class="actions"><a class="btn tint" href="Maths/Solutions/maths_vector_solutions.pdf?v=20cc91e5f39e" title="Read — maths_vector_solutions.pdf (1.3 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=Maths%2FSolutions%2Fmaths_vector_solutions.pdf&amp;v=20cc91e5f39e&amp;t=Vector+Calculus" title="Read — maths_vector_solutions.pdf (1.3 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#047857;--sc-d:#6BBAA3;--sc-tint:#E6F2EE;--sc-edge:#A0CCBF"
                data-search="complex variables maths ec ee in me ch pi complex variables maths_complex_solutions.pdf"
                data-series="Maths"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Complex Variables</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Complex Variables</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Complex Variables</h3>
-          <p class="card-meta"><span>945 KB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>945 KB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span><span class="badge">ME</span><span class="badge">CH</span><span class="badge">PI</span></div>
-          <div class="actions"><a class="btn tint" href="Maths/Solutions/maths_complex_solutions.pdf?v=20a30bd5d26d" title="Read — maths_complex_solutions.pdf (945 KB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=Maths%2FSolutions%2Fmaths_complex_solutions.pdf&amp;v=20a30bd5d26d&amp;t=Complex+Variables" title="Read — maths_complex_solutions.pdf (945 KB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#047857;--sc-d:#6BBAA3;--sc-tint:#E6F2EE;--sc-edge:#A0CCBF"
                data-search="differential equations maths ec ee in me ce ch pi differential equations maths_differential_equations_solutions.pdf"
                data-series="Maths"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Differential Equations</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Differential Equations</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Differential Equations</h3>
-          <p class="card-meta"><span>1.1 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>1.1 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span><span class="badge">ME</span><span class="badge">CE</span><span class="badge">CH</span><span class="badge">PI</span></div>
-          <div class="actions"><a class="btn tint" href="Maths/Solutions/maths_differential_equations_solutions.pdf?v=481579ab6631" title="Read — maths_differential_equations_solutions.pdf (1.1 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=Maths%2FSolutions%2Fmaths_differential_equations_solutions.pdf&amp;v=481579ab6631&amp;t=Differential+Equations" title="Read — maths_differential_equations_solutions.pdf (1.1 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#047857;--sc-d:#6BBAA3;--sc-tint:#E6F2EE;--sc-edge:#A0CCBF"
                data-search="numerical methods maths in me ce ch pi numerical methods maths_numerical_solutions.pdf"
                data-series="Maths"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Numerical Methods</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Numerical Methods</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Numerical Methods</h3>
-          <p class="card-meta"><span>2.7 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>2.7 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">IN</span><span class="badge">ME</span><span class="badge">CE</span><span class="badge">CH</span><span class="badge">PI</span></div>
-          <div class="actions"><a class="btn tint" href="Maths/Solutions/maths_numerical_solutions.pdf?v=e4982f13b671" title="Read — maths_numerical_solutions.pdf (2.7 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=Maths%2FSolutions%2Fmaths_numerical_solutions.pdf&amp;v=e4982f13b671&amp;t=Numerical+Methods" title="Read — maths_numerical_solutions.pdf (2.7 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#047857;--sc-d:#6BBAA3;--sc-tint:#E6F2EE;--sc-edge:#A0CCBF"
                data-search="transform theory maths me ce ch pi transform theory maths_transform_theory_solutions.pdf"
                data-series="Maths"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Transform Theory</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Transform Theory</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions</p>
+          
           <h3 class="card-title">Transform Theory</h3>
-          <p class="card-meta"><span>1.1 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>1.1 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"><span class="badge">ME</span><span class="badge">CE</span><span class="badge">CH</span><span class="badge">PI</span></div>
-          <div class="actions"><a class="btn tint" href="Maths/Solutions/maths_transform_theory_solutions.pdf?v=5928c0395ec4" title="Read — maths_transform_theory_solutions.pdf (1.1 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=Maths%2FSolutions%2Fmaths_transform_theory_solutions.pdf&amp;v=5928c0395ec4&amp;t=Transform+Theory" title="Read — maths_transform_theory_solutions.pdf (1.1 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       </div>
@@ -761,26 +870,26 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-search="complete questions aptitude complete book apti.pdf"
                data-series="Aptitude"
                data-types="questions">
-        <div class="cover gen" style="--cv1:#773706;--cv2:#342016"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">A</span><span class="qs" title="Questions">Q</span><span class="cover-series">Aptitude</span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#773706;--cv2:#342016"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">A</span><span class="qs" title="Questions">Q</span><span class="cover-series">Aptitude</span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">GATE Questions · All Branches</p>
           <h3 class="card-title">Complete Questions</h3>
-          <p class="card-meta"><span>34.4 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>34.4 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"></div>
-          <div class="actions"><a class="btn solid" href="Aptitude/Questions/apti.pdf?v=80a2b839770b" title="Read — apti.pdf (34.4 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn solid" href="read.html?f=Aptitude%2FQuestions%2Fapti.pdf&amp;v=80a2b839770b&amp;t=Aptitude+Questions" title="Read — apti.pdf (34.4 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#B45309;--sc-d:#E09D68;--sc-tint:#F8EEE6;--sc-edge:#E2BEA2"
                data-search="complete solutions aptitude complete book apti_solutions.pdf"
                data-series="Aptitude"
                data-types="solutions">
-        <div class="cover gen" style="--cv1:#B45309;--cv2:#4B2B17"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">A</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Aptitude</span><span class="cover-rule"></span><span class="cover-title">Complete Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span><span class="cover-cycle">GATE 2027</span></span></div>
+        <div class="cover gen" style="--cv1:#B45309;--cv2:#4B2B17"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">A</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Aptitude</span><span class="cover-rule"></span><span class="cover-title">Complete Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">GATE Solutions · All Branches</p>
+          <p class="card-kind">Solutions · All Branches</p>
           <h3 class="card-title">Complete Solutions</h3>
-          <p class="card-meta"><span>19.5 MB</span><span class="sep">·</span><span>GATE 2027</span></p>
+          <p class="card-meta"><span>19.5 MB</span><span class="sep">·</span><span>PYQ</span></p>
           <div class="badges"></div>
-          <div class="actions"><a class="btn tint" href="Aptitude/Solutions/apti_solutions.pdf?v=a40b1db219a0" title="Read — apti_solutions.pdf (19.5 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn tint" href="read.html?f=Aptitude%2FSolutions%2Fapti_solutions.pdf&amp;v=a40b1db219a0&amp;t=Aptitude+Solutions" title="Read — apti_solutions.pdf (19.5 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       </div>
@@ -795,6 +904,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 <footer>
   <div class="footer-inner">
     <a class="logo" href="#top" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
+    <a class="feedback-btn" href="https://forms.gle/KjeJHFvppH4TDoLu6" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-4-.9L3 21l1.9-4.5A8.4 8.4 0 0 1 4 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8 8.4Z"/></svg>Share feedback</a>
     <span>© 2026 PrepFusion · All rights reserved</span>
   </div>
 </footer>
