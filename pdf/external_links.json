@@ -7,6 +7,14 @@
       "target_dir": "NexusX/Questions"
     }
   },
+  "pdf-nexusx_v1": {
+    "nexusx_v1.pdf": {
+      "download_url": "https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-nexusx_v1/nexusx_v1.pdf",
+      "size_bytes": 214063118,
+      "tag": "pdf-nexusx_v1",
+      "target_dir": "NexusX/Questions"
+    }
+  },
   "pdf-powerx": {
     "powerx.pdf": {
       "download_url": "https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-powerx/powerx.pdf",
