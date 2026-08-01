@@ -585,9 +585,19 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 /* A year with an unusually tall bar is very likely a real GATE fact (that
    year ran multiple shifts with different papers for this branch), not a
    data bug — this heads off "why is 2014 so much higher?" without
-   asserting which specific years, which isn't reliably sourceable. */
-.analytics-info{display:inline-flex;color:var(--ink-faint);cursor:help;flex:none}
-.analytics-info:hover,.analytics-info:focus-visible{color:var(--sc-use,var(--ink-soft))}
+   asserting which specific years, which isn't reliably sourceable.
+   Click/tap-toggled (JS adds .is-open), not hover-only: hover tooltips
+   need sustained mouse-over (slow on desktop) and don't exist at all on
+   touch, where a tap did nothing. */
+.analytics-info{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  background:none;border:0;padding:2px;color:var(--ink-faint);cursor:pointer;flex:none;border-radius:4px}
+.analytics-info:hover,.analytics-info.is-open{color:var(--sc-use,var(--ink-soft))}
+.analytics-info-note{display:none;position:absolute;top:100%;right:0;margin-top:8px;width:260px;
+  max-width:calc(100vw - 48px);padding:10px 12px;border-radius:8px;background:var(--card);
+  border:1px solid var(--line);box-shadow:0 12px 28px -8px rgba(0,0,0,.35);
+  font:400 12px/1.5 "Inter",sans-serif;color:var(--ink-soft);text-align:left;
+  cursor:default;z-index:5}
+.analytics-info.is-open .analytics-info-note{display:block}
 /* Lives above the chart card, not squeezed into its header — the text
    grows with selection depth ("Subject (Branch): Chapter") and needs room
    to wrap onto a second line rather than fight the chart title for space. */
@@ -1154,9 +1164,15 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
         <div class="analytics-chart-card">
           <div class="analytics-chart-header">
             <h4>Question Frequency by Exam Year</h4>
-            <span class="analytics-info" tabindex="0" title="Some years show noticeably more questions than others because GATE ran multiple shifts with different question papers that year for high-volume branches like EC/EE — more shifts means more distinct questions counted for that year, not a change in how the exam was weighted.">
+            <!-- A native title="" tooltip needs sustained hover (slow/unreliable
+                 on desktop, and touch devices have no hover at all — tapping did
+                 nothing, which is what was reported). This is a real toggled
+                 popover instead: click OR tap both open it, works identically
+                 on every input type. -->
+            <button type="button" class="analytics-info" aria-expanded="false" aria-describedby="analyticsInfoNote">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.8" r="0.5" fill="currentColor" stroke="none"/></svg>
-            </span>
+              <span class="analytics-info-note" id="analyticsInfoNote" role="tooltip">Some years show noticeably more questions than others because GATE ran multiple shifts with different question papers that year for high-volume branches like EC/EE — more shifts means more distinct questions counted for that year, not a change in how the exam was weighted.</span>
+            </button>
           </div>
           <div class="analytics-chart-container">
             <canvas id="analyticsChart"></canvas>
@@ -1346,17 +1362,60 @@ var activeAnalyticsChart = null;
   if(collapseBtn) collapseBtn.addEventListener('click', function(){ setAllNodes(false); });
 })();
 
-function computeTreeSummary(files){
+(function(){
+  var infoBtn = document.querySelector('.analytics-info');
+  if(!infoBtn) return;
+  infoBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = !infoBtn.classList.contains('is-open');
+    infoBtn.classList.toggle('is-open', open);
+    infoBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  // Tapping/clicking anywhere else, or Escape, closes it — otherwise it's
+  // stuck open until the whole modal closes.
+  document.addEventListener('click', function(){
+    infoBtn.classList.remove('is-open');
+    infoBtn.setAttribute('aria-expanded', 'false');
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      infoBtn.classList.remove('is-open');
+      infoBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+
+// What each tree DEPTH actually means, per series — verified against the
+// real extracted trees (docs/QUESTION_ANALYTICS_HANDOFF.md §5), not
+// assumed. A fixed depth-position label ("depth 0 is always Subject")
+// broke as soon as a series' real shape differed:
+//   NexusX/PowerX: Subject > Branch > Chapter  (3 levels before Question)
+//   SiliconX:      Subject > Chapter            (2 levels — no Branch node
+//                  exists in this tree at all; SiliconX being EC-only is
+//                  real, but it isn't something this tree encodes, so it
+//                  isn't reported here rather than being invented)
+//   Maths:         Chapter > Branch             (2 levels — the WHOLE
+//                  book is one subject, Maths; "Linear Algebra" etc. are
+//                  its chapters, not separate subjects)
+var SERIES_LEVEL_LABELS = {
+  NexusX:   [['Subject', 'Subjects'], ['Branch', 'Branches'], ['Chapter', 'Chapters']],
+  PowerX:   [['Subject', 'Subjects'], ['Branch', 'Branches'], ['Chapter', 'Chapters']],
+  SiliconX: [['Subject', 'Subjects'], ['Chapter', 'Chapters']],
+  Maths:    [['Chapter', 'Chapters'], ['Branch', 'Branches']]
+};
+
+function computeTreeSummary(files, series){
   // Node count per depth, PLUS the set of distinct titles at that depth —
-  // "EC" is the exact same branch name repeated under every subject
+  // "EC" is the exact same branch repeated under every subject/chapter
   // (Network Theory's EC, Analog Electronics' EC, ...), so a raw node
-  // count reads as wrong for Branches specifically ("15 Branches" when
-  // there are really only 3: EC/EE/IN). Subjects and Chapters stay a raw
-  // node count on purpose — two DIFFERENT chapters coincidentally sharing
-  // a generic name (e.g. "V. Miscellaneous Topics") are still two real,
-  // separate chapters; collapsing those would under-count, not fix
-  // anything. Only the Branch level (index 1) is the one place a repeated
-  // title is genuinely the same thing repeating, not a coincidence.
+  // count reads as wrong for a Branch level specifically ("15 Branches"
+  // when there are really only 3: EC/EE/IN — PowerX has only ONE, every
+  // subject's branch child is literally "EE — Electrical Engineering").
+  // Any level actually called "Branch" uses the unique count; everything
+  // else (Subject, Chapter) stays a raw node count on purpose — two
+  // DIFFERENT chapters coincidentally sharing a generic name (e.g.
+  // "V. Miscellaneous Topics") are still two real, separate chapters;
+  // collapsing those would under-count, not fix anything.
   var countsByDepth = {}, titlesByDepth = {};
   function walk(node, depth){
     var kids = node.children || [];
@@ -1368,14 +1427,12 @@ function computeTreeSummary(files){
   (files || []).forEach(function(f){
     (f.tree && f.tree.children || []).forEach(function(c){ walk(c, 0); });
   });
-  // [singular, plural] — "Branch" -> "Branches" isn't a bare +s.
-  var LABELS = [['Subject', 'Subjects'], ['Branch', 'Branches'],
-                ['Chapter', 'Chapters'], ['Section', 'Sections']];
-  var BRANCH_DEPTH_INDEX = 1;
+  var scheme = SERIES_LEVEL_LABELS[series] ||
+    [['Subject', 'Subjects'], ['Branch', 'Branches'], ['Chapter', 'Chapters'], ['Section', 'Sections']];
   return Object.keys(countsByDepth).map(Number).sort(function(a, b){ return a - b; })
     .map(function(d, i){
-      var n = i === BRANCH_DEPTH_INDEX ? titlesByDepth[d].size : countsByDepth[d];
-      var pair = LABELS[i] || ['Level ' + (i + 1), 'Level ' + (i + 1) + 's'];
+      var pair = scheme[i] || ['Level ' + (i + 1), 'Level ' + (i + 1) + 's'];
+      var n = pair[0] === 'Branch' ? titlesByDepth[d].size : countsByDepth[d];
       return n + ' ' + (n === 1 ? pair[0] : pair[1]);
     }).join(' · ');
 }
@@ -1418,7 +1475,7 @@ function openAnalyticsModal(triggerBtn){
     // structure summary (how many subjects/branches/chapters this book
     // actually breaks down into) is information a visitor can't already
     // see, which is the whole point of opening this modal.
-    var summary = computeTreeSummary(data.files);
+    var summary = computeTreeSummary(data.files, data.series);
     if(titleEl) titleEl.textContent = summary || data.book_title || 'Question Analytics';
 
     var totalQs = 0;
