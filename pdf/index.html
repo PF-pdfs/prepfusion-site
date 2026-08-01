@@ -99,6 +99,13 @@
 :root[data-theme="dark"] .shelf{--sc-use:var(--sc-hd)}
 
 *{box-sizing:border-box}
+/* Any element with a `display` rule of its own (.nav-dd-panel{display:flex}
+   here) permanently wins over the browser's default [hidden]{display:none} —
+   author-origin CSS always beats the UA stylesheet regardless of selector
+   specificity. Without this the YouTube menu's `hidden` attribute toggled
+   correctly in JS the entire time and never once actually hid anything; the
+   same trap the reader's Contents drawer already had to guard against. */
+[hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;color:var(--ink);font:400 16px/1.65 "Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   background:var(--paper);transition:background-color .2s,color .2s}
