@@ -18,8 +18,8 @@
 <meta property="og:title" content="PrepFusion Library — GATE Previous Year Questions &amp; Solutions">
 <meta property="og:description" content="Free GATE preparation PDFs — NexusX, SiliconX, PowerX, Maths and Aptitude series. Previous year questions and detailed solutions.">
 <meta property="og:url" content="https://pyq.prepfusion.in/pdf/">
-<meta property="og:image" content="https://pyq.prepfusion.in/pdf/assets/logo.png">
-<meta name="twitter:image" content="https://pyq.prepfusion.in/pdf/assets/logo.png">
+<meta property="og:image" content="https://pyq.prepfusion.in/pdf/assets/og-image.png">
+<meta name="twitter:image" content="https://pyq.prepfusion.in/pdf/assets/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="PrepFusion Library — GATE Previous Year Questions &amp; Solutions">
 <meta name="twitter:description" content="Free GATE preparation PDFs — NexusX, SiliconX, PowerX, Maths and Aptitude series. Previous year questions and detailed solutions.">
@@ -312,12 +312,19 @@ main{padding-bottom:60px}
 .cover-brand .bm-mono::after{color:var(--cv2);font-size:11px}
 
 .card-body{padding:17px 19px 19px;display:flex;flex-direction:column;gap:11px;flex:1}
-/* Combined cards have no .card-title (the cover already carries that text) —
-   this is the only heading-weight line they get, so it needs real presence,
-   not the small eyebrow-caption styling it used to have above a title. */
+/* The cover already carries the real title as its big visible text — this
+   is the only heading-weight line a card shows on screen, so it needs real
+   presence, not the small eyebrow-caption styling it used to have above a
+   (now-removed-from-view) title. */
 .card-kind{margin:0;font:650 15.5px/1.35 "Sora",sans-serif;letter-spacing:-.01em;
   color:var(--ink)}
-.card-title{font:700 18.5px/1.25 "Sora",sans-serif;letter-spacing:-.025em;margin:0}
+/* h3.card-title is intentionally screen-reader-only now (see render_card):
+   it still carries the real, distinguishing book title for assistive tech,
+   just not on screen — sighted users already have it from the cover, and
+   .card-kind repeats the SAME "Series · Kind" text across every card in a
+   series, so it can't do that disambiguating job on its own. */
+.card-title{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .card-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font:400 12px "IBM Plex Mono",monospace;
   color:var(--ink-soft);margin:-4px 0 0}
 .card-meta .sep{opacity:.4}
@@ -424,7 +431,6 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   .statbox div{padding:12px 18px}
   .statbox b{font-size:22px}
   .card-body{padding:14px 15px 16px;gap:9px}
-  .card-title{font-size:16.5px}
   .cover-brand .bm-text{font-size:11px}
 }
 @media(max-width:420px){
@@ -521,7 +527,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
         <div class="cover gen" style="--cv1:#18419B;--cv2:#10244F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs" title="Questions">Q</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">Network, Analog, Digital, Signals &amp; Control</p>
-          
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
+          <h3 class="card-title">Complete Questions</h3>
           <p class="card-meta"><span>890 pages</span><span class="sep">·</span><span>320.5 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
           <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span></div>
@@ -534,7 +545,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Network Theory</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">NexusX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Network Theory</h3>
           <p class="card-meta"><span>632 pages</span><span class="sep">·</span><span>65.7 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -548,7 +564,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Analog Electronics</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">NexusX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Analog Electronics</h3>
           <p class="card-meta"><span>659 pages</span><span class="sep">·</span><span>114.8 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -562,7 +583,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Digital Electronics</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">NexusX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Digital Electronics</h3>
           <p class="card-meta"><span>552 pages</span><span class="sep">·</span><span>31.6 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -576,7 +602,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Signals &amp; Systems</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">NexusX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Signals &amp; Systems</h3>
           <p class="card-meta"><span>451 pages</span><span class="sep">·</span><span>8.8 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -590,7 +621,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#2563EB;--cv2:#15316D"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">N</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Nexus<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Control Systems</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">NexusX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Control Systems</h3>
           <p class="card-meta"><span>536 pages</span><span class="sep">·</span><span>34.5 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -616,7 +652,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
         <div class="cover gen" style="--cv1:#52269C;--cv2:#261A4F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs" title="Questions">Q</span><span class="cover-series">Silicon<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">EDC, EMFT &amp; Communication</p>
-          
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
+          <h3 class="card-title">Complete Questions</h3>
           <p class="card-meta"><span>160 pages</span><span class="sep">·</span><span>1.4 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
           <div class="badges"><span class="badge">EC</span></div>
@@ -629,7 +670,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#7C3AED;--cv2:#36216E"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Silicon<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Electronic Devices &amp; Circuits</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">SiliconX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Electronic Devices &amp; Circuits</h3>
           <p class="card-meta"><span>109 pages</span><span class="sep">·</span><span>1.7 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -643,7 +689,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#7C3AED;--cv2:#36216E"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Silicon<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Electromagnetic Fields</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">SiliconX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Electromagnetic Fields</h3>
           <p class="card-meta"><span>167 pages</span><span class="sep">·</span><span>3.1 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -657,7 +708,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#7C3AED;--cv2:#36216E"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">S</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Silicon<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Communication Systems</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">SiliconX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Communication Systems</h3>
           <p class="card-meta"><span>306 pages</span><span class="sep">·</span><span>24.8 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -683,7 +739,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
         <div class="cover gen" style="--cv1:#941330;--cv2:#3F1226"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs" title="Questions">Q</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">Machines, Power Systems, Power Electronics, EMFT &amp; Measurements</p>
-          
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
+          <h3 class="card-title">Complete Questions</h3>
           <p class="card-meta"><span>294 pages</span><span class="sep">·</span><span>116.3 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
           <div class="badges"><span class="badge">EE</span><span class="badge">IN</span></div>
@@ -696,7 +757,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Electrical Machines</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">PowerX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Electrical Machines</h3>
           <p class="card-meta"><span>364 pages</span><span class="sep">·</span><span>28.2 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -710,7 +776,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Power Systems</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">PowerX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Power Systems</h3>
           <p class="card-meta"><span>346 pages</span><span class="sep">·</span><span>21.0 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -724,7 +795,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Power Electronics</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">PowerX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Power Electronics</h3>
           <p class="card-meta"><span>157 pages</span><span class="sep">·</span><span>8.7 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -738,7 +814,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Electromagnetic Fields</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">PowerX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Electromagnetic Fields</h3>
           <p class="card-meta"><span>115 pages</span><span class="sep">·</span><span>8.4 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -752,7 +833,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#E11D48;--cv2:#5C162F"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">P</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Power<span class="brand-x">X</span></span><span class="cover-rule"></span><span class="cover-title">Measurements</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">PowerX · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Measurements</h3>
           <p class="card-meta"><span>123 pages</span><span class="sep">·</span><span>15.8 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -778,7 +864,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
         <div class="cover gen" style="--cv1:#034F39;--cv2:#08292A"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs" title="Questions">Q</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">Linear Algebra, Calculus, Probability, Vectors, Complex Variables, Diff. Equations, Numerical Methods &amp; Transforms</p>
-          
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
+          <h3 class="card-title">Complete Questions</h3>
           <p class="card-meta"><span>218 pages</span><span class="sep">·</span><span>2.4 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
           <div class="badges"><span class="badge">EC</span><span class="badge">EE</span><span class="badge">IN</span><span class="badge">CS</span><span class="badge">ME</span><span class="badge">CE</span><span class="badge">CH</span><span class="badge">PI</span></div>
@@ -791,7 +882,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Linear Algebra</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">Maths · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Linear Algebra</h3>
           <p class="card-meta"><span>228 pages</span><span class="sep">·</span><span>1.5 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -805,7 +901,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Calculus</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">Maths · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Calculus</h3>
           <p class="card-meta"><span>233 pages</span><span class="sep">·</span><span>3.8 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -819,7 +920,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Probability &amp; Statistics</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">Maths · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Probability &amp; Statistics</h3>
           <p class="card-meta"><span>6 pages</span><span class="sep">·</span><span>282 KB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -833,7 +939,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Vector Calculus</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">Maths · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Vector Calculus</h3>
           <p class="card-meta"><span>111 pages</span><span class="sep">·</span><span>1.6 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -847,7 +958,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Complex Variables</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">Maths · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Complex Variables</h3>
           <p class="card-meta"><span>91 pages</span><span class="sep">·</span><span>1.2 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -861,7 +977,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Differential Equations</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">Maths · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Differential Equations</h3>
           <p class="card-meta"><span>210 pages</span><span class="sep">·</span><span>1.5 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -875,7 +996,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Numerical Methods</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">Maths · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Numerical Methods</h3>
           <p class="card-meta"><span>85 pages</span><span class="sep">·</span><span>3.0 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -889,7 +1015,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="solutions">
         <div class="cover gen" style="--cv1:#047857;--cv2:#083935"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Transform Theory</span><span class="cover-kind">Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          
+          <p class="card-kind">Maths · Solutions</p>
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
           <h3 class="card-title">Transform Theory</h3>
           <p class="card-meta"><span>37 pages</span><span class="sep">·</span><span>1.3 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
@@ -915,7 +1046,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
         <div class="cover gen" style="--cv1:#773706;--cv2:#342016"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">A</span><span class="qs" title="Questions">Q</span><span class="cover-series">Aptitude</span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">All Branches</p>
-          
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
+          <h3 class="card-title">Complete Questions</h3>
           <p class="card-meta"><span>225 pages</span><span class="sep">·</span><span>39.0 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
           <div class="badges"></div>
@@ -929,7 +1065,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
         <div class="cover gen" style="--cv1:#B45309;--cv2:#4B2B17"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">A</span><span class="qs s" title="Solutions">S</span><span class="cover-series">Aptitude</span><span class="cover-rule"></span><span class="cover-title">Complete Solutions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
           <p class="card-kind">All Branches</p>
-          
+          <!-- The cover's big text already shows the real title visually
+               (and per-subject cards' kind_line reads the same "Series ·
+               Kind" across every subject in that series) — this keeps a
+               real, distinguishing heading for screen readers without
+               putting the same words on screen twice. -->
+          <h3 class="card-title">Complete Solutions</h3>
           <p class="card-meta"><span>824 pages</span><span class="sep">·</span><span>27.2 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
           <div class="badges"></div>
