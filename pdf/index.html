@@ -538,18 +538,23 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 .analytics-dialog{position:relative;z-index:2;width:100%;max-width:960px;max-height:90vh;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 25px 50px -12px rgba(0,0,0,.35);overflow:hidden;transform:scale(.96);transition:transform .25s ease}
 .analytics-modal:not([hidden]) .analytics-dialog,.analytics-modal.is-open .analytics-dialog{transform:scale(1)}
 .analytics-header{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line)}
-.analytics-series-pill{display:inline-block;padding:2px 8px;border-radius:6px;font:600 11px/1.4 "IBM Plex Mono",monospace;background:var(--sc-tint,var(--chipbg));color:var(--sc-use,var(--sc,var(--ink-soft)));margin-bottom:6px}
-.analytics-title-row{display:flex;align-items:center}
+/* --chipbg, not --sc-tint — --sc-tint is a 90%-white mix, built for an
+   outline BUTTON on a light card and never given a dark-mode twin. Paired
+   with --sc-use's dark-mode value (deliberately LIGHTENED so it reads on a
+   dark card), that was light text on a near-white chip — backwards, and
+   why the series name went unreadable in dark mode. --chipbg already has
+   its own correct light/dark values. */
+.analytics-series-pill{display:inline-block;padding:2px 8px;border-radius:6px;font:600 11px/1.4 "IBM Plex Mono",monospace;background:var(--chipbg);color:var(--sc-use,var(--sc,var(--ink-soft)));margin-bottom:6px}
 .analytics-header h2{font:700 22px/1.2 "Sora",sans-serif;margin:0;color:var(--ink)}
 /* Same visual language as the reader's own BETA badge (.beta in
    READER_TEMPLATE) — this feature is genuinely still being refined
    (see docs/QUESTION_ANALYTICS_HANDOFF.md), passable now but not final.
-   Sits OUTSIDE #analyticsTitle on purpose: openAnalyticsModal() sets that
-   h2's textContent on every open, which would silently wipe out a badge
-   nested inside it. */
-.analytics-beta{display:inline-block;flex:none;font:700 9px/1 "IBM Plex Mono",monospace;
-  letter-spacing:.1em;padding:3px 5px;border-radius:4px;background:var(--accent);color:#0f172a;
-  margin-left:7px;cursor:help}
+   Sits in the dialog's own top-right corner, ABOVE the header row rather
+   than crowded next to the title — that corner was empty space before,
+   and a badge easy to miss next to a 22px heading is not doing its job. */
+.analytics-beta{position:absolute;top:14px;right:56px;font:700 9px/1 "IBM Plex Mono",monospace;
+  letter-spacing:.08em;padding:5px 8px;border-radius:5px;background:var(--accent);color:#0f172a;
+  cursor:help;white-space:nowrap;z-index:1}
 .analytics-subtitle{font-size:13px;color:var(--ink-soft);margin:4px 0 0}
 .analytics-close{background:none;border:none;font-size:26px;line-height:1;color:var(--ink-soft);cursor:pointer;padding:4px;border-radius:6px;transition:color .15s}
 .analytics-close:hover{color:var(--ink)}
@@ -565,7 +570,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 .analytics-tree ul{list-style:none;padding-left:14px;margin:4px 0 6px;border-left:1px dashed var(--line-strong)}
 .analytics-tree li{margin:3px 0}
 .analytics-node{display:flex;align-items:center;gap:4px;padding:5px 8px;border-radius:6px;cursor:pointer;color:var(--ink);transition:background .15s}
-.analytics-node:hover,.analytics-node.is-active{background:var(--sc-tint,var(--chipbg));color:var(--sc-use,var(--sc,var(--ink)))}
+.analytics-node:hover,.analytics-node.is-active{background:var(--chipbg);color:var(--sc-use,var(--sc,var(--ink)))}
 .analytics-tgl{flex:none;width:20px;height:20px;display:grid;place-items:center;background:none;border:0;
   padding:0;color:inherit;cursor:pointer;border-radius:4px}
 .analytics-tgl svg{transition:transform .15s}
@@ -577,7 +582,10 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 .analytics-chart-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:20px}
 .analytics-chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .analytics-chart-header h4{font:600 15px "Sora",sans-serif;margin:0;color:var(--ink)}
-.analytics-badge{font:600 12px "IBM Plex Mono",monospace;color:var(--sc-use,var(--sc,var(--ink-soft)))}
+/* Lives above the chart card, not squeezed into its header — the text
+   grows with selection depth ("Subject (Branch): Chapter") and needs room
+   to wrap onto a second line rather than fight the chart title for space. */
+.analytics-selection{margin:0;font:600 16px/1.35 "Sora",sans-serif;color:var(--sc-use,var(--sc,var(--ink)))}
 .analytics-chart-container{position:relative;height:320px;width:100%}
 @media(max-width:768px){
   .analytics-body{grid-template-columns:1fr;overflow-y:auto}
@@ -1115,13 +1123,11 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 <div id="analyticsModal" class="analytics-modal" hidden>
   <div class="analytics-backdrop" onclick="closeAnalyticsModal()"></div>
   <div class="analytics-dialog" role="dialog" aria-modal="true" aria-labelledby="analyticsTitle">
+    <span class="analytics-beta" title="Still being refined — the numbers are right, the interaction and layout may still change.">BETA · Work in progress</span>
     <header class="analytics-header">
       <div>
         <span class="analytics-series-pill" id="analyticsSeries">Series</span>
-        <span class="analytics-title-row">
-          <h2 id="analyticsTitle">Book Analytics</h2>
-          <span class="analytics-beta" title="Still being refined — the numbers are right, the interaction and layout may still change.">BETA</span>
-        </span>
+        <h2 id="analyticsTitle">Book Analytics</h2>
         <p class="analytics-subtitle" id="analyticsSubtitle"></p>
       </div>
       <button type="button" class="analytics-close" onclick="closeAnalyticsModal()" aria-label="Close modal">&times;</button>
@@ -1138,10 +1144,10 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
         <div id="analyticsTreeContainer"></div>
       </div>
       <div class="analytics-main">
+        <p class="analytics-selection" id="analyticsSelectionBadge">All Chapters</p>
         <div class="analytics-chart-card">
           <div class="analytics-chart-header">
             <h4>Question Frequency by Exam Year</h4>
-            <span id="analyticsSelectionBadge" class="analytics-badge">All Chapters</span>
           </div>
           <div class="analytics-chart-container">
             <canvas id="analyticsChart"></canvas>
@@ -1331,6 +1337,35 @@ var activeAnalyticsChart = null;
   if(collapseBtn) collapseBtn.addEventListener('click', function(){ setAllNodes(false); });
 })();
 
+function computeTreeSummary(files){
+  // Counts real NODES per depth (not distinct titles — "EC" is a
+  // different branch under every subject, and a Set would collapse them
+  // all into one). Depth-agnostic on purpose: NexusX/SiliconX/PowerX are
+  // Subject>Branch>Chapter (3 levels before the question leaves), Maths is
+  // Topic>Branch (2, no separate chapter — verified against the real
+  // extracted tree, not assumed), so this labels whatever levels actually
+  // exist instead of hardcoding a shape that's wrong for some series.
+  var countsByDepth = {};
+  function walk(node, depth){
+    var kids = node.children || [];
+    if(kids.length === 0) return;   // this node IS a question, not a level
+    countsByDepth[depth] = (countsByDepth[depth] || 0) + 1;
+    kids.forEach(function(c){ walk(c, depth + 1); });
+  }
+  (files || []).forEach(function(f){
+    (f.tree && f.tree.children || []).forEach(function(c){ walk(c, 0); });
+  });
+  // [singular, plural] — "Branch" -> "Branches" isn't a bare +s.
+  var LABELS = [['Subject', 'Subjects'], ['Branch', 'Branches'],
+                ['Chapter', 'Chapters'], ['Section', 'Sections']];
+  return Object.keys(countsByDepth).map(Number).sort(function(a, b){ return a - b; })
+    .map(function(d, i){
+      var n = countsByDepth[d];
+      var pair = LABELS[i] || ['Level ' + (i + 1), 'Level ' + (i + 1) + 's'];
+      return n + ' ' + (n === 1 ? pair[0] : pair[1]);
+    }).join(' · ');
+}
+
 function openAnalyticsModal(triggerBtn){
   var card = triggerBtn ? triggerBtn.closest('.card') : null;
   if(!card) return;
@@ -1343,13 +1378,15 @@ function openAnalyticsModal(triggerBtn){
     if(!modal) return;
 
     // The modal is one shared element outside every card's own scope, so it
-    // can't inherit --sc/--sc-tint from the card the way everything else on
+    // can't inherit --sc/--sc-d from the card the way everything else on
     // the page does (they're only set inline, per .card, by render_card()).
     // Copy them across explicitly so the modal picks up NexusX blue,
-    // SiliconX purple, PowerX red etc. instead of a fixed generic accent.
+    // SiliconX purple, PowerX red etc. instead of a fixed generic accent —
+    // .analytics-dialog's own CSS then resolves --sc-use to whichever of
+    // the two matches the current light/dark theme, same as every card.
     var dialog = modal.querySelector('.analytics-dialog');
     if(dialog){
-      ['--sc', '--sc-d', '--sc-tint', '--sc-edge'].forEach(function(prop){
+      ['--sc', '--sc-d'].forEach(function(prop){
         var v = card.style.getPropertyValue(prop);
         if(v) dialog.style.setProperty(prop, v);
       });
@@ -1361,13 +1398,20 @@ function openAnalyticsModal(triggerBtn){
     var treeContainer = document.getElementById('analyticsTreeContainer');
 
     if(seriesEl) seriesEl.textContent = data.series || 'PYQ Analytics';
-    if(titleEl) titleEl.textContent = data.book_title || 'Question Analytics';
+
+    // The book title ("Complete Questions") is already the card's own
+    // title, one click away — repeating it here said nothing new. A
+    // structure summary (how many subjects/branches/chapters this book
+    // actually breaks down into) is information a visitor can't already
+    // see, which is the whole point of opening this modal.
+    var summary = computeTreeSummary(data.files);
+    if(titleEl) titleEl.textContent = summary || data.book_title || 'Question Analytics';
 
     var totalQs = 0;
     if(data.files){
       data.files.forEach(function(f){ totalQs += (f.questions || 0); });
     }
-    if(subtitleEl) subtitleEl.textContent = (data.files ? data.files.length : 0) + ' section(s) · ' + totalQs + ' total questions parsed';
+    if(subtitleEl) subtitleEl.textContent = totalQs + ' total questions parsed';
 
     if(treeContainer){
       treeContainer.innerHTML = '';
@@ -1437,6 +1481,17 @@ function closeAnalyticsModal(){
     activeAnalyticsChart.destroy();
     activeAnalyticsChart = null;
   }
+}
+
+function formatBreadcrumb(pathStr){
+  // "Subject / Branch / Chapter" -> "Subject (Branch): Chapter" — reads as
+  // one coherent label instead of a raw slash-separated path, and grows
+  // predictably as the selection gets deeper (a bare Subject click stays
+  // just "Subject").
+  var parts = pathStr.split(' / ');
+  if(parts.length === 1) return parts[0];
+  if(parts.length === 2) return parts[0] + ' (' + parts[1] + ')';
+  return parts[0] + ' (' + parts[1] + '): ' + parts.slice(2).join(' / ');
 }
 
 function isDisplayLeaf(node){
@@ -1512,7 +1567,7 @@ function createTreeNode(node, pathPrefix, yearTable, aggregatedYears, depth){
         }
       });
     }
-    document.getElementById('analyticsSelectionBadge').textContent = node.title || 'Selected Topic';
+    document.getElementById('analyticsSelectionBadge').textContent = formatBreadcrumb(currentPath) || 'Selected Topic';
     renderYearChart(chapterYears, node.title);
   });
 
@@ -1611,9 +1666,20 @@ function renderYearChart(yearData, titleLabel){
           // on every tree click, and a long animation there reads as lag,
           // not polish.
           animation: { duration: 300 },
+          // Explicit, not left to Chart.js's per-type default: a mixed
+          // bar+line chart has TWO datasets sitting at the same x/y per
+          // year, and without pinning how a hover resolves "which point is
+          // this", the tooltip could latch onto whichever dataset last won
+          // that ambiguity and stop updating on further mouse movement —
+          // matches the reported "hover once, chart freezes" symptom.
+          // 'index' + intersect:false always resolves to the single nearest
+          // year column, deterministically, regardless of which dataset.
+          interaction: { mode: 'index', intersect: false },
+          hover: { mode: 'index', intersect: false },
           plugins: {
             legend: { display: false },
             tooltip: {
+              mode: 'index', intersect: false,
               // One dataset's worth per year, not two identical lines —
               // both series plot the same numbers, only their look differs.
               filter: function(item){ return item.datasetIndex === 0; },
