@@ -582,6 +582,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 .analytics-chart-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:20px}
 .analytics-chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .analytics-chart-header h4{font:600 15px "Sora",sans-serif;margin:0;color:var(--ink)}
+/* A year with an unusually tall bar is very likely a real GATE fact (that
+   year ran multiple shifts with different papers for this branch), not a
+   data bug — this heads off "why is 2014 so much higher?" without
+   asserting which specific years, which isn't reliably sourceable. */
+.analytics-info{display:inline-flex;color:var(--ink-faint);cursor:help;flex:none}
+.analytics-info:hover,.analytics-info:focus-visible{color:var(--sc-use,var(--ink-soft))}
 /* Lives above the chart card, not squeezed into its header — the text
    grows with selection depth ("Subject (Branch): Chapter") and needs room
    to wrap onto a second line rather than fight the chart title for space. */
@@ -1148,6 +1154,9 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
         <div class="analytics-chart-card">
           <div class="analytics-chart-header">
             <h4>Question Frequency by Exam Year</h4>
+            <span class="analytics-info" tabindex="0" title="Some years show noticeably more questions than others because GATE ran multiple shifts with different question papers that year for high-volume branches like EC/EE — more shifts means more distinct questions counted for that year, not a change in how the exam was weighted.">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.8" r="0.5" fill="currentColor" stroke="none"/></svg>
+            </span>
           </div>
           <div class="analytics-chart-container">
             <canvas id="analyticsChart"></canvas>
@@ -1338,18 +1347,22 @@ var activeAnalyticsChart = null;
 })();
 
 function computeTreeSummary(files){
-  // Counts real NODES per depth (not distinct titles — "EC" is a
-  // different branch under every subject, and a Set would collapse them
-  // all into one). Depth-agnostic on purpose: NexusX/SiliconX/PowerX are
-  // Subject>Branch>Chapter (3 levels before the question leaves), Maths is
-  // Topic>Branch (2, no separate chapter — verified against the real
-  // extracted tree, not assumed), so this labels whatever levels actually
-  // exist instead of hardcoding a shape that's wrong for some series.
-  var countsByDepth = {};
+  // Node count per depth, PLUS the set of distinct titles at that depth —
+  // "EC" is the exact same branch name repeated under every subject
+  // (Network Theory's EC, Analog Electronics' EC, ...), so a raw node
+  // count reads as wrong for Branches specifically ("15 Branches" when
+  // there are really only 3: EC/EE/IN). Subjects and Chapters stay a raw
+  // node count on purpose — two DIFFERENT chapters coincidentally sharing
+  // a generic name (e.g. "V. Miscellaneous Topics") are still two real,
+  // separate chapters; collapsing those would under-count, not fix
+  // anything. Only the Branch level (index 1) is the one place a repeated
+  // title is genuinely the same thing repeating, not a coincidence.
+  var countsByDepth = {}, titlesByDepth = {};
   function walk(node, depth){
     var kids = node.children || [];
     if(kids.length === 0) return;   // this node IS a question, not a level
     countsByDepth[depth] = (countsByDepth[depth] || 0) + 1;
+    (titlesByDepth[depth] = titlesByDepth[depth] || new Set()).add(node.title);
     kids.forEach(function(c){ walk(c, depth + 1); });
   }
   (files || []).forEach(function(f){
@@ -1358,9 +1371,10 @@ function computeTreeSummary(files){
   // [singular, plural] — "Branch" -> "Branches" isn't a bare +s.
   var LABELS = [['Subject', 'Subjects'], ['Branch', 'Branches'],
                 ['Chapter', 'Chapters'], ['Section', 'Sections']];
+  var BRANCH_DEPTH_INDEX = 1;
   return Object.keys(countsByDepth).map(Number).sort(function(a, b){ return a - b; })
     .map(function(d, i){
-      var n = countsByDepth[d];
+      var n = i === BRANCH_DEPTH_INDEX ? titlesByDepth[d].size : countsByDepth[d];
       var pair = LABELS[i] || ['Level ' + (i + 1), 'Level ' + (i + 1) + 's'];
       return n + ' ' + (n === 1 ? pair[0] : pair[1]);
     }).join(' · ');
