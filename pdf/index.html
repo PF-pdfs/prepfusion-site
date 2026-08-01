@@ -142,7 +142,12 @@ a{color:var(--brand)}
 .bm-lg .bm-mono::after{color:var(--paper)}
 .nav{display:flex;gap:2px;margin-left:auto;align-items:center}
 .nav a,.nav .nav-soon{color:var(--ink-soft);text-decoration:none;font-size:14px;font-weight:500;
-  padding:8px 13px;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+  padding:8px 13px;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+/* currentColor means every nav icon already tracks its own link's colour —
+   muted at rest, full ink on hover/current, with zero per-theme icon
+   variants to maintain. flex-shrink:0 only guards against the icon
+   squashing if a label ever runs long. */
+.nav-ic{flex-shrink:0}
 .nav a:hover{color:var(--ink);background:var(--chipbg)}
 /* The section you're on. Deliberately a quiet highlight rather than a "Live"
    badge: a LIVE pill beside the amber "Soon" pills would imply the library
@@ -158,6 +163,26 @@ a{color:var(--brand)}
 .soon-dot{width:6px;height:6px;border-radius:50%;background:currentColor;position:relative;flex-shrink:0}
 .soon-dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:currentColor;
   opacity:.5;animation:soonPulse 2s ease-out infinite}
+
+/* ---------- nav dropdown (YouTube) ---------- */
+.nav-dd{position:relative}
+.nav-dd-btn{display:inline-flex;align-items:center;gap:6px;color:var(--ink-soft);
+  background:none;border:0;font:500 14px "Inter",sans-serif;cursor:pointer;
+  padding:8px 11px 8px 13px;border-radius:9px;white-space:nowrap}
+.nav-dd-btn:hover,.nav-dd-btn[aria-expanded="true"]{color:var(--ink);background:var(--chipbg)}
+.nav-dd-chev{transition:transform .15s;opacity:.6}
+.nav-dd-btn[aria-expanded="true"] .nav-dd-chev{transform:rotate(180deg)}
+/* position:fixed, not absolute — on a phone .nav scrolls sideways
+   (overflow-x:auto), which clips an absolutely-positioned child the moment
+   it extends past the row's own box. Fixed positioning is relative to the
+   viewport, so the scrolling ancestor can never clip it; the JS below sets
+   top/left from the button's own rect right before it opens. */
+.nav-dd-panel{position:fixed;z-index:30;min-width:168px;
+  background:var(--card);border:1.5px solid var(--line-strong);border-radius:12px;
+  box-shadow:var(--shadow-lift);padding:6px;display:flex;flex-direction:column;gap:2px}
+.nav-dd-panel a{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;
+  color:var(--ink);text-decoration:none;font:500 13.5px "Inter",sans-serif}
+.nav-dd-panel a:hover{background:var(--shell)}
 @keyframes soonPulse{
   0%{transform:scale(.5);opacity:.5}
   70%{transform:scale(2.1);opacity:0}
@@ -408,7 +433,11 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   .nav{order:3;flex-basis:100%;margin-left:0;flex-wrap:nowrap;
        overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
   .nav::-webkit-scrollbar{display:none}
-  .nav a,.nav .nav-soon{flex:0 0 auto;font-size:13px;padding:7px 11px}
+  /* .nav-dd (the actual flex child) needs the no-shrink rule; .nav-dd-btn
+     is nested inside it, not a direct child of .nav, so it only needs the
+     size tweak to match its siblings. */
+  .nav a,.nav .nav-soon,.nav-dd{flex:0 0 auto}
+  .nav a,.nav .nav-soon,.nav-dd-btn{font-size:13px;padding:7px 11px}
   .tt{margin-left:auto}
   .hero{padding-top:44px}
   .search{flex:1 1 100%;max-width:none}
@@ -475,7 +504,16 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   <div class="bar-in">
     <a class="logo" href="#top" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
     <nav class="nav">
-      <a class="nav-current" href="#top" aria-current="page" title="You&#x27;re here — every previous-year paper, free to read.">Library</a><a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in.">Courses<span class="ext" aria-hidden="true">↗</span></a><span class="nav-soon" title="Search, save and improve every GATE question and solution.">Study Hub<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span><span class="nav-soon" title="Printed editions of every series, delivered.">Bookstore<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span>
+      <a class="nav-current" href="#top" aria-current="page" title="You&#x27;re here — every previous-year paper, free to read."><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V7"/><path d="M3 5a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3H4a1 1 0 0 1-1-1Z"/></svg>Library</a><a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in." target="_blank" rel="noopener"><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 10.9a1 1 0 0 0 0-1.8L12.8 5.2a2 2 0 0 0-1.6 0L2.6 9.1a1 1 0 0 0 0 1.8l8.6 3.9a2 2 0 0 0 1.6 0Z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>Courses<span class="ext" aria-hidden="true">↗</span></a><div class="nav-dd">
+  <button type="button" class="nav-dd-btn" aria-haspopup="true" aria-expanded="false"
+          aria-controls="ytMenu" title="Watch GATE lectures on YouTube">
+    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF0000" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8Z"/><path fill="#fff" d="M9.6 15.6V8.4L15.8 12z"/></svg>YouTube
+    <svg class="nav-dd-chev" width="11" height="11" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2.6" stroke-linecap="round"
+         stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+  </button>
+  <div class="nav-dd-panel" id="ytMenu" role="menu" hidden><a href="https://www.youtube.com/@PrepFusion_GATE" target="_blank" rel="noopener" role="menuitem"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF0000" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8Z"/><path fill="#fff" d="M9.6 15.6V8.4L15.8 12z"/></svg>English</a><a href="https://www.youtube.com/@prepfusion-hindi" target="_blank" rel="noopener" role="menuitem"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF0000" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8Z"/><path fill="#fff" d="M9.6 15.6V8.4L15.8 12z"/></svg>Hindi</a></div>
+</div><span class="nav-soon" title="Search, save and improve every GATE question and solution."><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Study Hub<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span><span class="nav-soon" title="Printed editions of every series, delivered."><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Bookstore<span class="soon-tag"><span class="soon-dot" aria-hidden="true"></span>Soon</span></span>
     </nav>
     <button id="themeToggle" class="tt" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
       <svg class="i-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
@@ -1104,9 +1142,11 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 <script>
 (function(){
   var q = document.getElementById('q');
-  /* Coming-soon mode emits no toolbar and no cards. Skip straight to the
-     theme toggle rather than wiring up filters against absent elements. */
-  if (!q) { initTheme(); return; }
+  /* Coming-soon mode emits no toolbar and no cards, but the header — and
+     therefore the YouTube dropdown — still renders (see render_coming_soon()
+     in build_site.py: "shell stays, shelves don't"). Both branches must wire
+     it up, not just this early-return one. */
+  if (!q) { initTheme(); initYouTubeNav(); return; }
   var chips = Array.prototype.slice.call(document.querySelectorAll('#chips .chip'));
   var segBtns = Array.prototype.slice.call(document.querySelectorAll('#seg button'));
   var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
@@ -1166,6 +1206,53 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   });
 
   initTheme();
+  initYouTubeNav();
+
+  /* ---------- YouTube channel picker ----------
+     position:fixed on the panel (see the CSS) means it is never clipped by
+     the mobile nav's own overflow-x:auto — but that also means ITS position
+     has to be set in JS from the button's actual on-screen rect, recomputed
+     every time it opens, since "fixed" doesn't get any layout help from the
+     button being its nearest ancestor the way "absolute" would. */
+  function initYouTubeNav(){
+    var btn = document.querySelector('.nav-dd-btn');
+    if (!btn) return;
+    var panel = document.getElementById('ytMenu');
+
+    function close(){
+      panel.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+    }
+    function open(){
+      panel.hidden = false;               // must be visible before measuring
+      var r = btn.getBoundingClientRect();
+      var w = panel.offsetWidth;
+      panel.style.top = (r.bottom + 6) + 'px';
+      panel.style.left = Math.max(8, Math.min(r.left, innerWidth - w - 8)) + 'px';
+      btn.setAttribute('aria-expanded', 'true');
+    }
+
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();                 // don't let this same click hit the
+      panel.hidden ? open() : close();     // document listener below and re-close it
+    });
+    Array.prototype.forEach.call(panel.querySelectorAll('a'), function(a){
+      a.addEventListener('click', close);  // opens in a new tab; tidy up this one
+    });
+    document.addEventListener('click', function(e){
+      if (!panel.hidden && !panel.contains(e.target) && e.target !== btn) close();
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && !panel.hidden){ close(); btn.focus(); }
+    });
+    /* A fixed-position panel does not move with whatever it was anchored
+       to — if the page (or the nav's own horizontal scroller) scrolls or the
+       window resizes while it's open, close it rather than leave it floating
+       over the wrong spot. capture:true because scroll events don't bubble,
+       so this is the only way to hear one that happened inside .nav. */
+    addEventListener('scroll', function(){ if (!panel.hidden) close(); }, true);
+    addEventListener('resize', function(){ if (!panel.hidden) close(); });
+  }
 
   /* ---------- dark / light mode ----------
      A function declaration, so it is hoisted and the early return above
