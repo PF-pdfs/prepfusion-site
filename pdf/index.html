@@ -1106,10 +1106,10 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
         <div class="card-body">
           <p class="card-kind">All Branches</p>
           <h3 class="card-title">Complete Questions</h3>
-          <p class="card-meta"><span>225 pages</span><span class="sep">·</span><span>39.0 MB</span></p>
+          <p class="card-meta"><span>225 pages</span><span class="sep">·</span><span>39.5 MB</span></p>
           <p class="card-updated">Updated Aug 1, 2026</p>
           <div class="badges"></div>
-          <div class="actions"><a class="btn solid" href="read.html?f=Aptitude%2FQuestions%2Fapti.pdf&amp;v=04a72187c17f&amp;t=Aptitude+Questions" title="Read — apti.pdf (39.0 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
+          <div class="actions"><a class="btn solid" href="read.html?f=Aptitude%2FQuestions%2Fapti.pdf&amp;v=776656a4f7cc&amp;t=Aptitude+Questions" title="Read — apti.pdf (39.5 MB)" target="_blank" rel="noopener"><svg class="bi" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h7a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H2Z"/><path d="M22 4.5h-7a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H22Z"/></svg>Read</a></div>
         </div>
       </article>
       <article class="card" style="--sc:#B45309;--sc-d:#E09D68;--sc-tint:#F8EEE6;--sc-edge:#E2BEA2"
@@ -1405,49 +1405,36 @@ var SERIES_LEVEL_LABELS = {
 };
 
 function computeTreeSummary(files, series){
-  // A chapter's title repeats once per BRANCH under the same subject —
-  // "I. Basic Concepts of Networks" appears identically under Network
-  // Theory's EC, EE, AND IN, because it's genuinely one chapter topic
-  // split into branch-specific question sets, not three different
-  // chapters. A raw node count tripled it (108 instead of the real ~42
-  // for NexusX). The fix has to be scoped, not a global title dedup like
-  // Branch gets: two DIFFERENT subjects coincidentally sharing a generic
-  // chapter name (e.g. "V. Miscellaneous Topics") are still two real
-  // separate chapters, and collapsing those globally would under-count.
-  // So a level AFTER the Branch level dedupes by its full ancestor path
-  // with ONLY the Branch segment removed — same subject + same chapter
-  // title collapses to one, different subjects never merge.
+  // Every level except Subject is reported as its DISTINCT title count,
+  // not a raw node count — "I. Basic Concepts of Networks" repeats once
+  // per branch under the same subject, "EC" repeats once per subject, and
+  // reporting either as a raw node count reads as wrong ("108 Chapters"
+  // when the real number of distinct chapter topics is far lower). This
+  // is a simple global dedup by title, on purpose, not scoped per-subject —
+  // that's a coarser number than "chapters that are truly identical
+  // start-to-finish across subjects", but it's the one that's simple to
+  // explain and can't be subtly wrong in a way that's hard to notice.
+  // Subject titles are always genuinely distinct, so it's left as a raw
+  // count (a Set there would be a no-op anyway).
   var scheme = SERIES_LEVEL_LABELS[series] ||
     [['Subject', 'Subjects'], ['Branch', 'Branches'], ['Chapter', 'Chapters'], ['Section', 'Sections']];
-  var branchDepth = -1;
-  scheme.forEach(function(pair, i){ if(pair[0] === 'Branch') branchDepth = i; });
 
-  var countsByDepth = {}, branchTitlesByDepth = {}, dedupKeysByDepth = {};
-  function walk(node, depth, ancestors){
+  var countsByDepth = {}, titlesByDepth = {};
+  function walk(node, depth){
     var kids = node.children || [];
     if(kids.length === 0) return;   // this node IS a question, not a level
-    var path = ancestors.concat([node.title]);
     countsByDepth[depth] = (countsByDepth[depth] || 0) + 1;
-    if(depth === branchDepth){
-      (branchTitlesByDepth[depth] = branchTitlesByDepth[depth] || new Set()).add(node.title);
-    }
-    if(branchDepth > -1 && depth > branchDepth){
-      var dedupPath = path.filter(function(_, i){ return i !== branchDepth; });
-      (dedupKeysByDepth[depth] = dedupKeysByDepth[depth] || new Set()).add(dedupPath.join(' / '));
-    }
-    kids.forEach(function(c){ walk(c, depth + 1, path); });
+    (titlesByDepth[depth] = titlesByDepth[depth] || new Set()).add(node.title);
+    kids.forEach(function(c){ walk(c, depth + 1); });
   }
   (files || []).forEach(function(f){
-    (f.tree && f.tree.children || []).forEach(function(c){ walk(c, 0, []); });
+    (f.tree && f.tree.children || []).forEach(function(c){ walk(c, 0); });
   });
 
   return Object.keys(countsByDepth).map(Number).sort(function(a, b){ return a - b; })
     .map(function(d, i){
       var pair = scheme[i] || ['Level ' + (i + 1), 'Level ' + (i + 1) + 's'];
-      var n;
-      if(i === branchDepth) n = branchTitlesByDepth[d].size;
-      else if(branchDepth > -1 && i > branchDepth) n = dedupKeysByDepth[d].size;
-      else n = countsByDepth[d];
+      var n = pair[0] === 'Subject' ? countsByDepth[d] : titlesByDepth[d].size;
       return n + ' ' + (n === 1 ? pair[0] : pair[1]);
     }).join(' · ');
 }
