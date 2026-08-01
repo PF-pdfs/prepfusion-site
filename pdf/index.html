@@ -521,11 +521,12 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   background:rgba(15,23,42,.7);border-color:rgba(255,255,255,.3)}
 
 /* Analytics Modal */
+.analytics-modal[hidden]{display:none !important}
 .analytics-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s ease}
-.analytics-modal:not([hidden]){opacity:1;pointer-events:auto}
-.analytics-backdrop{position:fixed;inset:0;background:rgba(11,18,32,0.7);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.analytics-modal:not([hidden]),.analytics-modal.is-open{display:flex !important;opacity:1 !important;pointer-events:auto !important}
+.analytics-backdrop{position:fixed;inset:0;background:rgba(11,18,32,0.75);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .analytics-dialog{position:relative;z-index:2;width:100%;max-width:960px;max-height:90vh;display:flex;flex-direction:column;background:var(--bg-card,#ffffff);border:1px solid var(--border-soft,#e2e8f0);border-radius:18px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.35);overflow:hidden;transform:scale(0.96);transition:transform .25s ease}
-.analytics-modal:not([hidden]) .analytics-dialog{transform:scale(1)}
+.analytics-modal:not([hidden]) .analytics-dialog,.analytics-modal.is-open .analytics-dialog{transform:scale(1)}
 :root[data-theme="dark"] .analytics-dialog{background:#151F36;border-color:#263554;color:#f8fafc}
 .analytics-header{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border-soft,#e2e8f0)}
 :root[data-theme="dark"] .analytics-header{border-color:#263554}
@@ -1285,7 +1286,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 var activeAnalyticsChart = null;
 
 function openAnalyticsModal(triggerBtn){
-  var card = triggerBtn.closest('.card');
+  var card = triggerBtn ? triggerBtn.closest('.card') : null;
   if(!card) return;
   var scriptTag = card.querySelector('script.analytics-data');
   if(!scriptTag) return;
@@ -1293,45 +1294,60 @@ function openAnalyticsModal(triggerBtn){
   try{
     var data = JSON.parse(scriptTag.textContent);
     var modal = document.getElementById('analyticsModal');
+    if(!modal) return;
+
     var titleEl = document.getElementById('analyticsTitle');
     var seriesEl = document.getElementById('analyticsSeries');
     var subtitleEl = document.getElementById('analyticsSubtitle');
     var treeContainer = document.getElementById('analyticsTreeContainer');
 
-    seriesEl.textContent = data.series || 'PYQ Analytics';
-    titleEl.textContent = data.book_title || 'Question Analytics';
+    if(seriesEl) seriesEl.textContent = data.series || 'PYQ Analytics';
+    if(titleEl) titleEl.textContent = data.book_title || 'Question Analytics';
 
     var totalQs = 0;
-    data.files.forEach(function(f){ totalQs += (f.questions || 0); });
-    subtitleEl.textContent = data.files.length + ' section(s) · ' + totalQs + ' total questions parsed';
+    if(data.files){
+      data.files.forEach(function(f){ totalQs += (f.questions || 0); });
+    }
+    if(subtitleEl) subtitleEl.textContent = (data.files ? data.files.length : 0) + ' section(s) · ' + totalQs + ' total questions parsed';
 
-    treeContainer.innerHTML = '';
-    var ul = document.createElement('ul');
-    ul.className = 'analytics-tree';
+    if(treeContainer){
+      treeContainer.innerHTML = '';
+      var ul = document.createElement('ul');
+      ul.className = 'analytics-tree';
 
-    var aggregatedYears = {};
+      var aggregatedYears = {};
 
-    data.files.forEach(function(fileItem){
-      if(fileItem.tree && fileItem.tree.children){
-        fileItem.tree.children.forEach(function(childNode){
-          ul.appendChild(createTreeNode(childNode, '', fileItem.year_table, aggregatedYears));
+      if(data.files && data.files.length > 0){
+        data.files.forEach(function(fileItem){
+          if(fileItem.tree && fileItem.tree.children){
+            fileItem.tree.children.forEach(function(childNode){
+              ul.appendChild(createTreeNode(childNode, '', fileItem.year_table, aggregatedYears));
+            });
+          }
+          if(fileItem.year_table){
+            Object.keys(fileItem.year_table).forEach(function(chKey){
+              var yearsObj = fileItem.year_table[chKey];
+              Object.keys(yearsObj).forEach(function(y){
+                aggregatedYears[y] = (aggregatedYears[y] || 0) + yearsObj[y];
+              });
+            });
+          }
         });
       }
-      if(fileItem.year_table){
-        Object.keys(fileItem.year_table).forEach(function(chKey){
-          var yearsObj = fileItem.year_table[chKey];
-          Object.keys(yearsObj).forEach(function(y){
-            aggregatedYears[y] = (aggregatedYears[y] || 0) + yearsObj[y];
-          });
-        });
+
+      if(ul.children.length === 0){
+        treeContainer.innerHTML = '<p style="padding:12px;color:var(--ink-soft,#64748b);font-size:13px;margin:0;">No chapter outline available for this PDF.</p>';
+      } else {
+        treeContainer.appendChild(ul);
       }
-    });
 
-    treeContainer.appendChild(ul);
-    document.getElementById('analyticsSelectionBadge').textContent = 'All Chapters';
-    renderYearChart(aggregatedYears, 'All Chapters');
+      var badgeEl = document.getElementById('analyticsSelectionBadge');
+      if(badgeEl) badgeEl.textContent = 'All Chapters';
+      renderYearChart(aggregatedYears, 'All Chapters');
+    }
 
-    modal.hidden = false;
+    modal.removeAttribute('hidden');
+    modal.classList.add('is-open');
     document.body.style.overflow = 'hidden';
   }catch(e){
     console.error('Failed to parse analytics payload:', e);
@@ -1341,7 +1357,8 @@ function openAnalyticsModal(triggerBtn){
 function closeAnalyticsModal(){
   var modal = document.getElementById('analyticsModal');
   if(modal){
-    modal.hidden = true;
+    modal.setAttribute('hidden', '');
+    modal.classList.remove('is-open');
     document.body.style.overflow = '';
   }
   if(activeAnalyticsChart){
