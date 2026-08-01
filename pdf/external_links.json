@@ -1,12 +1,4 @@
 {
-  "pdf-nexusx": {
-    "nexusx.pdf": {
-      "download_url": "https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-nexusx/nexusx.pdf",
-      "size_bytes": 317687514,
-      "tag": "pdf-nexusx",
-      "target_dir": "NexusX/Questions"
-    }
-  },
   "pdf-nexusx_v1": {
     "nexusx_v1.pdf": {
       "download_url": "https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-nexusx_v1/nexusx_v1.pdf",

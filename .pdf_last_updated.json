@@ -43,6 +43,14 @@
     "date": "2026-08-01",
     "hash": "bd500a48fcc8"
   },
+  "NexusX/Questions/nexusx_v1.pdf": {
+    "date": "2026-08-01",
+    "hash": "1d7121502341"
+  },
+  "NexusX/Questions/nexusx_v2.pdf": {
+    "date": "2026-08-01",
+    "hash": "ac65bc80480a"
+  },
   "NexusX/Solutions/nexusx_analog_ec_solutions.pdf": {
     "date": "2026-08-01",
     "hash": "1d49d57a19d2"
@@ -102,6 +110,10 @@
   "NexusX/Solutions/nexusx_signals_in_solutions.pdf": {
     "date": "2026-08-01",
     "hash": "1d2424fec725"
+  },
+  "PowerX/Questions/powerx.pdf": {
+    "date": "2026-08-01",
+    "hash": "be948a5eaad0"
   },
   "PowerX/Solutions/powerx_emft_ee_solutions.pdf": {
     "date": "2026-08-01",
