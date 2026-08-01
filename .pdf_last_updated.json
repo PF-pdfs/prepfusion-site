@@ -1,0 +1,150 @@
+{
+  "Aptitude/Questions/apti.pdf": {
+    "date": "2026-08-01",
+    "hash": "04a72187c17f"
+  },
+  "Aptitude/Solutions/apti_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "a40b1db219a0"
+  },
+  "Maths/Questions/PrepFusion_Engineering_Mathematics.pdf": {
+    "date": "2026-08-01",
+    "hash": "f7cde8d28629"
+  },
+  "Maths/Solutions/maths_calculus_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "9b6bffb10015"
+  },
+  "Maths/Solutions/maths_complex_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "2d7ee182ed8e"
+  },
+  "Maths/Solutions/maths_differential_equations_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "3c4169f622bc"
+  },
+  "Maths/Solutions/maths_linear_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "1bbaf4077e9a"
+  },
+  "Maths/Solutions/maths_numerical_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "2ea6eb6d327a"
+  },
+  "Maths/Solutions/maths_probability_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "fe0d2460cae4"
+  },
+  "Maths/Solutions/maths_transform_theory_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "ddad66fc3209"
+  },
+  "Maths/Solutions/maths_vector_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "bd500a48fcc8"
+  },
+  "NexusX/Solutions/nexusx_analog_ec_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "1d49d57a19d2"
+  },
+  "NexusX/Solutions/nexusx_analog_ee_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "a9174afe43f5"
+  },
+  "NexusX/Solutions/nexusx_analog_in_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "ee4e5e27285c"
+  },
+  "NexusX/Solutions/nexusx_control_ee_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "ce2af91e4efd"
+  },
+  "NexusX/Solutions/nexusx_control_in_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "01a583f2a513"
+  },
+  "NexusX/Solutions/nexusx_control_systems_ec_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "e44f0202112f"
+  },
+  "NexusX/Solutions/nexusx_digital_ec_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "830521202942"
+  },
+  "NexusX/Solutions/nexusx_digital_ee_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "45c72c4dcdc9"
+  },
+  "NexusX/Solutions/nexusx_digital_in_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "78b9c93ce4a2"
+  },
+  "NexusX/Solutions/nexusx_gate_ec_nw_sol.pdf": {
+    "date": "2026-08-01",
+    "hash": "7075e02cbfd1"
+  },
+  "NexusX/Solutions/nexusx_network_theory_ee_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "f5c336ffc30e"
+  },
+  "NexusX/Solutions/nexusx_network_theory_in_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "2946c6098202"
+  },
+  "NexusX/Solutions/nexusx_signals_ec_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "8861cdeff9ae"
+  },
+  "NexusX/Solutions/nexusx_signals_ee_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "a429321e2f84"
+  },
+  "NexusX/Solutions/nexusx_signals_in_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "1d2424fec725"
+  },
+  "PowerX/Solutions/powerx_emft_ee_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "7f92c9e58ccd"
+  },
+  "PowerX/Solutions/powerx_emft_in_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "8907fd57b280"
+  },
+  "PowerX/Solutions/powerx_machines_ee_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "1696be6ad148"
+  },
+  "PowerX/Solutions/powerx_machines_in_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "ebfd93f3bcd0"
+  },
+  "PowerX/Solutions/powerx_measurements_ee_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "b5a305676048"
+  },
+  "PowerX/Solutions/powerx_power_electronics_ee_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "7e942a54616a"
+  },
+  "PowerX/Solutions/powerx_power_systems_ee_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "004d17c921bb"
+  },
+  "SiliconX/Questions/siliconx.pdf": {
+    "date": "2026-08-01",
+    "hash": "8d73d520f8f6"
+  },
+  "SiliconX/Solutions/siliconx_communications_ec_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "61c7f0f7add1"
+  },
+  "SiliconX/Solutions/siliconx_edc_ec_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "7e732b2585f1"
+  },
+  "SiliconX/Solutions/siliconx_emft_ec_solutions.pdf": {
+    "date": "2026-08-01",
+    "hash": "88d453d22425"
+  }
+}
