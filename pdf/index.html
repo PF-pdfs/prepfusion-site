@@ -432,6 +432,13 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   .statbox b{font-size:22px}
   .card-body{padding:14px 15px 16px;gap:9px}
   .cover-brand .bm-text{font-size:11px}
+  /* .card-kind carries a full subject list on combined cards (e.g. "Network,
+     Analog, Digital, Signals & Control") — fine at desktop card width, but
+     the 2-up mobile grid above makes that same text wrap across several
+     lines and dominate the card. Smaller size plus a hard clamp keeps it a
+     supporting line, not the whole card. */
+  .card-kind{font-size:12.5px;display:-webkit-box;-webkit-box-orient:vertical;
+    -webkit-line-clamp:2;overflow:hidden}
 }
 @media(max-width:420px){
   .hero h1{font-size:33px}
@@ -863,7 +870,7 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                data-types="questions">
         <div class="cover gen" style="--cv1:#034F39;--cv2:#08292A"><span class="halftone"></span><span class="spine"></span><span class="glyph" aria-hidden="true">M</span><span class="qs" title="Questions">Q</span><span class="cover-series">Maths</span><span class="cover-rule"></span><span class="cover-title">Complete Questions</span><span class="cover-foot"><span class="bm cover-brand"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></span></div>
         <div class="card-body">
-          <p class="card-kind">Linear Algebra, Calculus, Probability, Vectors, Complex Variables, Diff. Equations, Numerical Methods &amp; Transforms</p>
+          <p class="card-kind">Linear Algebra, Calculus, Probability &amp; 5 more topics</p>
           <!-- The cover's big text already shows the real title visually
                (and per-subject cards' kind_line reads the same "Series ·
                Kind" across every subject in that series) — this keeps a
