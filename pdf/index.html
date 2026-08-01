@@ -530,7 +530,11 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 .analytics-modal[hidden]{display:none !important}
 .analytics-modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s ease}
 .analytics-modal:not([hidden]),.analytics-modal.is-open{display:flex !important;opacity:1 !important;pointer-events:auto !important}
-.analytics-backdrop{position:fixed;inset:0;background:rgba(11,18,32,0.75);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+/* blur(6px), not 10 — backdrop-filter is one of the more expensive effects
+   a browser can composite, and it's running over the ENTIRE viewport
+   behind the dialog. Visually still reads as "glass", noticeably lighter
+   on the compositor, especially on a laptop without a discrete GPU. */
+.analytics-backdrop{position:fixed;inset:0;background:rgba(11,18,32,0.75);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .analytics-dialog{position:relative;z-index:2;width:100%;max-width:960px;max-height:90vh;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 25px 50px -12px rgba(0,0,0,.35);overflow:hidden;transform:scale(.96);transition:transform .25s ease}
 .analytics-modal:not([hidden]) .analytics-dialog,.analytics-modal.is-open .analytics-dialog{transform:scale(1)}
 .analytics-header{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line)}
@@ -541,14 +545,24 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 .analytics-close:hover{color:var(--ink)}
 .analytics-body{display:grid;grid-template-columns:300px 1fr;gap:0;flex:1;overflow:hidden}
 .analytics-sidebar{padding:20px;border-right:1px solid var(--line);overflow-y:auto;max-height:calc(90vh - 90px)}
-.analytics-sidebar h3{font:600 13px/1 "Sora",sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin:0 0 14px}
+.analytics-sidebar-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+.analytics-sidebar-head h3{font:600 13px/1 "Sora",sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin:0}
+.analytics-tree-tools{display:flex;gap:4px}
+.analytics-tree-tools button{font:600 10.5px "IBM Plex Mono",monospace;color:var(--ink-soft);background:none;
+  border:1px solid var(--line);border-radius:6px;padding:3px 7px;cursor:pointer;transition:color .15s,border-color .15s}
+.analytics-tree-tools button:hover{color:var(--sc-use,var(--ink));border-color:var(--sc-use,var(--line-strong))}
 .analytics-tree{font-size:13px;list-style:none;padding:0;margin:0}
 .analytics-tree ul{list-style:none;padding-left:14px;margin:4px 0 6px;border-left:1px dashed var(--line-strong)}
 .analytics-tree li{margin:3px 0}
-.analytics-node{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;border-radius:6px;cursor:pointer;color:var(--ink);transition:background .15s}
+.analytics-node{display:flex;align-items:center;gap:4px;padding:5px 8px;border-radius:6px;cursor:pointer;color:var(--ink);transition:background .15s}
 .analytics-node:hover,.analytics-node.is-active{background:var(--sc-tint,var(--chipbg));color:var(--sc-use,var(--sc,var(--ink)))}
-.analytics-node-title{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
-.analytics-node-badge{font:600 11px "IBM Plex Mono",monospace;color:var(--ink-faint);background:var(--chipbg);padding:1px 6px;border-radius:10px}
+.analytics-tgl{flex:none;width:20px;height:20px;display:grid;place-items:center;background:none;border:0;
+  padding:0;color:inherit;cursor:pointer;border-radius:4px}
+.analytics-tgl svg{transition:transform .15s}
+.analytics-tgl[aria-expanded="true"] svg{transform:rotate(90deg)}
+.analytics-pad{flex:none;width:20px}
+.analytics-node-title{flex:1;min-width:0;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.analytics-node-badge{flex:none;font:600 11px "IBM Plex Mono",monospace;color:var(--ink-faint);background:var(--chipbg);padding:1px 6px;border-radius:10px}
 .analytics-main{padding:24px;display:flex;flex-direction:column;gap:20px;overflow-y:auto}
 .analytics-chart-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:20px}
 .analytics-chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
@@ -1101,7 +1115,13 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
     </header>
     <div class="analytics-body">
       <div class="analytics-sidebar">
-        <h3>Chapter Breakdown</h3>
+        <div class="analytics-sidebar-head">
+          <h3>Chapter Breakdown</h3>
+          <div class="analytics-tree-tools">
+            <button type="button" id="analyticsExpandAll">Expand all</button>
+            <button type="button" id="analyticsCollapseAll">Collapse all</button>
+          </div>
+        </div>
         <div id="analyticsTreeContainer"></div>
       </div>
       <div class="analytics-main">
@@ -1283,6 +1303,21 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 
 var activeAnalyticsChart = null;
 
+(function(){
+  var expandBtn = document.getElementById('analyticsExpandAll');
+  var collapseBtn = document.getElementById('analyticsCollapseAll');
+  function setAllNodes(open){
+    document.querySelectorAll('#analyticsTreeContainer .analytics-tree ul').forEach(function(sub){
+      sub.hidden = !open;
+    });
+    document.querySelectorAll('#analyticsTreeContainer .analytics-tgl').forEach(function(t){
+      t.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+  if(expandBtn) expandBtn.addEventListener('click', function(){ setAllNodes(true); });
+  if(collapseBtn) collapseBtn.addEventListener('click', function(){ setAllNodes(false); });
+})();
+
 function openAnalyticsModal(triggerBtn){
   var card = triggerBtn ? triggerBtn.closest('.card') : null;
   if(!card) return;
@@ -1332,7 +1367,7 @@ function openAnalyticsModal(triggerBtn){
         data.files.forEach(function(fileItem){
           if(fileItem.tree && fileItem.tree.children){
             fileItem.tree.children.forEach(function(childNode){
-              ul.appendChild(createTreeNode(childNode, '', fileItem.year_table, aggregatedYears));
+              ul.appendChild(createTreeNode(childNode, '', fileItem.year_table, aggregatedYears, 0));
             });
           }
           if(fileItem.year_table){
@@ -1346,10 +1381,13 @@ function openAnalyticsModal(triggerBtn){
         });
       }
 
+      var treeTools = document.querySelector('.analytics-tree-tools');
       if(ul.children.length === 0){
         treeContainer.innerHTML = '<p style="padding:12px;color:var(--ink-soft,#64748b);font-size:13px;margin:0;">No chapter outline available for this PDF.</p>';
+        if(treeTools) treeTools.hidden = true;
       } else {
         treeContainer.appendChild(ul);
+        if(treeTools) treeTools.hidden = false;
       }
 
       var badgeEl = document.getElementById('analyticsSelectionBadge');
@@ -1388,16 +1426,57 @@ function closeAnalyticsModal(){
   }
 }
 
-function createTreeNode(node, pathPrefix, yearTable, aggregatedYears){
+function isDisplayLeaf(node){
+  // "Chapter/Unit is the lowest level shown" without hardcoding a depth —
+  // NexusX/SiliconX/PowerX are 4 levels (Subject>Branch>Chapter>Question),
+  // Aptitude is 2 (Year>Question), and Maths hasn't been verified at all
+  // (see docs/QUESTION_ANALYTICS_HANDOFF.md §5). A node is the lowest one
+  // worth SHOWING once its own children have no children of their own —
+  // i.e. its children ARE individual questions — regardless of how deep
+  // that happens to be for this particular series.
+  var kids = node.children || [];
+  if(kids.length === 0) return true;
+  return kids.every(function(c){ return !c.children || c.children.length === 0; });
+}
+
+function createTreeNode(node, pathPrefix, yearTable, aggregatedYears, depth){
   var li = document.createElement('li');
   var nodeDiv = document.createElement('div');
   nodeDiv.className = 'analytics-node';
 
   var currentPath = pathPrefix ? (pathPrefix + ' / ' + node.title) : node.title;
   var qCount = countNodeLeaves(node);
+  var leaf = isDisplayLeaf(node);
 
-  nodeDiv.innerHTML = '<span class="analytics-node-title" title="' + (node.title || '') + '">' + (node.title || 'Root') + '</span>' +
-                      '<span class="analytics-node-badge">' + qCount + ' Qs</span>';
+  if(!leaf){
+    var tgl = document.createElement('button');
+    tgl.type = 'button';
+    tgl.className = 'analytics-tgl';
+    // Only the top level starts open — a book can carry a four-figure
+    // outline, and opening the tree onto all of it at once is a wall of
+    // text, not a map. Matches the reader's own Contents-drawer convention.
+    tgl.setAttribute('aria-expanded', depth === 0 ? 'true' : 'false');
+    tgl.setAttribute('aria-label', 'Expand section');
+    tgl.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+      + 'stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+      + '<path d="m9 5 7 7-7 7"/></svg>';
+    nodeDiv.appendChild(tgl);
+  } else {
+    var pad = document.createElement('span');
+    pad.className = 'analytics-pad';
+    nodeDiv.appendChild(pad);
+  }
+
+  var titleSpan = document.createElement('span');
+  titleSpan.className = 'analytics-node-title';
+  titleSpan.title = node.title || '';
+  titleSpan.textContent = node.title || 'Root';
+  nodeDiv.appendChild(titleSpan);
+
+  var badgeSpan = document.createElement('span');
+  badgeSpan.className = 'analytics-node-badge';
+  badgeSpan.textContent = qCount + ' Qs';
+  nodeDiv.appendChild(badgeSpan);
 
   nodeDiv.addEventListener('click', function(e){
     e.stopPropagation();
@@ -1407,10 +1486,12 @@ function createTreeNode(node, pathPrefix, yearTable, aggregatedYears){
     var chapterYears = {};
     if(yearTable){
       Object.keys(yearTable).forEach(function(k){
-        /* Match the exact path OR any path that contains this node's title
-           as a segment — so clicking a parent (Subject / Branch) aggregates
-           ALL chapters underneath it, not just the one exact-path match. */
-        if(k === currentPath || k.indexOf(node.title) !== -1){
+        // Exact match, or a real path-segment prefix ("X / Y" starts-with
+        // "X / "), never a bare substring of the title — two different
+        // subjects can share an identically-worded chapter/branch name
+        // (e.g. every subject has an "EC" branch), and matching on the
+        // title alone silently pooled all of them into one node's chart.
+        if(k === currentPath || k.indexOf(currentPath + ' / ') === 0){
           var yObj = yearTable[k];
           Object.keys(yObj).forEach(function(y){
             chapterYears[y] = (chapterYears[y] || 0) + yObj[y];
@@ -1420,14 +1501,25 @@ function createTreeNode(node, pathPrefix, yearTable, aggregatedYears){
     }
     document.getElementById('analyticsSelectionBadge').textContent = node.title || 'Selected Topic';
     renderYearChart(chapterYears, node.title);
+
+    if(!leaf){
+      var sub = li.querySelector(':scope > ul');
+      if(sub){
+        var open = sub.hidden;
+        sub.hidden = !open;
+        tgl.setAttribute('aria-expanded', open ? 'true' : 'false');
+        tgl.setAttribute('aria-label', open ? 'Collapse section' : 'Expand section');
+      }
+    }
   });
 
   li.appendChild(nodeDiv);
 
-  if(node.children && node.children.length > 0){
+  if(!leaf){
     var subUl = document.createElement('ul');
+    subUl.hidden = depth !== 0;
     node.children.forEach(function(child){
-      subUl.appendChild(createTreeNode(child, currentPath, yearTable, aggregatedYears));
+      subUl.appendChild(createTreeNode(child, currentPath, yearTable, aggregatedYears, depth + 1));
     });
     li.appendChild(subUl);
   }
@@ -1478,20 +1570,40 @@ function renderYearChart(yearData, titleLabel){
     if(activeAnalyticsChart){ activeAnalyticsChart.destroy(); activeAnalyticsChart = null; }
     try{
       activeAnalyticsChart = new Chart(canvas.getContext('2d'), {
+        // Bars for the actual per-year count (easy to compare years at a
+        // glance) plus a dashed trend line over the same points (easy to
+        // see the shape/direction across years) — Chart.js "mixed chart",
+        // one dataset per type, both plotted on the same axes.
         type: 'bar',
         data: {
           labels: years,
-          datasets: [{ label: 'Questions Asked', data: counts,
-            backgroundColor: barColor, borderRadius: 4 }]
+          datasets: [
+            { type: 'bar', label: 'Questions Asked', data: counts,
+              backgroundColor: barColor + '55', borderRadius: 4, order: 2 },
+            { type: 'line', label: 'Trend', data: counts,
+              borderColor: barColor, borderDash: [6, 4], borderWidth: 2,
+              pointBackgroundColor: barColor, pointBorderColor: barColor,
+              pointRadius: 3, pointHoverRadius: 5, fill: false,
+              tension: 0.25, order: 1 }
+          ]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
+          // Short and snappy, not Chart.js's default ~1s — this can redraw
+          // on every tree click, and a long animation there reads as lag,
+          // not polish.
+          animation: { duration: 300 },
           plugins: {
             legend: { display: false },
-            tooltip: { callbacks: {
-              title: function(i){ return 'GATE ' + i[0].label; },
-              label: function(i){ return i.raw + ' Question(s)'; }
-            }}
+            tooltip: {
+              // One dataset's worth per year, not two identical lines —
+              // both series plot the same numbers, only their look differs.
+              filter: function(item){ return item.datasetIndex === 0; },
+              callbacks: {
+                title: function(i){ return 'GATE ' + i[0].label; },
+                label: function(i){ return i.raw + ' Question(s)'; }
+              }
+            }
           },
           scales: {
             x: { grid:{ color:gridColor }, ticks:{ color:textColor, font:{family:'IBM Plex Mono',size:11} } },
@@ -1503,24 +1615,39 @@ function renderYearChart(yearData, titleLabel){
     } catch(e){ console.warn('Chart.js failed, using SVG fallback:', e); }
   }
 
-  /* ---- SVG/HTML fallback — zero dependencies, always renders ---- */
+  /* ---- SVG fallback — zero dependencies, always renders. Bars plus a
+     dashed trend line, matching the Chart.js "mixed chart" above, so a
+     visitor without Chart.js (CDN blocked/offline) sees the same shape
+     of chart, not a different one. ---- */
   if(activeAnalyticsChart){ activeAnalyticsChart.destroy(); activeAnalyticsChart = null; }
   var maxCount = Math.max.apply(null, counts.concat([1]));
-  var bars = years.map(function(y, i){
-    var cnt  = counts[i];
-    var pct  = Math.max((cnt / maxCount) * 74, 3);   /* 74% max height inside the 100% container */
-    return '<div style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;' +
-           'gap:4px;height:100%;justify-content:flex-end;" title="GATE '+y+': '+cnt+' Qs">' +
-           '<span style="font-size:10px;font-weight:600;color:'+textColor+'">'+cnt+'</span>' +
-           '<div style="width:100%;max-width:22px;height:'+pct+'%;background:'+barColor+';' +
-             'border-radius:4px 4px 0 0;transition:height .35s ease;"></div>' +
-           '<span style="font-size:9px;font-family:IBM Plex Mono,monospace;color:'+textColor+';' +
-             'writing-mode:vertical-rl;transform:rotate(180deg);max-height:40px;overflow:hidden;">'+y+'</span>' +
-           '</div>';
+  var W = 100, H = 100, padX = 3, padY = 10;   /* percent-based viewBox, scales with the container */
+  var innerW = W - padX * 2, innerH = H - padY * 2;
+  var slot = years.length > 0 ? innerW / years.length : innerW;
+  var barW = Math.min(slot * 0.5, 6);
+  var pts = years.map(function(y, i){
+    var x = years.length > 1 ? padX + (i / (years.length - 1)) * innerW : W / 2;
+    var yy = padY + innerH - (counts[i] / maxCount) * innerH;
+    return [x, yy];
+  });
+  var bars = pts.map(function(p, i){
+    var barH = innerH - (p[1] - padY);
+    return '<rect x="' + (p[0] - barW / 2).toFixed(2) + '" y="' + p[1].toFixed(2) + '" ' +
+           'width="' + barW.toFixed(2) + '" height="' + Math.max(barH, 0.5).toFixed(2) + '" ' +
+           'fill="' + barColor + '55" rx="0.6"><title>GATE ' + years[i] + ': ' + counts[i] + ' Qs</title></rect>';
+  }).join('');
+  var pointsAttr = pts.map(function(p){ return p[0].toFixed(2) + ',' + p[1].toFixed(2); }).join(' ');
+  var dots = pts.map(function(p){
+    return '<circle cx="' + p[0].toFixed(2) + '" cy="' + p[1].toFixed(2) + '" r="1.2" fill="' + barColor + '"/>';
   }).join('');
   container.innerHTML =
-    '<div style="display:flex;align-items:flex-end;gap:3px;height:100%;' +
-    'padding:8px 8px 0;box-sizing:border-box;">' + bars + '</div>';
+    '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" style="width:100%;height:100%;overflow:visible">' +
+    bars +
+    '<polyline points="' + pointsAttr + '" fill="none" stroke="' + barColor + '" stroke-width="0.8" ' +
+    'stroke-dasharray="2.4,1.6" stroke-linecap="round" vector-effect="non-scaling-stroke"/>' +
+    dots + '</svg>' +
+    '<div style="display:flex;justify-content:space-between;margin-top:4px;font:9px \'IBM Plex Mono\',monospace;color:' + textColor + '">' +
+    years.map(function(y){ return '<span>' + y + '</span>'; }).join('') + '</div>';
 }
 </script>
 </body>
