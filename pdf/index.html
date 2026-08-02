@@ -658,6 +658,10 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
    to wrap onto a second line rather than fight the chart title for space. */
 .analytics-selection{margin:0;font:600 16px/1.35 "Sora",sans-serif;color:var(--sc-use,var(--sc,var(--ink)))}
 .analytics-chart-container{position:relative;height:320px;width:100%}
+.analytics-chart-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;
+  font:400 11px "Inter",sans-serif;color:var(--ink-faint)}
+.analytics-legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;
+  margin-right:6px;vertical-align:middle}
 @media(max-width:768px){
   .analytics-body{grid-template-columns:1fr;overflow-y:auto}
   .analytics-sidebar{border-right:none;border-bottom:1px solid var(--line);max-height:240px}
@@ -1241,6 +1245,14 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
           <div class="analytics-chart-container">
             <canvas id="analyticsChart"></canvas>
           </div>
+          <!-- Filled in and un-hidden by renderYearChart() only once a branch
+               (or a set of candidate branches) is actually in view — blue/amber
+               only mean something once we know which branch's papers were
+               checked, so there is nothing honest to show before that. -->
+          <div class="analytics-chart-legend" id="analyticsChartLegend" hidden>
+            <span><i class="analytics-legend-dot" id="analyticsLegendDotNormal"></i>1 session</span>
+            <span><i class="analytics-legend-dot" id="analyticsLegendDotMulti"></i>More than 1 (hover a point for the exact count)</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1462,29 +1474,51 @@ var currentAnalyticsSeries = null;
 
 // Verified against the OFFICIAL GATE question-paper PDFs for each branch —
 // opened directly, page by page, not taken from a secondary source. A year
-// only appears here when the source PDF itself proves it: an explicit
-// "SESSION - N" cover page, an explicit "session N"/"shift N" label in the
-// paper's own header, OR (where a file was split into numbered parts with
-// no such label) a direct text comparison against its sibling part turning
-// up NO overlapping question content — i.e. two genuinely different papers,
-// not one paper split across two files. Cross-checked against independent
-// public sources for a sample of these years (GATE 2014, GATE 2017) with no
-// contradictions found.
+// only appears here when the PRINTED PAGE TEXT of the paper itself proves a
+// genuinely separate sitting: a real calendar date or forenoon/afternoon
+// shift, e.g. "31st Jan Shift1" vs "31st Jan Shift2" vs "1st Feb Shift1", or
+// an official "Question Paper Name:" header stating "session 2" on a
+// specific dated paper. Cross-checked against independent public sources
+// for GATE 2014 and GATE 2017 with no contradictions found.
 //
-// A year/branch NOT listed here means no such evidence was found in the
-// source PDFs available — it does NOT mean "confirmed single session".
-// Some years show multiple question SETS printed for a single sitting
-// (GATE's anti-cheating measure since well before this era) rather than
-// multiple actual sittings; those are deliberately excluded; a "Set-N" or
-// "GATE Single Session" label proves the opposite of what this table
-// tracks, so those years are correctly absent.
+// A year/branch NOT listed here means no such dated evidence was found —
+// it does NOT mean "confirmed single session". This table went through one
+// real revision already, worth recording so the same mistake isn't repeated:
+// an earlier pass included 2013 and 2014 on the strength of "SESSION - N"
+// cover pages and split sub-papers alone. Re-checking every one of those
+// pages for an actual date turned up NONE — 2013's "SESSION - N" pages are
+// each paired with a "Question Booklet Code" letter (EC-A/EC-B/EC-C/EC-D,
+// same pattern on ME and PI that year), which is GATE's well-documented
+// SAME-SITTING anti-cheating device (different booklet variants handed to
+// adjacent candidates), not a time distinction. 2016 was also reconsidered:
+// its "GATE 2016 Single Session" claim exists ONLY in the PDF's bookmark
+// titles, added by whoever compiled the file — never in the actual printed
+// page text — so it's too weak a source to assert single-session from
+// either. Multiple question SETS printed for one sitting (2016's clearest
+// example) are deliberately excluded regardless: a "Set-N" label describes
+// the opposite of what this table tracks. Two files with entirely different,
+// complete question sets (verified by full Q-number range, not just content
+// overlap) is NOT enough on its own either — that's equally consistent with
+// two sittings or two sets in one sitting, so a few site's-worth of quiet
+// content-diff-only entries were removed too once that gap was noticed.
+//
+// This was a MANUAL review process across ~110 PDFs. If a count looks wrong
+// or a year is missing, the feedback link in the footer reaches a real
+// person — see analytics-info-disclaimer below.
 var GATE_MULTI_SESSION_YEARS = {
-  EC: {2013: 4, 2014: 4, 2015: 3, 2017: 2},
-  EE: {2013: 4, 2014: 3, 2015: 2, 2017: 2},
-  PI: {2013: 4, 2015: 2},
-  ME: {2013: 4, 2014: 4, 2015: 3, 2017: 2, 2018: 2, 2022: 2},
-  CE: {2014: 2, 2015: 2, 2017: 2, 2024: 2, 2025: 2, 2026: 2}
+  EC: {2015: 3, 2017: 2},
+  EE: {2015: 2, 2017: 2},
+  PI: {2015: 2},
+  ME: {2015: 3, 2017: 2},
+  CE: {2015: 2, 2017: 2}
 };
+
+// Official GATE papers were only available (to check against) from 2007
+// onward — nothing before that was in the source material, so a year
+// earlier than this was never checked at all, in either direction. Read
+// alongside the table above: a blank YEAR from this point forward means
+// "checked, nothing found"; a blank year before it means "never checked".
+var GATE_SESSION_DATA_FROM_YEAR = 2007;
 
 // SiliconX's own book covers ONE branch only (see SERIES_BRANCHES in
 // build_site.py — this is a real, already-used fact about the series, not
@@ -1493,20 +1527,40 @@ var GATE_MULTI_SESSION_YEARS = {
 // the path-parsing logic below.
 var SERIES_FIXED_BRANCH = {SiliconX: 'EC'};
 
-// Pulls a branch code (EC/EE/IN/...) out of whichever tree node is
-// currently selected, given the FULL path string built by createTreeNode
-// (ancestor titles joined with " / "). Branch-level nodes are always titled
+// Pulls a branch code (EC/EE/IN/...) out of a single tree-node title OR a
+// full ancestor path (createTreeNode joins them with " / ") — same regex
+// either way, since a bare title has no "/" to match against and the
+// alternation covers start-of-string. Branch-level nodes are always titled
 // "EC — Electronics & Communication Engineering" (see extract_question_tree
 // in organize_pdfs.py) regardless of which series or how deep they sit —
 // NexusX/PowerX have Subject > Branch > Chapter, Maths has Chapter > Branch
-// instead, so this scans the whole path rather than assuming a fixed depth,
-// the same "don't hardcode a depth position" rule computeTreeSummary above
-// already follows for the same reason.
+// instead, so this scans the whole string rather than assuming a fixed
+// depth, the same "don't hardcode a depth position" rule computeTreeSummary
+// above already follows for the same reason. Gated on GATE_MULTI_SESSION_
+// YEARS itself — a branch this table has never verified (IN, CH, or a
+// typo) is never treated as "detected", so nothing downstream can act on it.
+function extractBranchCode(text){
+  if(!text) return null;
+  var m = /(^|\/)\s*([A-Z]{2})\s+[–—]\s/.exec(text);
+  return (m && GATE_MULTI_SESSION_YEARS.hasOwnProperty(m[2])) ? m[2] : null;
+}
+
 function branchFromPath(series, path){
   if(SERIES_FIXED_BRANCH[series]) return SERIES_FIXED_BRANCH[series];
-  if(!path) return null;
-  var m = /(^|\/)\s*([A-Z]{2})\s+[–—]\s/.exec(path);
-  return (m && GATE_MULTI_SESSION_YEARS.hasOwnProperty(m[2])) ? m[2] : null;
+  return extractBranchCode(path);
+}
+
+// Walks a node and everything under it, collecting every DISTINCT branch
+// code found among its own and its descendants' titles. Used when the
+// current selection can't be pinned to one branch (a Subject-level node
+// spanning EC/EE/IN, or the whole-book "All Chapters" view) but still
+// covers one or more branches this table HAS verified data for — lets the
+// chart say "at least one of these branches had an extra sitting" instead
+// of staying silent just because more than one branch is in view.
+function collectBranchesInSubtree(node, set){
+  var code = extractBranchCode(node.title);
+  if(code) set.add(code);
+  (node.children || []).forEach(function(c){ collectBranchesInSubtree(c, set); });
 }
 
 (function(){
@@ -1655,11 +1709,17 @@ function openAnalyticsModal(triggerBtn){
       ul.className = 'analytics-tree';
 
       var aggregatedYears = {};
+      // Every branch this book's tree mentions ANYWHERE, across every file
+      // — not just the ones with a session verified, extractBranchCode()
+      // already filters to that. Used by the "All Chapters" chart below,
+      // since that view spans every branch and can't be pinned to one.
+      var bookBranches = new Set();
 
       if(data.files && data.files.length > 0){
         data.files.forEach(function(fileItem){
           if(fileItem.tree && fileItem.tree.children){
             fileItem.tree.children.forEach(function(childNode){
+              collectBranchesInSubtree(childNode, bookBranches);
               ul.appendChild(createTreeNode(childNode, '', fileItem.year_table, aggregatedYears, 0));
             });
           }
@@ -1698,8 +1758,10 @@ function openAnalyticsModal(triggerBtn){
       // null path: "All Chapters" spans every branch in the book, so there's
       // no single branch to attribute a highlight to — EXCEPT for a series
       // like SiliconX that's fixed to one branch regardless of selection
-      // depth, which branchFromPath() resolves without needing a path at all.
-      renderYearChart(aggregatedYears, 'All Chapters', null);
+      // depth, which branchFromPath() resolves without needing a path at
+      // all. bookBranches carries the "at least one of these branches"
+      // fallback for everyone else.
+      renderYearChart(aggregatedYears, 'All Chapters', null, bookBranches);
     } else {
       modal.removeAttribute('hidden');
       modal.classList.add('is-open');
@@ -1808,7 +1870,13 @@ function createTreeNode(node, pathPrefix, yearTable, aggregatedYears, depth){
       });
     }
     document.getElementById('analyticsSelectionBadge').textContent = formatBreadcrumb(currentPath) || 'Selected Topic';
-    renderYearChart(chapterYears, node.title, currentPath);
+    // Only bother walking this node's subtree for a branch fallback when the
+    // path itself didn't already resolve one — e.g. a Subject-level node
+    // like "Network Theory (EC, EE, IN)" spans three branches at once, but
+    // a leaf chapter under "EC — ..." already has its answer from the path.
+    var nodeBranches = branchFromPath(currentAnalyticsSeries, currentPath) ? null
+      : (function(){ var s = new Set(); collectBranchesInSubtree(node, s); return s; })();
+    renderYearChart(chapterYears, node.title, currentPath, nodeBranches);
   });
 
   // The chevron ONLY expands/collapses — it must not also re-select this
@@ -1846,7 +1914,25 @@ function countNodeLeaves(node){
   return sum;
 }
 
-function renderYearChart(yearData, titleLabel, currentPath){
+// Shared by the info popover's table (single-branch and "at least one
+// branch" modes both end with this) — one place for the citation, the
+// 2007+ caveat, and the feedback pointer, so the three can't drift out of
+// sync between the two call sites.
+function sessionCitationHtml(){
+  var fbBtn = document.querySelector('.feedback-btn');
+  var fbHref = fbBtn ? fbBtn.getAttribute('href') : null;
+  var reportBit = fbHref
+    ? '<a href="' + fbHref + '" target="_blank" rel="noopener" style="color:inherit">report it with proof</a>'
+    : 'report it with proof via the feedback link in the footer';
+  return '<p style="margin:6px 0 0;font-size:10.5px;color:var(--ink-faint,#94a3b8)">' +
+    'Verified against official GATE question papers.*</p>' +
+    '<p style="margin:2px 0 0;font-size:10px;line-height:1.5;color:var(--ink-faint,#94a3b8)">' +
+    '* Official papers were only available from ' + GATE_SESSION_DATA_FROM_YEAR + ' onward, so multi-session ' +
+    'data is checked only from that year — nothing earlier was verified either way. This was a manual review ' +
+    'across many years and branches; if a count looks wrong, ' + reportBit + '.</p>';
+}
+
+function renderYearChart(yearData, titleLabel, currentPath, subtreeBranches){
   var container = document.querySelector('.analytics-chart-container');
   if(!container) return;
 
@@ -1855,6 +1941,9 @@ function renderYearChart(yearData, titleLabel, currentPath){
 
   var infoBtn = document.querySelector('.analytics-info');
   var infoTableEl = document.getElementById('analyticsInfoTable');
+  var legendEl = document.getElementById('analyticsChartLegend');
+  var legendNormalDot = document.getElementById('analyticsLegendDotNormal');
+  var legendMultiDot = document.getElementById('analyticsLegendDotMulti');
 
   /* Empty state — nothing to chart for this selection. Also clears any
      highlight tint left on the info button by a previous selection, so it
@@ -1865,6 +1954,7 @@ function renderYearChart(yearData, titleLabel, currentPath){
     if(activeAnalyticsChart){ activeAnalyticsChart.destroy(); activeAnalyticsChart = null; }
     if(infoBtn) infoBtn.style.color = '';
     if(infoTableEl) infoTableEl.innerHTML = '';
+    if(legendEl) legendEl.hidden = true;
     return;
   }
 
@@ -1878,24 +1968,6 @@ function renderYearChart(yearData, titleLabel, currentPath){
   var barColor  = seriesColor || (isDark ? '#60a5fa' : '#2563eb');
   var gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
   var textColor = isDark ? '#94a3b8' : '#64748b';
-
-  /* The info button explains WHY a year can spike — so any year in this
-     chart with a VERIFIED extra sitting (GATE_MULTI_SESSION_YEARS, checked
-     against that branch's own official papers) gets its trend-line point
-     recoloured, and the button gets the same colour, tying the two together
-     at a glance. Only the point, never the bar — recolouring the bar too
-     read as heavy-handed next to the plain ones beside it. Can mark MORE
-     THAN ONE year now (2013/2014/2015/2017 for EC, say), unlike the old
-     "just the tallest bar" heuristic this replaced — that was a guess from
-     this book's own numbers; this is checked fact, so it isn't limited to
-     picking exactly one point per chart. Nothing highlights at all when no
-     single branch can be attributed to the current selection (the
-     aggregated "All Chapters" view spanning every branch, or a series
-     without branch-level data) — see branchFromPath(). */
-  var branch = branchFromPath(currentAnalyticsSeries, currentPath);
-  var sessionYears = (branch && GATE_MULTI_SESSION_YEARS[branch]) || {};
-  var isSessionYear = years.map(function(y){ return sessionYears.hasOwnProperty(y); });
-  var anySessionYear = isSessionYear.indexOf(true) !== -1;
   // #B45309 is the exact amber SERIES_META already uses for Aptitude — reusing
   // an already-vetted colour rather than picking a new one. #d97706 (one shade
   // lighter) measured only 3.19:1 on a white icon background, barely clearing
@@ -1903,27 +1975,113 @@ function renderYearChart(yearData, titleLabel, currentPath){
   // threshold too (5.02:1), so it has real headroom rather than sitting right
   // at the line. #fbbf24 in dark mode was already comfortable (9.82:1).
   var sessionColor = isDark ? '#fbbf24' : '#B45309';
+
+  /* The info button explains WHY a year can spike — so any year in this
+     chart with a VERIFIED extra sitting (GATE_MULTI_SESSION_YEARS, checked
+     against that branch's own official papers) gets its trend-line point
+     recoloured, and the button gets the same colour, tying the two together
+     at a glance. Only the point, never the bar — recolouring the bar too
+     read as heavy-handed next to the plain ones beside it. Can mark MORE
+     THAN ONE year now (2015/2017 for EC, say), unlike the old "just the
+     tallest bar" heuristic this replaced — that was a guess from this
+     book's own numbers; this is checked fact.
+
+     Two modes:
+       'single'    — the selection resolves to exactly one branch (via the
+                      node's own path, or SiliconX's fixed answer). Every
+                      marked year shows THAT branch's real session count.
+       'aggregate' — the selection spans more than one branch (a Subject
+                      node, or the whole-book "All Chapters" view) but at
+                      least one of those branches has verified data
+                      (subtreeBranches). A year marks if ANY of them had an
+                      extra sitting — deliberately vaguer than 'single'
+                      ("at least one branch", not which one or how many),
+                      since attributing a specific count to the wrong branch
+                      would be worse than saying less. The popover always
+                      points to a specific branch for the full picture.
+       'none'      — no branch, and no candidates either (a series with no
+                      branch-level data at all, e.g. Aptitude, or a branch
+                      this table has never verified). Nothing is asserted. */
+  var branch = branchFromPath(currentAnalyticsSeries, currentPath);
+  var mode = branch ? 'single' : ((subtreeBranches && subtreeBranches.size) ? 'aggregate' : 'none');
+  var sessionYears = (branch && GATE_MULTI_SESSION_YEARS[branch]) || {};
+
+  // hitsPerYear[i] is an array of {branch, count} — empty when this year
+  // wasn't marked. Always length <= 1 in 'single' mode (this branch only);
+  // can be longer in 'aggregate' mode if more than one candidate branch had
+  // an extra sitting the same year.
+  var hitsPerYear = years.map(function(y){
+    if(mode === 'single') return sessionYears.hasOwnProperty(y) ? [{branch: branch, count: sessionYears[y]}] : [];
+    if(mode === 'aggregate'){
+      var hits = [];
+      subtreeBranches.forEach(function(b){
+        var sy = GATE_MULTI_SESSION_YEARS[b] || {};
+        if(sy.hasOwnProperty(y)) hits.push({branch: b, count: sy[y]});
+      });
+      return hits;
+    }
+    return [];
+  });
+  var isSessionYear = hitsPerYear.map(function(h){ return h.length > 0; });
+  var anySessionYear = isSessionYear.indexOf(true) !== -1;
+
+  // One line of hover text per point — shared between the Chart.js tooltip
+  // and the SVG fallback's native <title>, so the two never say different
+  // things for the same data.
+  function hoverNote(i){
+    if(hitsPerYear[i].length){
+      return hitsPerYear[i].map(function(h){
+        return 'Sessions: ' + h.count + (mode === 'aggregate' ? ' (' + h.branch + ')' : '');
+      }).join('; ');
+    }
+    if(mode === 'none') return null;
+    if(parseInt(years[i], 10) < GATE_SESSION_DATA_FROM_YEAR){
+      return 'Not checked (no official papers before ' + GATE_SESSION_DATA_FROM_YEAR + ')';
+    }
+    // Matches what the legend's blue dot promises — a year this branch (or
+    // set of candidate branches) WAS checked, with nothing extra found,
+    // says so explicitly rather than leaving the hover silent.
+    return mode === 'single' ? 'Sessions: 1 (verified)' : 'No extra sessions found in any branch checked';
+  }
+
   if(infoBtn) infoBtn.style.color = anySessionYear ? sessionColor : '';
 
+  if(legendEl){
+    legendEl.hidden = (mode === 'none');
+    if(mode !== 'none'){
+      if(legendNormalDot) legendNormalDot.style.background = barColor;
+      if(legendMultiDot) legendMultiDot.style.background = sessionColor;
+    }
+  }
+
   if(infoTableEl){
-    if(!anySessionYear){
+    if(mode === 'none' || !anySessionYear){
       infoTableEl.innerHTML = '';
-    } else {
+    } else if(mode === 'single'){
       // Only years actually ON THIS CHART, not the whole table for the
       // branch — a Network Theory chapter under EC only ever shows 1987-
       // 2026's worth of Network Theory years, and a row for a session year
       // this chapter happens not to cover would be a confusing non sequitur.
-      var rows = years.filter(function(y){ return sessionYears.hasOwnProperty(y); })
-        .map(function(y){
-          return '<tr><td>' + y + '</td><td>' + sessionYears[y] + '</td></tr>';
-        }).join('');
+      var rows = years.filter(function(y, i){ return isSessionYear[i]; })
+        .map(function(y){ return '<tr><td>' + y + '</td><td>' + sessionYears[y] + '</td></tr>'; }).join('');
       infoTableEl.innerHTML =
-        '<table class="analytics-info-table">' +
-        '<caption>' + branch + ' — verified sessions</caption>' +
-        '<tr><th>Year</th><th>Sessions</th></tr>' + rows +
-        '</table>' +
+        '<table class="analytics-info-table"><caption>' + branch + ' — verified sessions</caption>' +
+        '<tr><th>Year</th><th>Sessions</th></tr>' + rows + '</table>' + sessionCitationHtml();
+    } else {
+      // 'aggregate' — every branch+year hit, so a year with two candidate
+      // branches both flagged gets two rows, not one ambiguous row.
+      var aggRows = [];
+      years.forEach(function(y, i){
+        hitsPerYear[i].forEach(function(h){
+          aggRows.push('<tr><td>' + y + '</td><td>' + h.branch + '</td><td>' + h.count + '</td></tr>');
+        });
+      });
+      infoTableEl.innerHTML =
+        '<table class="analytics-info-table"><caption>At least one branch — verified sessions</caption>' +
+        '<tr><th>Year</th><th>Branch</th><th>Sessions</th></tr>' + aggRows.join('') + '</table>' +
         '<p style="margin:6px 0 0;font-size:10.5px;color:var(--ink-faint,#94a3b8)">' +
-        'Verified against official GATE question papers.</p>';
+        'This view spans more than one branch, so a highlighted year only means one of them had an extra ' +
+        'sitting — open that specific branch in the tree for its full breakdown.</p>' + sessionCitationHtml();
     }
   }
 
@@ -1982,7 +2140,11 @@ function renderYearChart(yearData, titleLabel, currentPath){
               filter: function(item){ return item.datasetIndex === 0; },
               callbacks: {
                 title: function(i){ return 'GATE ' + i[0].label; },
-                label: function(i){ return i.raw + ' Question(s)'; }
+                label: function(i){ return i.raw + ' Question(s)'; },
+                // Second tooltip line, only when there's something real to
+                // say — lets a visitor see the session count on hover
+                // without opening the (i) popover every time.
+                afterLabel: function(i){ return hoverNote(i.dataIndex); }
               }
             }
           },
@@ -2013,15 +2175,20 @@ function renderYearChart(yearData, titleLabel, currentPath){
   });
   var bars = pts.map(function(p, i){
     var barH = innerH - (p[1] - padY);
+    var note = hoverNote(i);
+    var title = 'GATE ' + years[i] + ': ' + counts[i] + ' Qs' + (note ? ' — ' + note : '');
     return '<rect x="' + (p[0] - barW / 2).toFixed(2) + '" y="' + p[1].toFixed(2) + '" ' +
            'width="' + barW.toFixed(2) + '" height="' + Math.max(barH, 0.5).toFixed(2) + '" ' +
-           'fill="' + barColor + '55" rx="0.6"><title>GATE ' + years[i] + ': ' + counts[i] + ' Qs</title></rect>';
+           'fill="' + barColor + '55" rx="0.6"><title>' + title + '</title></rect>';
   }).join('');
   var pointsAttr = pts.map(function(p){ return p[0].toFixed(2) + ',' + p[1].toFixed(2); }).join(' ');
   var dots = pts.map(function(p, i){
     var fill = isSessionYear[i] ? sessionColor : barColor;
     var r = isSessionYear[i] ? 1.9 : 1.2;
-    return '<circle cx="' + p[0].toFixed(2) + '" cy="' + p[1].toFixed(2) + '" r="' + r + '" fill="' + fill + '"/>';
+    var note = hoverNote(i);
+    var title = 'GATE ' + years[i] + (note ? ': ' + note : '');
+    return '<circle cx="' + p[0].toFixed(2) + '" cy="' + p[1].toFixed(2) + '" r="' + r + '" fill="' + fill + '">' +
+           '<title>' + title + '</title></circle>';
   }).join('');
   container.innerHTML =
     '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" style="width:100%;height:100%;overflow:visible">' +
