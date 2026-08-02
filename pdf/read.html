@@ -151,7 +151,7 @@ body{background:var(--shell);color:var(--ink);
 /* ---------- pages ---------- */
 main{padding:20px 10px 60px;display:flex;flex-direction:column;
   align-items:center;gap:16px}
-.pg{position:relative;background:#fff;box-shadow:0 2px 14px rgba(15,23,42,.14);border-radius:2px;
+.pg{background:#fff;box-shadow:0 2px 14px rgba(15,23,42,.14);border-radius:2px;
   width:100%;max-width:1100px;display:flex;align-items:center;justify-content:center;
   gap:9px;color:#94a3b8;font:600 12px/1 "IBM Plex Mono",monospace;min-height:120px;
   /* Jumping from Contents aligns the page with the viewport top, which the
@@ -165,17 +165,6 @@ main{padding:20px 10px 60px;display:flex;flex-direction:column;
   border:2px solid var(--line-strong);border-top-color:#94a3b8;
   animation:pfspin .8s linear infinite}
 .pg canvas{display:block;max-width:100%;height:auto;border-radius:2px}
-/* One of these per link annotation in the page (a URL, a QR code's own link
-   box, a jump to another page) — the canvas is a flat raster image with no
-   clickable regions of its own, so without this overlay every embedded link
-   was inert. Positioned in the SAME viewport space draw() rendered the page
-   at, from the PDF's own annotation rects, not guessed. Fully transparent at
-   rest — the visible cue is the cursor and a faint highlight on hover, since
-   the underlying page image already shows whatever the PDF drew for the link
-   (an underline, a QR square, a "click here") and doubling that up would be
-   redundant chrome sitting over someone else's content. */
-.pg-link{position:absolute;cursor:pointer;border-radius:2px}
-.pg-link:hover{background:rgba(37,99,235,.12);outline:1.5px solid rgba(37,99,235,.4)}
 /* Night mode. invert() alone swings every hue to its opposite (blue -> orange);
    the hue-rotate swings them back, so a blue circuit trace stays blue-ish.
    It genuinely helps line art. It cannot rescue photographs. */
@@ -332,29 +321,6 @@ if(!rel){
   const holder = $('pages');
   let doc, scale = 1;
 
-  // A fast scroll, or a bookmark jump landing far from where the reader was
-  // (scrollIntoView below, potentially hundreds of pages away), can sweep
-  // dozens of placeholders through the 900px margin within a couple of
-  // frames — the observer fired draw() for every one of them immediately,
-  // with no cap, so a burst like that meant that many concurrent canvas
-  // allocations and pdf.js render tasks in flight AT ONCE. Desktop's spare
-  // RAM/CPU absorbs that; mobile's doesn't, which is exactly the "fine on
-  // desktop, crashes/glitches on mobile" pattern reported — and exactly
-  // when it was reported (fast scrolling, or a distant bookmark jump).
-  // RENDER_CONCURRENCY caps how many pages are ever being rasterised at the
-  // same moment; everything past that just waits its turn in queue instead
-  // of piling on. The eventual visual result is identical, only throttled.
-  const RENDER_CONCURRENCY = 2;
-  let activeRenders = 0;
-  const renderQueue = [];
-  function pumpRenderQueue(){
-    while(activeRenders < RENDER_CONCURRENCY && renderQueue.length){
-      const [n, el] = renderQueue.shift();
-      activeRenders++;
-      draw(n, el).finally(() => { activeRenders--; pumpRenderQueue(); });
-    }
-  }
-
   const io = new IntersectionObserver((entries) => {
     for(const e of entries){
       if(!e.isIntersecting) continue;
@@ -362,9 +328,8 @@ if(!rel){
       if(el.dataset.done) continue;
       el.dataset.done = '1';
       io.unobserve(el);
-      renderQueue.push([Number(el.dataset.n), el]);
+      draw(Number(el.dataset.n), el);
     }
-    pumpRenderQueue();
   }, { rootMargin: '900px 0px' });
 
   // Mobile Safari (and some Android WebViews) refuse to allocate a canvas
@@ -402,71 +367,8 @@ if(!rel){
       el.textContent = '';
       el.style.minHeight = '';
       el.appendChild(c);
-      await drawLinks(page, vp, el);
     }catch(e){
       el.textContent = 'Page ' + n + ' could not be drawn';
-    }
-  }
-
-  // The canvas above is a flat raster image — a QR code, a "click here for
-  // the video" line, any URL the PDF's author actually embedded as a real
-  // link annotation, was completely inert without this. One transparent <a>
-  // per link annotation, positioned from the PDF's own rect (converted into
-  // the SAME viewport draw() just rendered at, so it lines up with the image
-  // regardless of zoom/DPR) rather than guessed from the page image.
-  async function drawLinks(page, vp, el){
-    let annots;
-    try{ annots = await page.getAnnotations(); }catch(e){ return; }
-    for(const a of annots){
-      // unsafeUrl is pdf.js's own name for this field — "unsafe" because
-      // it hasn't sanitised the scheme yet, which is exactly why target and
-      // rel are set explicitly below rather than trusting the PDF author.
-      const url = a.url || a.unsafeUrl;
-      if(!url && !a.dest) continue;   // not a link annotation (e.g. a form field)
-
-      // No convertToViewportRectangle on this pdf.js build (verified live,
-      // not assumed) — only convertToViewportPoint, so each corner is
-      // converted individually and the box built from those two points.
-      // PDF space is bottom-up; the viewport is top-down, so which corner
-      // ends up smaller/larger flips too — min/max below, not a fixed order.
-      const p1 = vp.convertToViewportPoint(a.rect[0], a.rect[1]);
-      const p2 = vp.convertToViewportPoint(a.rect[2], a.rect[3]);
-      const x = Math.min(p1[0], p2[0]), y = Math.min(p1[1], p2[1]);
-      const w = Math.abs(p2[0] - p1[0]), h = Math.abs(p2[1] - p1[1]);
-
-      const link = document.createElement('a');
-      link.className = 'pg-link';
-      link.style.left = x + 'px';
-      link.style.top = y + 'px';
-      link.style.width = w + 'px';
-      link.style.height = h + 'px';
-
-      if(url){
-        // Same reasoning as every outbound link elsewhere on this site
-        // (see the ".ext" arrow on the nav's Courses/YouTube links): a
-        // visitor reading a book should never lose their place in the
-        // reader because a reference link opened in the same tab.
-        link.href = url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-      } else {
-        // Internal link (a cross-reference to another page in the SAME
-        // book) — resolve it the same way the Contents drawer already
-        // does, and scroll there instead of leaving the tab.
-        link.href = '#';
-        link.addEventListener('click', async (e) => {
-          e.preventDefault();
-          try{
-            const d = typeof a.dest === 'string' ? await doc.getDestination(a.dest) : a.dest;
-            const ref = Array.isArray(d) ? d[0] : null;
-            const destN = ref && typeof ref === 'object' ? (await doc.getPageIndex(ref)) + 1
-                        : (typeof ref === 'number' ? ref + 1 : null);
-            const target = destN && holder.querySelector('.pg[data-n="' + destN + '"]');
-            if(target) target.scrollIntoView({ behavior:'smooth', block:'start' });
-          }catch(err){}
-        });
-      }
-      el.appendChild(link);
     }
   }
 
