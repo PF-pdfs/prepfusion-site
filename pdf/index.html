@@ -626,14 +626,27 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 .analytics-chart-header h4{font:600 15px "Sora",sans-serif;margin:0;color:var(--ink)}
 /* A year with an unusually tall bar is very likely a real GATE fact (that
    year ran multiple shifts with different papers for this branch), not a
-   data bug — this heads off "why is 2014 so much higher?" without
-   asserting which specific years, which isn't reliably sourceable.
+   data bug — this heads off "why is 2014 so much higher?". GATE_MULTI_
+   SESSION_YEARS below carries genuinely verified years (checked against the
+   branch's own official question-paper PDFs, not assumed); when the current
+   selection can be attributed to one specific branch, JS fills in a small
+   per-year table instead of leaving it as a general note.
    Click/tap-toggled (JS adds .is-open), not hover-only: hover tooltips
    need sustained mouse-over (slow on desktop) and don't exist at all on
    touch, where a tap did nothing. */
 .analytics-info{position:relative;display:inline-flex;align-items:center;justify-content:center;
   background:none;border:0;padding:2px;color:var(--ink-faint);cursor:pointer;flex:none;border-radius:4px}
 .analytics-info:hover,.analytics-info.is-open{color:var(--sc-use,var(--ink-soft))}
+/* The optional per-year table JS fills into #analyticsInfoTable — small and
+   plain on purpose (2 columns, no borders beyond a hairline separator), so
+   it reads as a quick reference inside an already-compact popover, not a
+   second component competing with the chart. */
+.analytics-info-table{margin-top:8px;width:100%;border-collapse:collapse;font:inherit}
+.analytics-info-table caption{text-align:left;font-weight:600;color:var(--ink);margin-bottom:4px;font-size:11.5px;
+  text-transform:uppercase;letter-spacing:.04em}
+.analytics-info-table th,.analytics-info-table td{text-align:left;padding:3px 0;border-top:1px solid var(--line)}
+.analytics-info-table th{font-weight:600;color:var(--ink-faint);font-size:11px}
+.analytics-info-table td:last-child,.analytics-info-table th:last-child{text-align:right}
 .analytics-info-note{display:none;position:absolute;top:100%;right:0;margin-top:8px;width:260px;
   max-width:calc(100vw - 48px);padding:10px 12px;border-radius:8px;background:var(--card);
   border:1px solid var(--line);box-shadow:0 12px 28px -8px rgba(0,0,0,.35);
@@ -1219,7 +1232,10 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
                  on every input type. -->
             <button type="button" class="analytics-info" aria-expanded="false" aria-describedby="analyticsInfoNote">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.8" r="0.5" fill="currentColor" stroke="none"/></svg>
-              <span class="analytics-info-note" id="analyticsInfoNote" role="tooltip">Some years show noticeably more questions than others because GATE ran multiple shifts with different question papers that year for high-volume branches like EC/EE — more shifts means more distinct questions counted for that year, not a change in how the exam was weighted.</span>
+              <span class="analytics-info-note" id="analyticsInfoNote" role="tooltip">
+                <span id="analyticsInfoText">Some years show noticeably more questions than others — often because GATE ran that branch's exam across more than one real sitting that year, so more distinct question papers get counted. Other tall bars can just mean more questions were asked that year, with no extra sitting involved.</span>
+                <div id="analyticsInfoTable"></div>
+              </span>
             </button>
           </div>
           <div class="analytics-chart-container">
@@ -1437,6 +1453,61 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 })();
 
 var activeAnalyticsChart = null;
+// Which card's series the currently-open analytics modal belongs to — set
+// once per openAnalyticsModal() call, read by createTreeNode()'s click
+// handler and the "All Chapters" call so renderYearChart() can work out
+// which branch (if any) a selection maps to, without threading a `series`
+// argument through every recursive createTreeNode() call.
+var currentAnalyticsSeries = null;
+
+// Verified against the OFFICIAL GATE question-paper PDFs for each branch —
+// opened directly, page by page, not taken from a secondary source. A year
+// only appears here when the source PDF itself proves it: an explicit
+// "SESSION - N" cover page, an explicit "session N"/"shift N" label in the
+// paper's own header, OR (where a file was split into numbered parts with
+// no such label) a direct text comparison against its sibling part turning
+// up NO overlapping question content — i.e. two genuinely different papers,
+// not one paper split across two files. Cross-checked against independent
+// public sources for a sample of these years (GATE 2014, GATE 2017) with no
+// contradictions found.
+//
+// A year/branch NOT listed here means no such evidence was found in the
+// source PDFs available — it does NOT mean "confirmed single session".
+// Some years show multiple question SETS printed for a single sitting
+// (GATE's anti-cheating measure since well before this era) rather than
+// multiple actual sittings; those are deliberately excluded; a "Set-N" or
+// "GATE Single Session" label proves the opposite of what this table
+// tracks, so those years are correctly absent.
+var GATE_MULTI_SESSION_YEARS = {
+  EC: {2013: 4, 2014: 4, 2015: 3, 2017: 2},
+  EE: {2013: 4, 2014: 3, 2015: 2, 2017: 2},
+  PI: {2013: 4, 2015: 2},
+  ME: {2013: 4, 2014: 4, 2015: 3, 2017: 2, 2018: 2, 2022: 2},
+  CE: {2014: 2, 2015: 2, 2017: 2, 2024: 2, 2025: 2, 2026: 2}
+};
+
+// SiliconX's own book covers ONE branch only (see SERIES_BRANCHES in
+// build_site.py — this is a real, already-used fact about the series, not
+// an assumption made here) — its tree has no Branch level to detect a code
+// from at all, so it needs its own fixed answer rather than falling through
+// the path-parsing logic below.
+var SERIES_FIXED_BRANCH = {SiliconX: 'EC'};
+
+// Pulls a branch code (EC/EE/IN/...) out of whichever tree node is
+// currently selected, given the FULL path string built by createTreeNode
+// (ancestor titles joined with " / "). Branch-level nodes are always titled
+// "EC — Electronics & Communication Engineering" (see extract_question_tree
+// in organize_pdfs.py) regardless of which series or how deep they sit —
+// NexusX/PowerX have Subject > Branch > Chapter, Maths has Chapter > Branch
+// instead, so this scans the whole path rather than assuming a fixed depth,
+// the same "don't hardcode a depth position" rule computeTreeSummary above
+// already follows for the same reason.
+function branchFromPath(series, path){
+  if(SERIES_FIXED_BRANCH[series]) return SERIES_FIXED_BRANCH[series];
+  if(!path) return null;
+  var m = /(^|\/)\s*([A-Z]{2})\s+[–—]\s/.exec(path);
+  return (m && GATE_MULTI_SESSION_YEARS.hasOwnProperty(m[2])) ? m[2] : null;
+}
 
 (function(){
   var expandBtn = document.getElementById('analyticsExpandAll');
@@ -1562,6 +1633,7 @@ function openAnalyticsModal(triggerBtn){
     var treeContainer = document.getElementById('analyticsTreeContainer');
 
     if(seriesEl) seriesEl.textContent = data.series || 'PYQ Analytics';
+    currentAnalyticsSeries = data.series || null;
 
     // The book title ("Complete Questions") is already the card's own
     // title, one click away — repeating it here said nothing new. A
@@ -1623,7 +1695,11 @@ function openAnalyticsModal(triggerBtn){
       modal.classList.add('is-open');
       document.body.style.overflow = 'hidden';
 
-      renderYearChart(aggregatedYears, 'All Chapters');
+      // null path: "All Chapters" spans every branch in the book, so there's
+      // no single branch to attribute a highlight to — EXCEPT for a series
+      // like SiliconX that's fixed to one branch regardless of selection
+      // depth, which branchFromPath() resolves without needing a path at all.
+      renderYearChart(aggregatedYears, 'All Chapters', null);
     } else {
       modal.removeAttribute('hidden');
       modal.classList.add('is-open');
@@ -1732,7 +1808,7 @@ function createTreeNode(node, pathPrefix, yearTable, aggregatedYears, depth){
       });
     }
     document.getElementById('analyticsSelectionBadge').textContent = formatBreadcrumb(currentPath) || 'Selected Topic';
-    renderYearChart(chapterYears, node.title);
+    renderYearChart(chapterYears, node.title, currentPath);
   });
 
   // The chevron ONLY expands/collapses — it must not also re-select this
@@ -1770,7 +1846,7 @@ function countNodeLeaves(node){
   return sum;
 }
 
-function renderYearChart(yearData, titleLabel){
+function renderYearChart(yearData, titleLabel, currentPath){
   var container = document.querySelector('.analytics-chart-container');
   if(!container) return;
 
@@ -1778,15 +1854,17 @@ function renderYearChart(yearData, titleLabel){
   var counts = years.map(function(y){ return yearData[y]; });
 
   var infoBtn = document.querySelector('.analytics-info');
+  var infoTableEl = document.getElementById('analyticsInfoTable');
 
   /* Empty state — nothing to chart for this selection. Also clears any
-     peak tint left on the info button by a previous selection, so it
+     highlight tint left on the info button by a previous selection, so it
      never stays coloured for a chart that no longer exists. */
   if(years.length === 0){
     container.innerHTML = '<p style="display:flex;align-items:center;justify-content:center;height:100%;' +
       'color:var(--ink-soft,#64748b);font-size:13px;margin:0;">No year data available for this selection.</p>';
     if(activeAnalyticsChart){ activeAnalyticsChart.destroy(); activeAnalyticsChart = null; }
     if(infoBtn) infoBtn.style.color = '';
+    if(infoTableEl) infoTableEl.innerHTML = '';
     return;
   }
 
@@ -1801,25 +1879,53 @@ function renderYearChart(yearData, titleLabel){
   var gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
   var textColor = isDark ? '#94a3b8' : '#64748b';
 
-  /* The info button explains WHY one year can spike (multiple GATE shifts
-     that year) — so the trend line's point on the tallest year gets a
-     distinct colour, and the button gets the SAME colour, tying the two
-     together at a glance instead of making a visitor read the tooltip to
-     figure out which year it's about. Only the point, not the bar itself —
-     recolouring the bar too read as too heavy-handed against the plain
-     ones beside it. Fixed amber rather than derived from the series colour:
-     it has to read as "different from every point" regardless of which
-     series' blue/green/red is showing, which a series-relative tint can't
-     guarantee. */
-  var peakIndex = counts.length ? counts.indexOf(Math.max.apply(null, counts)) : -1;
+  /* The info button explains WHY a year can spike — so any year in this
+     chart with a VERIFIED extra sitting (GATE_MULTI_SESSION_YEARS, checked
+     against that branch's own official papers) gets its trend-line point
+     recoloured, and the button gets the same colour, tying the two together
+     at a glance. Only the point, never the bar — recolouring the bar too
+     read as heavy-handed next to the plain ones beside it. Can mark MORE
+     THAN ONE year now (2013/2014/2015/2017 for EC, say), unlike the old
+     "just the tallest bar" heuristic this replaced — that was a guess from
+     this book's own numbers; this is checked fact, so it isn't limited to
+     picking exactly one point per chart. Nothing highlights at all when no
+     single branch can be attributed to the current selection (the
+     aggregated "All Chapters" view spanning every branch, or a series
+     without branch-level data) — see branchFromPath(). */
+  var branch = branchFromPath(currentAnalyticsSeries, currentPath);
+  var sessionYears = (branch && GATE_MULTI_SESSION_YEARS[branch]) || {};
+  var isSessionYear = years.map(function(y){ return sessionYears.hasOwnProperty(y); });
+  var anySessionYear = isSessionYear.indexOf(true) !== -1;
   // #B45309 is the exact amber SERIES_META already uses for Aptitude — reusing
   // an already-vetted colour rather than picking a new one. #d97706 (one shade
   // lighter) measured only 3.19:1 on a white icon background, barely clearing
   // the 3:1 floor for non-text UI; #B45309 clears the stricter 4.5:1 text
   // threshold too (5.02:1), so it has real headroom rather than sitting right
   // at the line. #fbbf24 in dark mode was already comfortable (9.82:1).
-  var peakColor = isDark ? '#fbbf24' : '#B45309';
-  if(infoBtn) infoBtn.style.color = peakIndex > -1 ? peakColor : '';
+  var sessionColor = isDark ? '#fbbf24' : '#B45309';
+  if(infoBtn) infoBtn.style.color = anySessionYear ? sessionColor : '';
+
+  if(infoTableEl){
+    if(!anySessionYear){
+      infoTableEl.innerHTML = '';
+    } else {
+      // Only years actually ON THIS CHART, not the whole table for the
+      // branch — a Network Theory chapter under EC only ever shows 1987-
+      // 2026's worth of Network Theory years, and a row for a session year
+      // this chapter happens not to cover would be a confusing non sequitur.
+      var rows = years.filter(function(y){ return sessionYears.hasOwnProperty(y); })
+        .map(function(y){
+          return '<tr><td>' + y + '</td><td>' + sessionYears[y] + '</td></tr>';
+        }).join('');
+      infoTableEl.innerHTML =
+        '<table class="analytics-info-table">' +
+        '<caption>' + branch + ' — verified sessions</caption>' +
+        '<tr><th>Year</th><th>Sessions</th></tr>' + rows +
+        '</table>' +
+        '<p style="margin:6px 0 0;font-size:10.5px;color:var(--ink-faint,#94a3b8)">' +
+        'Verified against official GATE question papers.</p>';
+    }
+  }
 
   /* ---- Chart.js path (preferred, zero-config when CDN loads) ---- */
   if(window.Chart){
@@ -1844,10 +1950,10 @@ function renderYearChart(yearData, titleLabel){
               backgroundColor: barColor + '55', borderRadius: 4, order: 2 },
             { type: 'line', label: 'Trend', data: counts,
               borderColor: barColor, borderDash: [6, 4], borderWidth: 2,
-              pointBackgroundColor: counts.map(function(_, i){ return i === peakIndex ? peakColor : barColor; }),
-              pointBorderColor: counts.map(function(_, i){ return i === peakIndex ? peakColor : barColor; }),
-              pointRadius: counts.map(function(_, i){ return i === peakIndex ? 5 : 3; }),
-              pointHoverRadius: counts.map(function(_, i){ return i === peakIndex ? 7 : 5; }),
+              pointBackgroundColor: counts.map(function(_, i){ return isSessionYear[i] ? sessionColor : barColor; }),
+              pointBorderColor: counts.map(function(_, i){ return isSessionYear[i] ? sessionColor : barColor; }),
+              pointRadius: counts.map(function(_, i){ return isSessionYear[i] ? 5 : 3; }),
+              pointHoverRadius: counts.map(function(_, i){ return isSessionYear[i] ? 7 : 5; }),
               fill: false, tension: 0.25, order: 1 }
           ]
         },
@@ -1913,8 +2019,8 @@ function renderYearChart(yearData, titleLabel){
   }).join('');
   var pointsAttr = pts.map(function(p){ return p[0].toFixed(2) + ',' + p[1].toFixed(2); }).join(' ');
   var dots = pts.map(function(p, i){
-    var fill = i === peakIndex ? peakColor : barColor;
-    var r = i === peakIndex ? 1.9 : 1.2;
+    var fill = isSessionYear[i] ? sessionColor : barColor;
+    var r = isSessionYear[i] ? 1.9 : 1.2;
     return '<circle cx="' + p[0].toFixed(2) + '" cy="' + p[1].toFixed(2) + '" r="' + r + '" fill="' + fill + '"/>';
   }).join('');
   container.innerHTML =
