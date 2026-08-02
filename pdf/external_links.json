@@ -18,7 +18,7 @@
   "pdf-powerx": {
     "powerx.pdf": {
       "download_url": "https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-powerx/powerx.pdf",
-      "size_bytes": 121922481,
+      "size_bytes": 122388761,
       "tag": "pdf-powerx",
       "target_dir": "PowerX/Questions"
     }
