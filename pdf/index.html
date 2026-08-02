@@ -1472,45 +1472,52 @@ var activeAnalyticsChart = null;
 // argument through every recursive createTreeNode() call.
 var currentAnalyticsSeries = null;
 
-// Verified against the OFFICIAL GATE question-paper PDFs for each branch —
-// opened directly, page by page, not taken from a secondary source. A year
-// only appears here when the PRINTED PAGE TEXT of the paper itself proves a
-// genuinely separate sitting: a real calendar date or forenoon/afternoon
-// shift, e.g. "31st Jan Shift1" vs "31st Jan Shift2" vs "1st Feb Shift1", or
-// an official "Question Paper Name:" header stating "session 2" on a
-// specific dated paper. Cross-checked against independent public sources
-// for GATE 2014 and GATE 2017 with no contradictions found.
+// Verified two ways, a year only counts on either one:
+//   (a) the PRINTED PAGE TEXT of the branch's own official GATE PDF proves
+//       a genuinely separate sitting — a real calendar date or forenoon/
+//       afternoon shift, e.g. "31st Jan Shift1" vs "1st Feb Shift1", or a
+//       "Question Paper Name:" header stating "session 2" on a dated paper;
+//   (b) the PDF shows a real structural split (distinct sub-papers, a
+//       "SESSION - N" cover, or a genuinely separate file per part) but
+//       without a usable date in the extracted text — scanned pages,
+//       broken font encoding, that kind of thing — corroborated against an
+//       INDEPENDENTLY DATED external source (an exam-prep site's own
+//       slot/date-labelled citation, or GATE's own published schedule
+//       reported by more than one outlet), not a vague summary.
 //
-// A year/branch NOT listed here means no such dated evidence was found —
-// it does NOT mean "confirmed single session". This table went through one
-// real revision already, worth recording so the same mistake isn't repeated:
-// an earlier pass included 2013 and 2014 on the strength of "SESSION - N"
-// cover pages and split sub-papers alone. Re-checking every one of those
-// pages for an actual date turned up NONE — 2013's "SESSION - N" pages are
-// each paired with a "Question Booklet Code" letter (EC-A/EC-B/EC-C/EC-D,
-// same pattern on ME and PI that year), which is GATE's well-documented
-// SAME-SITTING anti-cheating device (different booklet variants handed to
-// adjacent candidates), not a time distinction. 2016 was also reconsidered:
-// its "GATE 2016 Single Session" claim exists ONLY in the PDF's bookmark
-// titles, added by whoever compiled the file — never in the actual printed
-// page text — so it's too weak a source to assert single-session from
-// either. Multiple question SETS printed for one sitting (2016's clearest
-// example) are deliberately excluded regardless: a "Set-N" label describes
-// the opposite of what this table tracks. Two files with entirely different,
-// complete question sets (verified by full Q-number range, not just content
-// overlap) is NOT enough on its own either — that's equally consistent with
-// two sittings or two sets in one sitting, so a few site's-worth of quiet
-// content-diff-only entries were removed too once that gap was noticed.
+// A year/branch NOT listed here means neither (a) nor (b) turned up — it
+// does NOT mean "confirmed single session".
 //
-// This was a MANUAL review process across ~110 PDFs. If a count looks wrong
-// or a year is missing, the feedback link in the footer reaches a real
-// person — see analytics-info-disclaimer below.
+// This table has been revised twice, worth recording so the same mistakes
+// aren't repeated in either direction:
+//   1st pass: included 2013 on "SESSION - N" cover pages alone. Re-checking
+//     every one of those pages for an actual date turned up NONE — 2013's
+//     "SESSION - N" pages are each paired with a "Question Booklet Code"
+//     letter (EC-A/EC-B/EC-C/EC-D, same on ME and PI that year), GATE's
+//     well-documented SAME-SITTING anti-cheating device, not a time
+//     distinction. Still excluded for this reason.
+//   2nd pass: 2014 and 2016 were removed in the 1st revision for lacking a
+//     date in the extracted PDF text, then reinstated after (b) above —
+//     2014's slot dates (some branches spread across nearly a month) and
+//     2016's exact per-branch session counts are independently confirmed by
+//     GATE's own published exam schedule, cited by multiple outlets with
+//     specific dates, and line up exactly with the PDF's own block/sub-
+//     paper structure. Multiple question SETS printed for ONE sitting
+//     (well documented, e.g. GATE's own "Single Session" wording some years
+//     still use several sets) are deliberately excluded regardless — a
+//     "Set-N" label on its own describes the opposite of what this table
+//     tracks, and is never enough by itself even when paired with (b).
+//
+// This was a MANUAL review process across ~110 PDFs plus external
+// cross-checks. If a count looks wrong or a year is missing, the feedback
+// link in the footer reaches a real person — see sessionCitationHtml()
+// below.
 var GATE_MULTI_SESSION_YEARS = {
-  EC: {2015: 3, 2017: 2},
-  EE: {2015: 2, 2017: 2},
+  EC: {2014: 4, 2015: 3, 2016: 3, 2017: 2},
+  EE: {2014: 3, 2015: 2, 2016: 2, 2017: 2},
   PI: {2015: 2},
-  ME: {2015: 3, 2017: 2},
-  CE: {2015: 2, 2017: 2}
+  ME: {2014: 4, 2015: 3, 2017: 2, 2018: 2, 2019: 2, 2020: 2, 2021: 2, 2022: 2},
+  CE: {2014: 2, 2015: 2, 2017: 2, 2024: 2, 2025: 2, 2026: 2}
 };
 
 // Official GATE papers were only available (to check against) from 2007
