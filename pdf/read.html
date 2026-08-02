@@ -321,6 +321,29 @@ if(!rel){
   const holder = $('pages');
   let doc, scale = 1;
 
+  // A fast scroll, or a bookmark jump landing far from where the reader was
+  // (scrollIntoView below, potentially hundreds of pages away), can sweep
+  // dozens of placeholders through the 900px margin within a couple of
+  // frames — the observer fired draw() for every one of them immediately,
+  // with no cap, so a burst like that meant that many concurrent canvas
+  // allocations and pdf.js render tasks in flight AT ONCE. Desktop's spare
+  // RAM/CPU absorbs that; mobile's doesn't, which is exactly the "fine on
+  // desktop, crashes/glitches on mobile" pattern reported — and exactly
+  // when it was reported (fast scrolling, or a distant bookmark jump).
+  // RENDER_CONCURRENCY caps how many pages are ever being rasterised at the
+  // same moment; everything past that just waits its turn in queue instead
+  // of piling on. The eventual visual result is identical, only throttled.
+  const RENDER_CONCURRENCY = 2;
+  let activeRenders = 0;
+  const renderQueue = [];
+  function pumpRenderQueue(){
+    while(activeRenders < RENDER_CONCURRENCY && renderQueue.length){
+      const [n, el] = renderQueue.shift();
+      activeRenders++;
+      draw(n, el).finally(() => { activeRenders--; pumpRenderQueue(); });
+    }
+  }
+
   const io = new IntersectionObserver((entries) => {
     for(const e of entries){
       if(!e.isIntersecting) continue;
@@ -328,8 +351,9 @@ if(!rel){
       if(el.dataset.done) continue;
       el.dataset.done = '1';
       io.unobserve(el);
-      draw(Number(el.dataset.n), el);
+      renderQueue.push([Number(el.dataset.n), el]);
     }
+    pumpRenderQueue();
   }, { rootMargin: '900px 0px' });
 
   // Mobile Safari (and some Android WebViews) refuse to allocate a canvas
