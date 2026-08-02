@@ -693,8 +693,14 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   <div class="tools">
     <label class="search">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="q" type="search" placeholder="Search books, subjects, branches…" aria-label="Search books">
-      <span class="kbd">/</span>
+      <input id="q" type="search" placeholder="Search books, subjects, branches…" aria-label="Search books"
+             title="Press / anywhere on the page to jump here. Esc clears it.">
+      <!-- The chip alone ("/") only tells a visitor a shortcut exists, not
+           what it does or that Esc pairs with it — the title carries that.
+           Only ever seen on desktop (.kbd is hidden below the tablet
+           breakpoint, see CSS), since neither half of the shortcut applies
+           to a touchscreen. -->
+      <span class="kbd" title="Press / anywhere on the page to jump here. Esc clears it.">/</span>
     </label>
     <div class="chips" id="chips">
       <button class="chip" type="button" aria-pressed="true" data-chip="All"><span class="dot"></span>All</button>
@@ -1892,6 +1898,6 @@ function renderYearChart(yearData, titleLabel){
     years.map(function(y){ return '<span>' + y + '</span>'; }).join('') + '</div>';
 }
 </script>
-
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{&quot;token&quot;: &quot;0131fe3dc78b49e5851ecd5a6c882cac&quot;}'></script>
 </body>
 </html>
