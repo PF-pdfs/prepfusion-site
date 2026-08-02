@@ -1802,12 +1802,15 @@ function renderYearChart(yearData, titleLabel){
   var textColor = isDark ? '#94a3b8' : '#64748b';
 
   /* The info button explains WHY one year can spike (multiple GATE shifts
-     that year) — so the tallest bar gets a distinct colour, and the button
-     gets the SAME colour, tying the two together at a glance instead of
-     making a visitor read the tooltip to figure out which bar it's about.
-     Fixed amber rather than derived from the series colour: it has to read
-     as "different from every bar" regardless of which series' blue/green/
-     red is showing, which a series-relative tint can't guarantee. */
+     that year) — so the trend line's point on the tallest year gets a
+     distinct colour, and the button gets the SAME colour, tying the two
+     together at a glance instead of making a visitor read the tooltip to
+     figure out which year it's about. Only the point, not the bar itself —
+     recolouring the bar too read as too heavy-handed against the plain
+     ones beside it. Fixed amber rather than derived from the series colour:
+     it has to read as "different from every point" regardless of which
+     series' blue/green/red is showing, which a series-relative tint can't
+     guarantee. */
   var peakIndex = counts.length ? counts.indexOf(Math.max.apply(null, counts)) : -1;
   // #B45309 is the exact amber SERIES_META already uses for Aptitude — reusing
   // an already-vetted colour rather than picking a new one. #d97706 (one shade
@@ -1838,8 +1841,7 @@ function renderYearChart(yearData, titleLabel){
           labels: years,
           datasets: [
             { type: 'bar', label: 'Questions Asked', data: counts,
-              backgroundColor: counts.map(function(_, i){ return i === peakIndex ? peakColor : barColor + '55'; }),
-              borderRadius: 4, order: 2 },
+              backgroundColor: barColor + '55', borderRadius: 4, order: 2 },
             { type: 'line', label: 'Trend', data: counts,
               borderColor: barColor, borderDash: [6, 4], borderWidth: 2,
               pointBackgroundColor: counts.map(function(_, i){ return i === peakIndex ? peakColor : barColor; }),
@@ -1905,10 +1907,9 @@ function renderYearChart(yearData, titleLabel){
   });
   var bars = pts.map(function(p, i){
     var barH = innerH - (p[1] - padY);
-    var fill = i === peakIndex ? peakColor : (barColor + '55');
     return '<rect x="' + (p[0] - barW / 2).toFixed(2) + '" y="' + p[1].toFixed(2) + '" ' +
            'width="' + barW.toFixed(2) + '" height="' + Math.max(barH, 0.5).toFixed(2) + '" ' +
-           'fill="' + fill + '" rx="0.6"><title>GATE ' + years[i] + ': ' + counts[i] + ' Qs</title></rect>';
+           'fill="' + barColor + '55" rx="0.6"><title>GATE ' + years[i] + ': ' + counts[i] + ' Qs</title></rect>';
   }).join('');
   var pointsAttr = pts.map(function(p){ return p[0].toFixed(2) + ',' + p[1].toFixed(2); }).join(' ');
   var dots = pts.map(function(p, i){
