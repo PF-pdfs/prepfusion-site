@@ -52,12 +52,13 @@
 <script defer src="assets/chartjs/chart.umd.min.js"></script>
 <script>
 /* Apply the saved (or OS-preferred) theme before first paint — no flash. */
+/* Defaults to dark for a first-time visitor, regardless of OS preference —
+   a deliberate site default, not an OS-preference mirror. */
 (function(){
   try{
     var t = localStorage.getItem('pf-theme');
-    if(!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', t);
-  }catch(e){ document.documentElement.setAttribute('data-theme','light'); }
+    document.documentElement.setAttribute('data-theme', (t==='dark'||t==='light') ? t : 'dark');
+  }catch(e){ document.documentElement.setAttribute('data-theme','dark'); }
 })();
 </script>
 <style>
@@ -457,6 +458,18 @@ body.soon .hero-grid{grid-template-columns:1fr}
 footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px}
 .footer-inner{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
   padding:34px 24px;max-width:1180px;margin:0 auto;color:var(--ink-soft);font-size:13.5px}
+/* A dedicated class, not a bare ".footer-inner a" — the footer also holds
+   .logo and .feedback-btn, each with their own color rule at the same
+   (0,1,0) specificity; a plain element selector here would need only one
+   more class to outrank and silently override both. */
+/* Same outlined-pill treatment as .feedback-btn, deliberately — a bare text
+   link here read as part of the copyright line rather than as a clickable
+   nav item, since nothing at rest marked it as a link. */
+.footer-link{display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+  color:var(--ink);border:1.5px solid var(--line-strong);border-radius:10px;
+  padding:9px 15px;font:650 13px "Inter",sans-serif;white-space:nowrap;
+  transition:border-color .18s,transform .18s}
+.footer-link:hover{border-color:var(--ink);transform:translateY(-1px)}
 .feedback-btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;
   color:var(--ink);border:1.5px solid var(--line-strong);border-radius:10px;
   padding:9px 15px;font:650 13px "Inter",sans-serif;white-space:nowrap;
@@ -698,9 +711,9 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
 
 <header class="bar">
   <div class="bar-in">
-    <a class="logo" href="#top" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
+    <a class="logo" href="/pdf/" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
     <nav class="nav">
-      <a class="nav-current" href="#top" aria-current="page" title="You&#x27;re here — every previous-year paper, free to read."><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V7"/><path d="M3 5a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3H4a1 1 0 0 1-1-1Z"/></svg>Library</a><a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in." target="_blank" rel="noopener"><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 10.9a1 1 0 0 0 0-1.8L12.8 5.2a2 2 0 0 0-1.6 0L2.6 9.1a1 1 0 0 0 0 1.8l8.6 3.9a2 2 0 0 0 1.6 0Z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>Courses<span class="ext" aria-hidden="true">↗</span></a><div class="nav-dd">
+      <a class="nav-current" href="/pdf/" aria-current="page" title="Every previous-year paper, free to read."><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V7"/><path d="M3 5a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3H4a1 1 0 0 1-1-1Z"/></svg>Library</a><a href="https://prepfusion.in" title="Full GATE courses on prepfusion.in." target="_blank" rel="noopener"><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 10.9a1 1 0 0 0 0-1.8L12.8 5.2a2 2 0 0 0-1.6 0L2.6 9.1a1 1 0 0 0 0 1.8l8.6 3.9a2 2 0 0 0 1.6 0Z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>Courses<span class="ext" aria-hidden="true">↗</span></a><div class="nav-dd">
   <button type="button" class="nav-dd-btn" aria-haspopup="true" aria-expanded="false"
           aria-controls="ytMenu" title="Watch GATE lectures on YouTube">
     <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF0000" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8Z"/><path fill="#fff" d="M9.6 15.6V8.4L15.8 12z"/></svg>YouTube
@@ -1298,6 +1311,8 @@ footer{border-top:1.5px solid var(--line);background:var(--card);margin-top:24px
   <div class="footer-inner">
     <a class="logo" href="#top" aria-label="PrepFusion home"><span class="bm bm-lg"><img class="bm-logo" src="assets/logo.png" alt="" loading="lazy"><span class="bm-text">Prep<b>Fusion</b></span></span></a>
     <a class="feedback-btn" href="https://forms.gle/KjeJHFvppH4TDoLu6" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.9 8.9 0 0 1-4-.9L3 21l1.9-4.5A8.4 8.4 0 0 1 4 11.5a8.4 8.4 0 0 1 9-8.4 8.4 8.4 0 0 1 8 8.4Z"/></svg>Share feedback</a>
+    <a class="footer-link" href="https://chat.whatsapp.com/CG6NeORAHLt54WcwivLP2U?s=cl&amp;p=a&amp;mlu=4" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#25D366"/><path fill="#fff" d="M12.04 5.5c-3.61 0-6.54 2.93-6.54 6.54 0 1.15.3 2.28.88 3.27L5.4 18.6l3.42-.9a6.52 6.52 0 0 0 3.22.85h.003c3.61 0 6.54-2.93 6.54-6.54a6.5 6.5 0 0 0-1.92-4.63 6.5 6.5 0 0 0-4.62-1.88zm0 11.97a5.4 5.4 0 0 1-2.75-.76l-.2-.12-2 .52.53-1.94-.13-.2a5.41 5.41 0 0 1-.83-2.88c0-2.99 2.43-5.42 5.42-5.421.45 0 2.81.56 3.83 1.59a5.39 5.39 0 0 1 1.59 3.83c0 2.99-2.43 5.38-5.46 5.38zm2.96-4.03c-.16-.08-.96-.47-1.11-.53-.15-.05-.26-.08-.36.08-.11.16-.42.53-.51.64-.1.11-.19.12-.35.04-.16-.08-.68-.25-1.3-.8-.48-.43-.81-.96-.9-1.12-.09-.16-.01-.25.07-.33.07-.07.16-.19.24-.28.08-.1.11-.16.16-.27.05-.11.03-.2-.01-.28-.04-.08-.36-.88-.5-1.2-.13-.32-.26-.27-.36-.28h-.31c-.11 0-.28.04-.43.2-.15.16-.57.55-.57 1.35s.58 1.57.66 1.68c.08.11 1.14 1.74 2.77 2.44.39.17.69.27.92.34.39.12.74.11 1.02.06.31-.05.96-.39 1.09-.77.14-.38.14-.7.1-.77-.04-.07-.15-.11-.31-.19z"/></svg>Report an error</a>
+    <a class="footer-link" href="/about/">About Us</a>
     <span>© 2026 PrepFusion · All rights reserved</span>
   </div>
 </footer>

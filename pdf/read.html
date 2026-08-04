@@ -7,11 +7,13 @@
 <title>PrepFusion PDF Viewer</title>
 <link rel="icon" href="assets/favicon.png">
 <script>
-  /* Match the library's theme before first paint so the reader never flashes. */
+  /* Match the library's theme before first paint so the reader never flashes.
+     Defaults to dark for a first-time visitor — same default as the rest of
+     the site, not tied to the OS preference. */
   try{
     var t = localStorage.getItem('pf-theme');
-    document.documentElement.setAttribute('data-theme', (t==='dark'||t==='light') ? t : 'light');
-  }catch(e){ document.documentElement.setAttribute('data-theme','light'); }
+    document.documentElement.setAttribute('data-theme', (t==='dark'||t==='light') ? t : 'dark');
+  }catch(e){ document.documentElement.setAttribute('data-theme','dark'); }
   try{
     if(localStorage.getItem('pf-reader-night') === '1')
       document.documentElement.setAttribute('data-night','1');

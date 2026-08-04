@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /pdf/deployed_links.csv
 Disallow: /pdf/external_links.json
 
 Sitemap: https://pyq.prepfusion.in/sitemap.xml
