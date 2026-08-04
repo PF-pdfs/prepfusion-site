@@ -1,15 +1,15 @@
 {
   "Aptitude/Questions/apti.pdf": {
-    "date": "2026-08-02",
-    "hash": "965f0ce66027"
+    "date": "2026-08-04",
+    "hash": "36413571b92b"
   },
   "Aptitude/Solutions/apti_solutions.pdf": {
-    "date": "2026-08-02",
-    "hash": "299ab09a120c"
+    "date": "2026-08-04",
+    "hash": "5b98733cd6a7"
   },
   "Maths/Questions/PrepFusion_Engineering_Mathematics.pdf": {
-    "date": "2026-08-02",
-    "hash": "4fa0fe584d00"
+    "date": "2026-08-04",
+    "hash": "8a2790cf9dad"
   },
   "Maths/Solutions/maths_calculus_solutions.pdf": {
     "date": "2026-08-01",
@@ -52,16 +52,16 @@
     "hash": "6dac7fc570b7"
   },
   "NexusX/Solutions/nexusx_analog_ec_solutions.pdf": {
-    "date": "2026-08-02",
-    "hash": "0666b1bbec8c"
+    "date": "2026-08-04",
+    "hash": "b666f3bdae4b"
   },
   "NexusX/Solutions/nexusx_analog_ee_solutions.pdf": {
-    "date": "2026-08-02",
-    "hash": "9ccfdd2a6e12"
+    "date": "2026-08-04",
+    "hash": "468e4e694fa5"
   },
   "NexusX/Solutions/nexusx_analog_in_solutions.pdf": {
-    "date": "2026-08-02",
-    "hash": "1cd29b554230"
+    "date": "2026-08-04",
+    "hash": "c2d74a8e88bf"
   },
   "NexusX/Solutions/nexusx_control_ee_solutions.pdf": {
     "date": "2026-08-02",
@@ -76,8 +76,8 @@
     "hash": "7dabf8e98c2f"
   },
   "NexusX/Solutions/nexusx_digital_ec_solutions.pdf": {
-    "date": "2026-08-02",
-    "hash": "01031629a88a"
+    "date": "2026-08-04",
+    "hash": "48f5ecdd4b9d"
   },
   "NexusX/Solutions/nexusx_digital_ee_solutions.pdf": {
     "date": "2026-08-02",
@@ -100,16 +100,16 @@
     "hash": "007cdb6ff7eb"
   },
   "NexusX/Solutions/nexusx_signals_ec_solutions.pdf": {
-    "date": "2026-08-02",
-    "hash": "fafc97af5685"
+    "date": "2026-08-04",
+    "hash": "7c4a3258e563"
   },
   "NexusX/Solutions/nexusx_signals_ee_solutions.pdf": {
-    "date": "2026-08-02",
-    "hash": "c1a925157cd3"
+    "date": "2026-08-04",
+    "hash": "c7f1eb6c02ab"
   },
   "NexusX/Solutions/nexusx_signals_in_solutions.pdf": {
-    "date": "2026-08-02",
-    "hash": "89cdf30dd7a3"
+    "date": "2026-08-04",
+    "hash": "067a34d8c234"
   },
   "PowerX/Questions/powerx.pdf": {
     "date": "2026-08-02",
@@ -144,8 +144,8 @@
     "hash": "b0394d2f984c"
   },
   "SiliconX/Questions/siliconx.pdf": {
-    "date": "2026-08-02",
-    "hash": "8059d99ee500"
+    "date": "2026-08-04",
+    "hash": "9e3f7c03ba42"
   },
   "SiliconX/Solutions/siliconx_communications_ec_solutions.pdf": {
     "date": "2026-08-02",
