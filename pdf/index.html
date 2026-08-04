@@ -1563,11 +1563,31 @@ var currentAnalyticsSeries = null;
 // link in the footer reaches a real person — see sessionCitationHtml()
 // below.
 var GATE_MULTI_SESSION_YEARS = {
+  // EC and EE: every year 2018-2026 has now ALSO been checked (same rigor,
+  // real per-slot dated sources), not just 2014-2017 — genuinely found no
+  // multi-session years past 2017 for either, not merely unexamined. Likely
+  // explanation: CS is GATE's highest-volume paper by far, which is plausibly
+  // exactly why it alone kept needing session splits while EC/EE didn't.
   EC: {2014: 4, 2015: 3, 2016: 3, 2017: 2},
   EE: {2014: 3, 2015: 2, 2016: 2, 2017: 2},
   PI: {2015: 2},
-  ME: {2014: 4, 2015: 3, 2017: 2, 2018: 2, 2019: 2, 2020: 2, 2021: 2, 2022: 2},
-  CE: {2014: 2, 2015: 2, 2017: 2, 2024: 2, 2025: 2, 2026: 2}
+  // 2016 added: Slot 1/2/3 confirmed (Jan 30 forenoon, Jan 30 afternoon,
+  // Jan 31 afternoon) — a genuine gap in the original table, not a checked-
+  // and-found-single year. 2023-2026 now also checked: no multi-session
+  // evidence found (single dated paper each year, no paired second slot).
+  ME: {2014: 4, 2015: 3, 2016: 3, 2017: 2, 2018: 2, 2019: 2, 2020: 2, 2021: 2, 2022: 2},
+  // 2018-2023 added: real per-slot dated sources for every year, cross-
+  // checked against the official 2018 IIT Guwahati brochure, which names
+  // CE explicitly alongside CS/EC/EE/ME as "may be conducted in multiple
+  // sessions" that year. Unlike CS, CE stayed multi-session continuously
+  // 2018-2026, not fluctuating.
+  CE: {2014: 2, 2015: 2, 2017: 2, 2018: 2, 2019: 2, 2020: 2, 2021: 2, 2022: 2, 2023: 2, 2024: 2, 2025: 2, 2026: 2},
+  // Real per-slot dated sources for every year, cross-checked against the
+  // official 2016 IISc brochure — NOT a smooth "always multi-session" story:
+  // CS was multi-session 2014-2017, single-session 2018-2020, multi-session
+  // again in 2021 alone, single-session 2022-2023, then multi-session again
+  // 2024-2026. Kept exactly as found rather than interpolated/smoothed.
+  CS: {2014: 3, 2015: 3, 2016: 2, 2017: 2, 2021: 2, 2024: 2, 2025: 2, 2026: 2}
 };
 
 // Official GATE papers were only available (to check against) from 2007
