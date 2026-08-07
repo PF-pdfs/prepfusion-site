@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What's New in PrepFusion v1.1</title>
+<meta name="description" content="Student-facing release notes for PrepFusion Study Hub v1.1 — Practice mode, instant answer checking, the built-in calculator, and more." />
+<meta name="robots" content="noindex" />
+<style>
+  :root {
+    --paper: #f2f5fa;
+    --paper-line: #e7ecf6;
+    --ink: #0a1020;
+    --ink-soft: #47547a;
+    --ink-faint: #7280a3;
+    --brand: #14307f;
+    --brand-soft: #2a4bb0;
+    --accent: #ffcf2d;
+    --accent-ink: #6b4400;
+    --line: #c9d3e6;
+    --ok: #1d6b33;
+    --ok-bg: #dff3e4;
+    --card-bg: #ffffff;
+    --shadow: 0 1px 0 rgba(10, 16, 32, 0.04), 0 12px 28px -18px rgba(10, 16, 32, 0.35);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0a1020;
+      --paper-line: #121b33;
+      --ink: #eef2fb;
+      --ink-soft: #a9b6d6;
+      --ink-faint: #7c8bb3;
+      --brand: #8aa6f2;
+      --brand-soft: #6f93e8;
+      --accent: #ffcf2d;
+      --accent-ink: #ffe082;
+      --line: rgba(255, 255, 255, 0.14);
+      --ok: #58c98a;
+      --ok-bg: rgba(88, 201, 138, 0.14);
+      --card-bg: #101830;
+      --shadow: 0 1px 0 rgba(255, 255, 255, 0.03), 0 20px 40px -24px rgba(0, 0, 0, 0.65);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background:
+      linear-gradient(var(--paper-line) 1px, transparent 1px) 0 0 / 100% 34px,
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px) 0 0 / 34px 100%,
+      var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  .mono {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", "Liberation Mono", monospace;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 56px 20px 90px;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 22px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .brand-mark .name {
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-mark .name .x {
+    color: var(--accent-ink);
+  }
+
+  .brand-mark .tag {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+
+  .issue-stamp {
+    text-align: right;
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    line-height: 1.7;
+  }
+
+  .issue-stamp b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .hero {
+    padding: 40px 0 28px;
+  }
+
+  .hero .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-soft);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+
+  .hero .eyebrow::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  .hero h1 {
+    margin: 0 0 16px;
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  .hero h1 .x {
+    color: var(--accent-ink);
+  }
+
+  .hero p {
+    margin: 0;
+    max-width: 56ch;
+    font-size: 16.5px;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- ticket cards ---------- */
+
+  .tickets {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-top: 34px;
+  }
+
+  .ticket {
+    display: grid;
+    grid-template-columns: 1fr 118px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .ticket-main {
+    padding: 24px 22px;
+    border-right: none;
+    position: relative;
+  }
+
+  .ticket-code {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .ticket h2 {
+    margin: 0 0 8px;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .ticket p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    max-width: 46ch;
+  }
+
+  .ticket .howto {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+
+  .ticket .howto b {
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+
+  /* perforated stub */
+  .ticket-stub {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 10px;
+    background: color-mix(in srgb, var(--brand) 6%, var(--card-bg));
+    border-left: 1.5px dashed var(--line);
+  }
+
+  .ticket-stub::before,
+  .ticket-stub::after {
+    content: "";
+    position: absolute;
+    left: -8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+  }
+  .ticket-stub::before { top: -9px; }
+  .ticket-stub::after { bottom: -9px; }
+
+  .stub-label {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-align: center;
+  }
+
+  .stub-status {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 999px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .stub-status.live {
+    background: var(--ok-bg);
+    color: var(--ok);
+  }
+
+  .stub-status.new,
+  .stub-status.beta {
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+    color: var(--accent-ink);
+  }
+
+  .ticket-icon {
+    width: 30px;
+    height: 30px;
+    color: var(--brand-soft);
+  }
+
+  @media (max-width: 520px) {
+    .ticket {
+      grid-template-columns: 1fr 92px;
+    }
+    .hero h1 {
+      font-size: 32px;
+    }
+  }
+
+  /* ---------- sign-off ---------- */
+
+  .signoff {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 2px solid var(--ink);
+  }
+
+  .signoff p {
+    max-width: 58ch;
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+
+  .signoff .wave {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 22px;
+  }
+
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--brand-soft); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ticket { animation: rise 0.5s ease both; }
+    .ticket:nth-child(1) { animation-delay: 0.02s; }
+    .ticket:nth-child(2) { animation-delay: 0.07s; }
+    .ticket:nth-child(3) { animation-delay: 0.12s; }
+    .ticket:nth-child(4) { animation-delay: 0.17s; }
+    .ticket:nth-child(5) { animation-delay: 0.22s; }
+    .ticket:nth-child(6) { animation-delay: 0.27s; }
+    .ticket:nth-child(7) { animation-delay: 0.32s; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="brand-mark">
+      <span class="name">PrepFusion<span class="x">X</span></span>
+      <span class="tag">Study Hub</span>
+    </div>
+    <div class="issue-stamp">
+      RELEASE <b>v1.1</b><br />
+      ISSUED 08 / 2026
+    </div>
+  </header>
+
+  <section class="hero">
+    <span class="eyebrow">What's new</span>
+    <h1>Your Study Hub just leveled up.</h1>
+    <p>
+      Seven updates, all live right now. Nothing to install, nothing to configure — just open the
+      app and they're there. Here's exactly what's new and how to get the most out of each one.
+    </p>
+  </section>
+
+  <div class="tickets">
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-01 · PRACTICE</span>
+        <h2>Timed mock tests, built your way</h2>
+        <p>
+          Pick your subjects, chapters, difficulty, and question count — get a real timed test with
+          the exact same negative-marking rules as the actual GATE exam. Finish it and get a full
+          report: accuracy by subject, accuracy by difficulty, and a clean PDF you can keep.
+        </p>
+        <div class="howto"><b>Find it:</b> the "Practice" tab, right next to Study Hub in the top nav.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <span class="stub-status beta">Beta</span>
+        <span class="stub-label">Timed test</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-02 · CHECK</span>
+        <h2>Know instantly if you got it right</h2>
+        <p>
+          Select an answer on any question while you're browsing — not just during a test — and hit
+          "Check answer" for an immediate green or red. Miss it, and the right option lights up too,
+          so you always see what you should have picked.
+        </p>
+        <div class="howto"><b>Find it:</b> it just works — open any question with a clean answer key.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <span class="stub-status live">Live now</span>
+        <span class="stub-label">Answer check</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-03 · CALC</span>
+        <h2>The GATE calculator, built in</h2>
+        <p>
+          The same virtual scientific calculator used in the real exam interface — full trig, log,
+          memory, the works — now sits one tap away on every single question. Drag it wherever's
+          convenient and keep solving.
+        </p>
+        <div class="howto"><b>Find it:</b> the calculator icon next to any question's marks/type.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/></svg>
+        <span class="stub-status live">Live now</span>
+        <span class="stub-label">On every Q</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-04 · HISTORY</span>
+        <h2>Every test you've taken, in one place</h2>
+        <p>
+          "My reports" keeps a running history of every Practice test — pick up an unfinished one
+          right where you left off, or reopen a finished one to review the full breakdown any time.
+        </p>
+        <div class="howto"><b>Find it:</b> your account menu → "My reports."</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 15l4-5 4 3 5-7"/></svg>
+        <span class="stub-status live">Live now</span>
+        <span class="stub-label">Test history</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-05 · INBOX</span>
+        <h2>A proper home for updates</h2>
+        <p>
+          Notifications is now Inbox — the place where things worth knowing land: fixes to a
+          question you reported, a new video solution, and updates like this one. One glance at the
+          badge tells you if there's something new.
+        </p>
+        <div class="howto"><b>Find it:</b> you're reading this from it right now.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        <span class="stub-status live">Live now</span>
+        <span class="stub-label">Renamed</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-06 · NIGHT</span>
+        <h2>Dark mode, fixed for real diagrams</h2>
+        <p>
+          Circuit diagrams and figures used to sit on the page as a glaring white rectangle at
+          night. They now invert cleanly with the theme, so late-night sessions actually look right.
+        </p>
+        <div class="howto"><b>Find it:</b> the moon icon, top right — same as always, just better now.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <span class="stub-status live">Fixed</span>
+        <span class="stub-label">Diagrams</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-07 · PROGRESS</span>
+        <h2>See what you've already worked through</h2>
+        <p>
+          Every question you open now gets quietly marked as visited — separate from bookmarks,
+          just a simple "have I done this one" trail. Flip it either way yourself, and use "Unvisited
+          only" to jump straight to what's left in a chapter.
+        </p>
+        <div class="howto"><b>Find it:</b> next to the bookmark icon on any question, and the "Unvisited only" filter in a chapter's question list.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="stub-status new">New</span>
+        <span class="stub-label">Track progress</span>
+      </div>
+    </article>
+
+  </div>
+
+  <footer class="signoff">
+    <p>
+      That's v1.1. One more thing worth knowing: <b style="color:var(--ink)">My Profile</b> is there
+      whenever you want it — a couple of minutes filling it in and the site gets noticeably better at
+      working the way you actually prep.
+    </p>
+    <p>
+      We build this in the open, mostly from what you tell us is broken or missing — if something
+      here doesn't work the way you expected, report it the same way you always have, right from
+      the question.
+    </p>
+    <div class="wave">— The PrepFusion<span style="color:var(--accent-ink)">X</span> team</div>
+  </footer>
+
+</div>
+</body>
+</html>
