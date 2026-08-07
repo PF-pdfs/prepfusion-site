@@ -3,9 +3,9 @@
     {
       "key": "library",
       "label": "Library",
-      "url": "/pdf/",
+      "url": "https://pyq.prepfusion.in/pdf/",
       "same_site": true,
-      "same_tab": false,
+      "same_tab": true,
       "beta": false,
       "still_soon": false,
       "note": "Every previous-year paper, free to read."
