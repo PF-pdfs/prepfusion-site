@@ -1,10 +1,8 @@
 {
   "pdf-nexusx_v1": {
     "nexusx_v1.pdf": {
-      "download_url": "https://pyq.prepfusion.in/pdf/dl/pdf-nexusx_v1/nexusx_v1.pdf",
-      "reader_relpath": "dl/pdf-nexusx_v1/nexusx_v1.pdf",
-      "same_origin": true,
-      "size_bytes": 217277909,
+      "download_url": "https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-nexusx_v1/nexusx_v1.pdf",
+      "size_bytes": 217892742,
       "tag": "pdf-nexusx_v1",
       "target_dir": "NexusX/Questions"
     }
