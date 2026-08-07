@@ -1,0 +1,62 @@
+{
+  "nav": [
+    {
+      "key": "library",
+      "label": "Library",
+      "url": "/pdf/",
+      "same_site": true,
+      "same_tab": false,
+      "beta": false,
+      "still_soon": false,
+      "note": "Every previous-year paper, free to read."
+    },
+    {
+      "key": "courses",
+      "label": "Courses",
+      "url": "https://prepfusion.in",
+      "same_site": false,
+      "same_tab": false,
+      "beta": false,
+      "still_soon": false,
+      "note": "Full GATE courses on prepfusion.in."
+    },
+    {
+      "key": "study_hub",
+      "label": "Study Hub",
+      "url": "https://hub.prepfusion.in/",
+      "same_site": false,
+      "same_tab": true,
+      "beta": true,
+      "still_soon": false,
+      "note": "Search, save and improve every GATE question and solution."
+    },
+    {
+      "key": "bookstore",
+      "label": "Bookstore",
+      "url": "https://forms.gle/MZSGsFXjh4ysxDps8",
+      "same_site": false,
+      "same_tab": false,
+      "beta": false,
+      "still_soon": true,
+      "note": "Not live yet — tell us you're interested (quick form)."
+    }
+  ],
+  "youtube": [
+    {
+      "label": "English",
+      "url": "https://www.youtube.com/@PrepFusion_GATE"
+    },
+    {
+      "label": "Hindi",
+      "url": "https://www.youtube.com/@prepfusion-hindi"
+    }
+  ],
+  "footer": {
+    "feedback_url": "https://forms.gle/KjeJHFvppH4TDoLu6",
+    "feedback_label": "Share feedback",
+    "report_error_url": "https://chat.whatsapp.com/CG6NeORAHLt54WcwivLP2U?s=cl&p=a&mlu=4",
+    "report_error_label": "Report an error",
+    "about_url": "https://pyq.prepfusion.in/about/",
+    "copyright": "PrepFusion"
+  }
+}
