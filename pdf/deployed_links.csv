@@ -1,5 +1,5 @@
 Folder,Filename,Variant,Public URL
-pdf/Aptitude/Questions,apti.pdf,light,https://pyq.prepfusion.in/pdf/Aptitude/Questions/apti.pdf?v=ef3e7ababa14
+pdf/Aptitude/Questions,apti.pdf,light,https://pyq.prepfusion.in/pdf/Aptitude/Questions/apti.pdf?v=13b26a5b8910
 pdf/Aptitude/Solutions,apti_solutions.pdf,light,https://pyq.prepfusion.in/pdf/Aptitude/Solutions/apti_solutions.pdf?v=c4b420478f33
 pdf/Maths/Questions,PrepFusion_Engineering_Mathematics.pdf,light,https://pyq.prepfusion.in/pdf/Maths/Questions/PrepFusion_Engineering_Mathematics.pdf?v=bef854f48bea
 pdf/Maths/Solutions,maths_calculus_solutions.pdf,light,https://pyq.prepfusion.in/pdf/Maths/Solutions/maths_calculus_solutions.pdf?v=e2e0aafe47ef
@@ -11,17 +11,17 @@ pdf/Maths/Solutions,maths_probability_solutions.pdf,light,https://pyq.prepfusion
 pdf/Maths/Solutions,maths_transform_theory_solutions.pdf,light,https://pyq.prepfusion.in/pdf/Maths/Solutions/maths_transform_theory_solutions.pdf?v=e7dde320bd0c
 pdf/Maths/Solutions,maths_vector_solutions.pdf,light,https://pyq.prepfusion.in/pdf/Maths/Solutions/maths_vector_solutions.pdf?v=d6d3c17e0c96
 pdf/NexusX/Questions,nexusx_v1.pdf,light,https://pyq.prepfusion.in/pdf/dl/pdf-nexusx_v1/nexusx_v1.pdf
-pdf/NexusX/Questions,nexusx_v2.pdf,light,https://pyq.prepfusion.in/pdf/dl/pdf-nexusx_v2/nexusx_v2.pdf
+pdf/NexusX/Questions,nexusx_v2.pdf,light,https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-nexusx_v2/nexusx_v2.pdf
 pdf/NexusX/Solutions,nexusx_analog_ec_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_analog_ec_solutions.pdf?v=8c6572154716
 pdf/NexusX/Solutions,nexusx_analog_ee_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_analog_ee_solutions.pdf?v=c6fc91f8da30
 pdf/NexusX/Solutions,nexusx_analog_in_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_analog_in_solutions.pdf?v=3799424f795f
 pdf/NexusX/Solutions,nexusx_control_ee_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_control_ee_solutions.pdf?v=9ff74a087d66
 pdf/NexusX/Solutions,nexusx_control_in_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_control_in_solutions.pdf?v=541d1d91347e
 pdf/NexusX/Solutions,nexusx_control_systems_ec_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_control_systems_ec_solutions.pdf?v=9348e634bf68
-pdf/NexusX/Solutions,nexusx_digital_ec_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_digital_ec_solutions.pdf?v=fdef599d7820
+pdf/NexusX/Solutions,nexusx_digital_ec_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_digital_ec_solutions.pdf?v=0de85fa555e1
 pdf/NexusX/Solutions,nexusx_digital_ee_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_digital_ee_solutions.pdf?v=d0ed5168a6d7
-pdf/NexusX/Solutions,nexusx_digital_in_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_digital_in_solutions.pdf?v=f237e00c7b60
-pdf/NexusX/Solutions,nexusx_gate_ec_nw_sol.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_gate_ec_nw_sol.pdf?v=9d0b1fe3bcab
+pdf/NexusX/Solutions,nexusx_digital_in_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_digital_in_solutions.pdf?v=25d8fc6b72e2
+pdf/NexusX/Solutions,nexusx_gate_ec_nw_sol.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_gate_ec_nw_sol.pdf?v=74ecae7ffedc
 pdf/NexusX/Solutions,nexusx_network_theory_ee_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_network_theory_ee_solutions.pdf?v=1b0363f3b70e
 pdf/NexusX/Solutions,nexusx_network_theory_in_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_network_theory_in_solutions.pdf?v=0e9504cb9d9f
 pdf/NexusX/Solutions,nexusx_signals_ec_solutions.pdf,light,https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_signals_ec_solutions.pdf?v=39f2a00525f7
