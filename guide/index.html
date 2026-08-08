@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PrepFusion Study Hub — Guide</title>
+<meta name="description" content="A short tour of PrepFusion Study Hub — how Practice works, and why (and how) to report a question." />
+<meta name="robots" content="noindex" />
+<style>
+  :root {
+    --paper: #f2f5fa;
+    --paper-line: #e7ecf6;
+    --ink: #0a1020;
+    --ink-soft: #47547a;
+    --ink-faint: #7280a3;
+    --brand: #14307f;
+    --brand-soft: #2a4bb0;
+    --accent: #ffcf2d;
+    --accent-ink: #6b4400;
+    --line: #c9d3e6;
+    --ok: #1d6b33;
+    --ok-bg: #dff3e4;
+    --bad: #a3273f;
+    --bad-bg: #fbe4e8;
+    --card-bg: #ffffff;
+    --shadow: 0 1px 0 rgba(10, 16, 32, 0.04), 0 12px 28px -18px rgba(10, 16, 32, 0.35);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0a1020;
+      --paper-line: #121b33;
+      --ink: #eef2fb;
+      --ink-soft: #a9b6d6;
+      --ink-faint: #7c8bb3;
+      --brand: #8aa6f2;
+      --brand-soft: #6f93e8;
+      --accent: #ffcf2d;
+      --accent-ink: #ffe082;
+      --line: rgba(255, 255, 255, 0.14);
+      --ok: #58c98a;
+      --ok-bg: rgba(88, 201, 138, 0.14);
+      --bad: #ff8fa3;
+      --bad-bg: rgba(255, 143, 163, 0.14);
+      --card-bg: #101830;
+      --shadow: 0 1px 0 rgba(255, 255, 255, 0.03), 0 20px 40px -24px rgba(0, 0, 0, 0.65);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background:
+      linear-gradient(var(--paper-line) 1px, transparent 1px) 0 0 / 100% 34px,
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px) 0 0 / 34px 100%,
+      var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  .mono {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", "Liberation Mono", monospace;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 56px 20px 90px;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 22px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .brand-mark .name {
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-mark .name .x {
+    color: var(--accent-ink);
+  }
+
+  .brand-mark .tag {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+
+  .issue-stamp {
+    text-align: right;
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    line-height: 1.7;
+  }
+
+  .issue-stamp b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .hero {
+    padding: 40px 0 28px;
+  }
+
+  .hero .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-soft);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+
+  .hero .eyebrow::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  .hero h1 {
+    margin: 0 0 16px;
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  .hero h1 .x {
+    color: var(--accent-ink);
+  }
+
+  .hero p {
+    margin: 0;
+    max-width: 56ch;
+    font-size: 16.5px;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- ticket cards (same shape as /hub-update/, this repo's own
+     "What's New" release-notes page) ---------- */
+
+  .tickets {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-top: 34px;
+  }
+
+  .ticket {
+    display: grid;
+    grid-template-columns: 1fr 118px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .ticket-main {
+    padding: 24px 22px;
+    position: relative;
+  }
+
+  .ticket-code {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .ticket h2 {
+    margin: 0 0 8px;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .ticket p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    max-width: 46ch;
+  }
+
+  .ticket .howto {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+
+  .ticket .howto b {
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+
+  .ticket-stub {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 10px;
+    background: color-mix(in srgb, var(--brand) 6%, var(--card-bg));
+    border-left: 1.5px dashed var(--line);
+  }
+
+  .ticket-stub::before,
+  .ticket-stub::after {
+    content: "";
+    position: absolute;
+    left: -8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+  }
+  .ticket-stub::before { top: -9px; }
+  .ticket-stub::after { bottom: -9px; }
+
+  .stub-label {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-align: center;
+  }
+
+  .stub-status {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 999px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .stub-status.live {
+    background: var(--ok-bg);
+    color: var(--ok);
+  }
+
+  .ticket-icon {
+    width: 30px;
+    height: 30px;
+    color: var(--brand-soft);
+  }
+
+  @media (max-width: 520px) {
+    .ticket {
+      grid-template-columns: 1fr 92px;
+    }
+    .hero h1 {
+      font-size: 32px;
+    }
+  }
+
+  /* ---------- live example: a real-looking question, so "the buttons under
+     a question" is a picture, not just a sentence. Static and inert on
+     purpose — this is illustration, not a real question, so nothing here
+     should look clickable-and-functional. ---------- */
+
+  .example-wrap {
+    margin: 34px 0 0;
+  }
+
+  .example-label {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brand-soft);
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+
+  .example-card {
+    background: var(--card-bg);
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 22px 24px;
+  }
+
+  .example-meta {
+    display: flex;
+    gap: 10px;
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 14px;
+  }
+
+  .example-stem {
+    font-size: 15.5px;
+    margin: 0 0 16px;
+  }
+
+  .example-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0 0 20px;
+  }
+
+  .example-option {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    padding: 9px 12px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .example-option b {
+    color: var(--ink-soft);
+  }
+
+  .example-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 16px;
+    border-top: 1.5px solid var(--line);
+  }
+
+  .example-pill {
+    display: inline-flex;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+
+  .example-note {
+    margin: 14px 0 0;
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+
+  .example-arrow {
+    display: block;
+    margin: 8px 0 0 4px;
+    font-size: 12.5px;
+    color: var(--brand-soft);
+    font-weight: 700;
+  }
+
+  /* ---------- sign-off ---------- */
+
+  .signoff {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 2px solid var(--ink);
+  }
+
+  .signoff p {
+    max-width: 58ch;
+    color: var(--ink-soft);
+    font-size: 15px;
+  }
+
+  .signoff .wave {
+    font-family: Consolas, "SF Mono", "Cascadia Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 22px;
+  }
+
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--brand-soft); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ticket { animation: rise 0.5s ease both; }
+    .ticket:nth-child(1) { animation-delay: 0.02s; }
+    .ticket:nth-child(2) { animation-delay: 0.07s; }
+    .ticket:nth-child(3) { animation-delay: 0.12s; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="brand-mark">
+      <span class="name">PrepFusion<span class="x">X</span></span>
+      <span class="tag">Study Hub</span>
+    </div>
+    <div class="issue-stamp">
+      GUIDE<br />
+      UPDATED 08 / 2026
+    </div>
+  </header>
+
+  <section class="hero">
+    <span class="eyebrow">Getting started</span>
+    <h1>A short tour of Study Hub.</h1>
+    <p>
+      Not a one-time thing — this page grows every time something worth explaining ships. Right now:
+      how Practice works, and the three small buttons under a question that are easy to miss the first
+      time you see them.
+    </p>
+  </section>
+
+  <div class="tickets">
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-G1 · PRACTICE</span>
+        <h2>Self-paced or Timed — same questions, two ways to work through them</h2>
+        <p>
+          <b style="color:var(--ink)">Self-paced</b> is the question library itself — every previous-year
+          question, browsable by subject and chapter, at your own speed, no clock. <b style="color:var(--ink)">Timed
+          tests</b> build a real exam-style test from the sections you pick, with GATE's own negative
+          marking and a countdown.
+        </p>
+        <div class="howto"><b>Find it:</b> the "Practice" tab in the top nav — the switch between the two modes sits right below it.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <span class="stub-status live">Live now</span>
+        <span class="stub-label">Practice</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-G2 · INBOX</span>
+        <h2>The bell icon, top right — that's your Inbox</h2>
+        <p>
+          Not a decoration — it's where things worth knowing land: a fix to a question you reported, a
+          new video solution, updates like this page. A number on it means something's unread; open it
+          and it's marked read.
+        </p>
+        <div class="howto"><b>Find it:</b> top right of every page, the bell-shaped icon next to the dark-mode toggle.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        <span class="stub-status live">Live now</span>
+        <span class="stub-label">Top right</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-G3 · REPORT</span>
+        <h2>Reporting a question — and where to actually find the button</h2>
+        <p>
+          Three small actions live on a question page, easy to walk past because they're deliberately
+          quiet. Two live in different places, not one:
+        </p>
+        <div class="howto">
+          <b>Get to a question:</b> "Practice" (top nav) → "Self-paced" → pick a subject → pick a
+          chapter → open any question. (Reviewing a finished Timed test drops you into questions the
+          same way.)
+        </div>
+        <div class="howto">
+          <b>⚑ Report problem with question</b> — right below the question and its options, on any
+          previous-year question (Self-paced or reviewing a finished Timed test). Not shown during a
+          running timed test — reporting against a live clock helps nobody.
+        </div>
+        <div class="howto">
+          <b>⚑ Report problem with solution</b> and <b>🎬 Request a video solution</b> — open
+          <b>"Show solution"</b> first. Both sit just below the solution itself, since you can only judge
+          a solution (or ask for a video walkthrough of one) once you've actually read it.
+        </div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22V3"/></svg>
+        <span class="stub-status live">Live now</span>
+        <span class="stub-label">On a question</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-G4 · TRACKING</span>
+        <h2>Bookmark, Visited and Rate — the three small icons above a question</h2>
+        <p>
+          Same top-right row as the calculator button, on every question. All three are for you, not
+          us — nothing here gets reported anywhere.
+        </p>
+        <div class="howto">
+          <b>🔖 Bookmark</b> — save this exact question to come back to later, from your Profile.
+        </div>
+        <div class="howto">
+          <b>👁 Visited</b> — marks a question as opened, so a chapter's progress tracker knows what
+          you've already been through. Hidden during a running timed test.
+        </div>
+        <div class="howto">
+          <b>Rate (Easy / Medium / Hard)</b> — your own difficulty judgement, sits just above the
+          question body. Also hidden during a running timed test — it's meant to be answered after
+          you've actually worked the question, not against the clock.
+        </div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4Z"/></svg>
+        <span class="stub-status live">Live now</span>
+        <span class="stub-label">On a question</span>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="example-wrap">
+    <p class="example-label">What this actually looks like</p>
+    <div class="example-card">
+      <p class="example-meta">Example question — not a real one, just for illustration</p>
+      <p class="example-stem">
+        A series RLC circuit is driven at its resonant frequency. What is the phase difference between
+        the source voltage and the source current?
+      </p>
+      <div class="example-options">
+        <div class="example-option"><b>(A)</b> 90°</div>
+        <div class="example-option"><b>(B)</b> 45°</div>
+        <div class="example-option"><b>(C)</b> 0°</div>
+        <div class="example-option"><b>(D)</b> 180°</div>
+      </div>
+      <span class="example-arrow">↓ this row, under every question, is what PF-G3 above is about</span>
+      <div class="example-actions">
+        <span class="example-pill">⚑ Report problem with question</span>
+      </div>
+      <p class="example-note">
+        Open "Show solution" on a real question and you'll find two more, the same quiet way — a problem-
+        with-solution flag and a request-a-video button, right under the written solution.
+      </p>
+    </div>
+  </div>
+
+  <footer class="signoff">
+    <p>
+      This page updates when something worth explaining changes — a new tab, a reworked flow, a feature
+      that needs a "where do I find it" answer. Small copy tweaks don't get their own edition; a real
+      change to what you can do here does.
+    </p>
+    <p>
+      We build this mostly from what you tell us is confusing or missing — if something here still isn't
+      clear, report it the same way described above, right from the question.
+    </p>
+    <div class="wave">— The PrepFusion<span style="color:var(--accent-ink)">X</span> team</div>
+  </footer>
+
+</div>
+</body>
+</html>
