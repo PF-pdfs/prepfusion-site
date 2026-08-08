@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>What's New in PrepFusion v1.1</title>
-<meta name="description" content="Student-facing release notes for PrepFusion Study Hub v1.1 — Practice mode, instant answer checking, the built-in calculator, and more." />
+<title>What's New in PrepFusion v1.2</title>
+<meta name="description" content="Student-facing release notes for PrepFusion Study Hub v1.2 — the Study tab, Dashboard, and the Free/Paid catalog cleanup." />
 <meta name="robots" content="noindex" />
 <style>
   :root {
@@ -362,8 +362,6 @@
     .ticket:nth-child(3) { animation-delay: 0.12s; }
     .ticket:nth-child(4) { animation-delay: 0.17s; }
     .ticket:nth-child(5) { animation-delay: 0.22s; }
-    .ticket:nth-child(6) { animation-delay: 0.27s; }
-    .ticket:nth-child(7) { animation-delay: 0.32s; }
     @keyframes rise {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
@@ -380,22 +378,22 @@
       <span class="tag">Study Hub</span>
     </div>
     <div class="issue-stamp">
-      RELEASE <b>v1.1</b><br />
+      RELEASE <b>v1.2</b><br />
       ISSUED 08 / 2026
     </div>
   </header>
 
   <nav class="version-tabs" aria-label="Release version">
-    <span class="version-tab is-current">v1.1</span>
-    <a class="version-tab" href="./v1.2/index.html">v1.2 (latest) →</a>
+    <a class="version-tab" href="../index.html">← v1.1 (previous)</a>
+    <span class="version-tab is-current">v1.2 (current)</span>
   </nav>
 
   <section class="hero">
     <span class="eyebrow">What's new</span>
-    <h1>Your Study Hub just leveled up.</h1>
+    <h1>Study Hub is no longer just a question bank.</h1>
     <p>
-      Seven updates, all live right now. Nothing to install, nothing to configure — just open the
-      app and they're there. Here's exactly what's new and how to get the most out of each one.
+      The headline this time: full courses, watchable and tracked, right alongside Practice. Five
+      updates, all live right now — here's exactly what's new and how to get the most out of each one.
     </p>
   </section>
 
@@ -403,125 +401,94 @@
 
     <article class="ticket">
       <div class="ticket-main">
-        <span class="ticket-code mono">PF-01 · PRACTICE</span>
-        <h2>Timed mock tests, built your way</h2>
+        <span class="ticket-code mono">PF-08 · STUDY</span>
+        <h2>Full courses, watchable here, with a real tracker</h2>
         <p>
-          Pick your subjects, chapters, difficulty, and question count — get a real timed test with
-          the exact same negative-marking rules as the actual GATE exam. Finish it and get a full
-          report: accuracy by subject, accuracy by difficulty, and a clean PDF you can keep.
+          Every GATE and VLSI course, chapter by chapter — <b style="color:var(--ink)">Free</b> courses
+          play in full right here; <b style="color:var(--ink)">Paid</b> ones show the real syllabus as a
+          preview. The tracker weighs progress by actual lecture length, not just boxes ticked, and PYQ
+          chapters get their own separate tracker underneath.
         </p>
-        <div class="howto"><b>Find it:</b> the "Practice" tab, right next to Study Hub in the top nav.</div>
+        <div class="howto"><b>Find it:</b> the "Study" tab, next to Practice in the top nav.</div>
       </div>
       <div class="ticket-stub">
-        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        <span class="stub-status beta">Beta</span>
-        <span class="stub-label">Timed test</span>
-      </div>
-    </article>
-
-    <article class="ticket">
-      <div class="ticket-main">
-        <span class="ticket-code mono">PF-02 · CHECK</span>
-        <h2>Know instantly if you got it right</h2>
-        <p>
-          Select an answer on any question while you're browsing — not just during a test — and hit
-          "Check answer" for an immediate green or red. Miss it, and the right option lights up too,
-          so you always see what you should have picked.
-        </p>
-        <div class="howto"><b>Find it:</b> it just works — open any question with a clean answer key.</div>
-      </div>
-      <div class="ticket-stub">
-        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
         <span class="stub-status live">Live now</span>
-        <span class="stub-label">Answer check</span>
+        <span class="stub-label">Study tab</span>
       </div>
     </article>
 
     <article class="ticket">
       <div class="ticket-main">
-        <span class="ticket-code mono">PF-03 · CALC</span>
-        <h2>The GATE calculator, built in</h2>
+        <span class="ticket-code mono">PF-09 · TAILORED</span>
+        <h2>Four quick questions, and Study tunes itself to you</h2>
         <p>
-          The same virtual scientific calculator used in the real exam interface — full trig, log,
-          memory, the works — now sits one tap away on every single question. Drag it wherever's
-          convenient and keep solving.
+          First time you open Study, it asks your branch, target GATE year, preparation stage, and VLSI
+          placement track — so the catalog is ordered and weighted for the exam you're actually sitting.
+          All four stay editable any time afterward.
         </p>
-        <div class="howto"><b>Find it:</b> the calculator icon next to any question's marks/type.</div>
-      </div>
-      <div class="ticket-stub">
-        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/></svg>
-        <span class="stub-status live">Live now</span>
-        <span class="stub-label">On every Q</span>
-      </div>
-    </article>
-
-    <article class="ticket">
-      <div class="ticket-main">
-        <span class="ticket-code mono">PF-04 · HISTORY</span>
-        <h2>Every test you've taken, in one place</h2>
-        <p>
-          "My reports" keeps a running history of every Practice test — pick up an unfinished one
-          right where you left off, or reopen a finished one to review the full breakdown any time.
-        </p>
-        <div class="howto"><b>Find it:</b> your account menu → "My reports."</div>
-      </div>
-      <div class="ticket-stub">
-        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 15l4-5 4 3 5-7"/></svg>
-        <span class="stub-status live">Live now</span>
-        <span class="stub-label">Test history</span>
-      </div>
-    </article>
-
-    <article class="ticket">
-      <div class="ticket-main">
-        <span class="ticket-code mono">PF-05 · INBOX</span>
-        <h2>A proper home for updates</h2>
-        <p>
-          Notifications is now Inbox — the place where things worth knowing land: fixes to a
-          question you reported, a new video solution, and updates like this one. One glance at the
-          badge tells you if there's something new.
-        </p>
-        <div class="howto"><b>Find it:</b> you're reading this from it right now.</div>
-      </div>
-      <div class="ticket-stub">
-        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-        <span class="stub-status live">Live now</span>
-        <span class="stub-label">Renamed</span>
-      </div>
-    </article>
-
-    <article class="ticket">
-      <div class="ticket-main">
-        <span class="ticket-code mono">PF-06 · NIGHT</span>
-        <h2>Dark mode, fixed for real diagrams</h2>
-        <p>
-          Circuit diagrams and figures used to sit on the page as a glaring white rectangle at
-          night. They now invert cleanly with the theme, so late-night sessions actually look right.
-        </p>
-        <div class="howto"><b>Find it:</b> the moon icon, top right — same as always, just better now.</div>
-      </div>
-      <div class="ticket-stub">
-        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
-        <span class="stub-status live">Fixed</span>
-        <span class="stub-label">Diagrams</span>
-      </div>
-    </article>
-
-    <article class="ticket">
-      <div class="ticket-main">
-        <span class="ticket-code mono">PF-07 · PROGRESS</span>
-        <h2>See what you've already worked through</h2>
-        <p>
-          Every question you open now gets quietly marked as visited — separate from bookmarks,
-          just a simple "have I done this one" trail. Flip it either way yourself, and use "Unvisited
-          only" to jump straight to what's left in a chapter.
-        </p>
-        <div class="howto"><b>Find it:</b> next to the bookmark icon on any question, and the "Unvisited only" filter in a chapter's question list.</div>
+        <div class="howto"><b>Find it:</b> it appears automatically the first time you open Study; change answers later in the account menu → "My details."</div>
       </div>
       <div class="ticket-stub">
         <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         <span class="stub-status new">New</span>
-        <span class="stub-label">Track progress</span>
+        <span class="stub-label">Onboarding</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-10 · DASHBOARD</span>
+        <h2>One place for your whole preparation, at a glance</h2>
+        <p>
+          A new tab pulls your progress together across GATE and VLSI, free and paid, lectures and PYQ
+          chapters — a single view instead of hunting for it inside course pages. Split out of "My
+          details" on purpose, since a settings form and a progress report are two different reasons to
+          come back.
+        </p>
+        <div class="howto"><b>Find it:</b> the "Dashboard" tab, next to Study; also in the account menu.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <span class="stub-status new">New</span>
+        <span class="stub-label">Dashboard</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-11 · CATALOG</span>
+        <h2>Free or Paid — simpler labels, and no dead ends on notes</h2>
+        <p>
+          "Premium" is now plainly <b style="color:var(--ink)">Paid</b>; the old "Capsule course" pill is
+          gone too. General Aptitude now lives in one place, not split across a free and paid twin. And
+          any course without notes of its own — free or paid — now points straight to our Telegram group
+          instead of a blank space.
+        </p>
+        <div class="howto"><b>Find it:</b> any course page in Study — look for the badge and the notes links.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22V3"/></svg>
+        <span class="stub-status live">Live now</span>
+        <span class="stub-label">Study catalog</span>
+      </div>
+    </article>
+
+    <article class="ticket">
+      <div class="ticket-main">
+        <span class="ticket-code mono">PF-12 · GUIDE</span>
+        <h2>The Guide page now actually shows you where things are</h2>
+        <p>
+          Updated with exact steps to reach the report buttons (not just what they do), a live-rendered
+          example question so you can see the row before you go looking for it, and a clear callout for
+          the Inbox bell — plus Bookmark, Visited and Rate, explained in one place.
+        </p>
+        <div class="howto"><b>Find it:</b> the account menu → "Guide", or the Inbox's welcome message.</div>
+      </div>
+      <div class="ticket-stub">
+        <svg class="ticket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5"/><path d="M12 17h.01"/></svg>
+        <span class="stub-status live">Updated</span>
+        <span class="stub-label">Guide page</span>
       </div>
     </article>
 
@@ -529,14 +496,13 @@
 
   <footer class="signoff">
     <p>
-      That's v1.1. One more thing worth knowing: <b style="color:var(--ink)">My Profile</b> is there
-      whenever you want it — a couple of minutes filling it in and the site gets noticeably better at
-      working the way you actually prep.
+      Missed v1.1? <a href="../index.html" style="color:var(--brand-soft); font-weight:700;">Catch up on it here</a> —
+      timed tests, instant answer checking, the built-in calculator and more.
     </p>
     <p>
-      We build this in the open, mostly from what you tell us is broken or missing — if something
-      here doesn't work the way you expected, report it the same way you always have, right from
-      the question.
+      We build this in the open, mostly from what you tell us is broken or missing — if something here
+      doesn't work the way you expected, report it the same way you always have, right from the
+      question.
     </p>
     <div class="wave">— The PrepFusion<span style="color:var(--accent-ink)">X</span> team</div>
   </footer>
