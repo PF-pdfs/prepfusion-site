@@ -8960,12 +8960,12 @@
                 {
                   "children": [],
                   "page": 51,
-                  "title": "Q2.22.2"
+                  "title": "Q2.22.1"
                 },
                 {
                   "children": [],
                   "page": 51,
-                  "title": "Q2.22.1"
+                  "title": "Q2.22.2"
                 },
                 {
                   "children": [],
@@ -14742,7 +14742,7 @@
                 },
                 {
                   "children": [],
-                  "page": 185,
+                  "page": 186,
                   "title": "Q6.25.3"
                 },
                 {
@@ -14782,7 +14782,7 @@
                 },
                 {
                   "children": [],
-                  "page": 186,
+                  "page": 187,
                   "title": "Q6.22.2"
                 },
                 {
@@ -14922,7 +14922,7 @@
                 },
                 {
                   "children": [],
-                  "page": 189,
+                  "page": 190,
                   "title": "Q6.10.2"
                 },
                 {
@@ -14972,7 +14972,7 @@
                 },
                 {
                   "children": [],
-                  "page": 190,
+                  "page": 191,
                   "title": "Q6.05.2"
                 },
                 {
@@ -15017,12 +15017,12 @@
                 },
                 {
                   "children": [],
-                  "page": 191,
+                  "page": 192,
                   "title": "Q6.95.1"
                 },
                 {
                   "children": [],
-                  "page": 191,
+                  "page": 192,
                   "title": "Q6.95.2"
                 },
                 {
@@ -15068,7 +15068,7 @@
                 },
                 {
                   "children": [],
-                  "page": 192,
+                  "page": 193,
                   "title": "Q6.21.1"
                 },
                 {
@@ -15118,7 +15118,7 @@
                 },
                 {
                   "children": [],
-                  "page": 193,
+                  "page": 194,
                   "title": "Q6.13.2"
                 },
                 {
@@ -15168,7 +15168,7 @@
                 },
                 {
                   "children": [],
-                  "page": 194,
+                  "page": 195,
                   "title": "Q6.06.1"
                 },
                 {
@@ -15203,7 +15203,7 @@
                 },
                 {
                   "children": [],
-                  "page": 195,
+                  "page": 196,
                   "title": "Q6.03.1"
                 },
                 {
@@ -15254,12 +15254,12 @@
                 },
                 {
                   "children": [],
-                  "page": 196,
+                  "page": 197,
                   "title": "Q6.22.1"
                 },
                 {
                   "children": [],
-                  "page": 196,
+                  "page": 197,
                   "title": "Q6.22.2"
                 },
                 {
@@ -15304,12 +15304,12 @@
                 },
                 {
                   "children": [],
-                  "page": 197,
+                  "page": 198,
                   "title": "Q6.11.1"
                 },
                 {
                   "children": [],
-                  "page": 197,
+                  "page": 198,
                   "title": "Q6.10.1"
                 },
                 {
@@ -29181,11 +29181,6 @@
                     {
                       "children": [],
                       "page": 9,
-                      "title": "Q1.26.2"
-                    },
-                    {
-                      "children": [],
-                      "page": 9,
                       "title": "Q1.24.1"
                     },
                     {
@@ -29220,7 +29215,7 @@
                     },
                     {
                       "children": [],
-                      "page": 10,
+                      "page": 9,
                       "title": "Q1.05.1"
                     },
                     {
@@ -29569,6 +29564,11 @@
                     {
                       "children": [],
                       "page": 24,
+                      "title": "Q4.26.2"
+                    },
+                    {
+                      "children": [],
+                      "page": 24,
                       "title": "Q4.25.1"
                     },
                     {
@@ -29588,7 +29588,7 @@
                     },
                     {
                       "children": [],
-                      "page": 24,
+                      "page": 25,
                       "title": "Q4.23.1"
                     },
                     {
@@ -29628,7 +29628,7 @@
                     },
                     {
                       "children": [],
-                      "page": 25,
+                      "page": 26,
                       "title": "Q4.18.2"
                     },
                     {
@@ -29723,7 +29723,7 @@
                     },
                     {
                       "children": [],
-                      "page": 27,
+                      "page": 28,
                       "title": "Q4.12.1"
                     },
                     {
@@ -36714,7 +36714,7 @@
         "2015": 1,
         "2019": 1,
         "2024": 1,
-        "2026": 2
+        "2026": 1
       },
       "Signals and Systems (EC, EE, IN) / EC — Electronics & Communication Engineering / II. Basics of Systems": {
         "1990": 1,
@@ -36800,7 +36800,7 @@
         "2023": 4,
         "2024": 2,
         "2025": 2,
-        "2026": 1
+        "2026": 2
       },
       "Signals and Systems (EC, EE, IN) / EC — Electronics & Communication Engineering / V. Laplace Transform": {
         "1987": 1,
