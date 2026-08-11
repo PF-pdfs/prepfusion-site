@@ -11,7 +11,9 @@
   },
   "pdf-nexusx_v2": {
     "nexusx_v2.pdf": {
-      "download_url": "https://github.com/PF-pdfs/prepfusion-site/releases/download/pdf-nexusx_v2/nexusx_v2.pdf",
+      "download_url": "https://pyq.prepfusion.in/pdf/dl/pdf-nexusx_v2/nexusx_v2.pdf",
+      "reader_relpath": "dl/pdf-nexusx_v2/nexusx_v2.pdf",
+      "same_origin": true,
       "size_bytes": 122035323,
       "tag": "pdf-nexusx_v2",
       "target_dir": "NexusX/Questions"
@@ -22,7 +24,7 @@
       "download_url": "https://pyq.prepfusion.in/pdf/dl/pdf-powerx/powerx.pdf",
       "reader_relpath": "dl/pdf-powerx/powerx.pdf",
       "same_origin": true,
-      "size_bytes": 118898610,
+      "size_bytes": 118310781,
       "tag": "pdf-powerx",
       "target_dir": "PowerX/Questions"
     }
