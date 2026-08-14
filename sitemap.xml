@@ -13,71 +13,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_emft_ee_solutions.pdf</loc>
-    <lastmod>2026-08-06</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_emft_in_solutions.pdf</loc>
-    <lastmod>2026-08-06</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_machines_ee_solutions.pdf</loc>
-    <lastmod>2026-08-12</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_machines_in_solutions.pdf</loc>
-    <lastmod>2026-08-06</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_measurements_ee_solutions.pdf</loc>
-    <lastmod>2026-08-11</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_power_electronics_ee_solutions.pdf</loc>
-    <lastmod>2026-08-08</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_power_systems_ee_solutions.pdf</loc>
-    <lastmod>2026-08-06</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/Aptitude/Questions/apti.pdf</loc>
-    <lastmod>2026-08-14</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/Aptitude/Solutions/apti_solutions.pdf</loc>
-    <lastmod>2026-08-09</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/SiliconX/Questions/siliconx.pdf</loc>
-    <lastmod>2026-08-13</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/SiliconX/Solutions/siliconx_communications_ec_solutions.pdf</loc>
-    <lastmod>2026-08-13</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/SiliconX/Solutions/siliconx_edc_ec_solutions.pdf</loc>
-    <lastmod>2026-08-12</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://pyq.prepfusion.in/pdf/SiliconX/Solutions/siliconx_emft_ec_solutions.pdf</loc>
-    <lastmod>2026-08-12</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://pyq.prepfusion.in/pdf/NexusX/Solutions/nexusx_analog_ec_solutions.pdf</loc>
     <lastmod>2026-08-12</lastmod>
     <priority>0.8</priority>
@@ -153,8 +88,58 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pyq.prepfusion.in/pdf/Maths/Questions/PrepFusion_Engineering_Mathematics.pdf</loc>
-    <lastmod>2026-08-14</lastmod>
+    <loc>https://pyq.prepfusion.in/pdf/SiliconX/Solutions/siliconx_communications_ec_solutions.pdf</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/SiliconX/Solutions/siliconx_edc_ec_solutions.pdf</loc>
+    <lastmod>2026-08-12</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/SiliconX/Solutions/siliconx_emft_ec_solutions.pdf</loc>
+    <lastmod>2026-08-12</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/SiliconX/Questions/siliconx.pdf</loc>
+    <lastmod>2026-08-13</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_emft_ee_solutions.pdf</loc>
+    <lastmod>2026-08-06</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_emft_in_solutions.pdf</loc>
+    <lastmod>2026-08-06</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_machines_ee_solutions.pdf</loc>
+    <lastmod>2026-08-12</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_machines_in_solutions.pdf</loc>
+    <lastmod>2026-08-06</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_measurements_ee_solutions.pdf</loc>
+    <lastmod>2026-08-11</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_power_electronics_ee_solutions.pdf</loc>
+    <lastmod>2026-08-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/PowerX/Solutions/powerx_power_systems_ee_solutions.pdf</loc>
+    <lastmod>2026-08-06</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
@@ -195,6 +180,21 @@
   <url>
     <loc>https://pyq.prepfusion.in/pdf/Maths/Solutions/maths_vector_solutions.pdf</loc>
     <lastmod>2026-08-06</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/Maths/Questions/PrepFusion_Engineering_Mathematics.pdf</loc>
+    <lastmod>2026-08-14</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/Aptitude/Solutions/apti_solutions.pdf</loc>
+    <lastmod>2026-08-09</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pyq.prepfusion.in/pdf/Aptitude/Questions/apti.pdf</loc>
+    <lastmod>2026-08-14</lastmod>
     <priority>0.8</priority>
   </url>
 </urlset>
