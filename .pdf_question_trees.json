@@ -22392,11 +22392,6 @@
                     {
                       "children": [],
                       "page": 243,
-                      "title": "Q5.26.1"
-                    },
-                    {
-                      "children": [],
-                      "page": 243,
                       "title": "Q5.19.1"
                     }
                   ],
@@ -25648,6 +25643,11 @@
                     {
                       "children": [],
                       "page": 399,
+                      "title": "Q7.26.1"
+                    },
+                    {
+                      "children": [],
+                      "page": 399,
                       "title": "Q7.21.1"
                     },
                     {
@@ -25667,7 +25667,7 @@
                     },
                     {
                       "children": [],
-                      "page": 399,
+                      "page": 400,
                       "title": "Q7.18.2"
                     },
                     {
@@ -25687,12 +25687,12 @@
                     },
                     {
                       "children": [],
-                      "page": 400,
+                      "page": 401,
                       "title": "Q7.16.1"
                     },
                     {
                       "children": [],
-                      "page": 400,
+                      "page": 401,
                       "title": "Q7.15.1"
                     },
                     {
@@ -25712,7 +25712,7 @@
                     },
                     {
                       "children": [],
-                      "page": 401,
+                      "page": 402,
                       "title": "Q7.14.2"
                     },
                     {
@@ -25727,17 +25727,17 @@
                     },
                     {
                       "children": [],
-                      "page": 402,
+                      "page": 403,
                       "title": "Q7.09.1"
                     },
                     {
                       "children": [],
-                      "page": 402,
+                      "page": 403,
                       "title": "Q7.08.1"
                     },
                     {
                       "children": [],
-                      "page": 402,
+                      "page": 403,
                       "title": "Q7.04.1"
                     },
                     {
@@ -25752,22 +25752,22 @@
                     },
                     {
                       "children": [],
-                      "page": 403,
+                      "page": 404,
                       "title": "Q7.03.3"
                     },
                     {
                       "children": [],
-                      "page": 403,
+                      "page": 404,
                       "title": "Q7.01.1"
                     },
                     {
                       "children": [],
-                      "page": 403,
+                      "page": 404,
                       "title": "Q7.99.1"
                     },
                     {
                       "children": [],
-                      "page": 403,
+                      "page": 404,
                       "title": "Q7.98.1"
                     },
                     {
@@ -25787,27 +25787,27 @@
                     },
                     {
                       "children": [],
-                      "page": 404,
+                      "page": 405,
                       "title": "Q7.97.4"
                     },
                     {
                       "children": [],
-                      "page": 404,
+                      "page": 405,
                       "title": "Q7.97.5"
                     },
                     {
                       "children": [],
-                      "page": 404,
+                      "page": 405,
                       "title": "Q7.96.1"
                     },
                     {
                       "children": [],
-                      "page": 404,
+                      "page": 405,
                       "title": "Q7.96.2"
                     },
                     {
                       "children": [],
-                      "page": 404,
+                      "page": 405,
                       "title": "Q7.95.1"
                     },
                     {
@@ -25837,22 +25837,22 @@
                     },
                     {
                       "children": [],
-                      "page": 405,
+                      "page": 406,
                       "title": "Q7.92.2"
                     },
                     {
                       "children": [],
-                      "page": 405,
+                      "page": 406,
                       "title": "Q7.91.1"
                     },
                     {
                       "children": [],
-                      "page": 405,
+                      "page": 406,
                       "title": "Q7.91.2"
                     },
                     {
                       "children": [],
-                      "page": 405,
+                      "page": 406,
                       "title": "Q7.91.3"
                     },
                     {
@@ -25877,12 +25877,12 @@
                     },
                     {
                       "children": [],
-                      "page": 406,
+                      "page": 407,
                       "title": "Q7.87.2"
                     },
                     {
                       "children": [],
-                      "page": 406,
+                      "page": 407,
                       "title": "Q7.87.3"
                     }
                   ],
@@ -28061,8 +28061,7 @@
         "2026": 2
       },
       "Analog Electronics (EC, EE, IN) / EC — Electronics & Communication Engineering / V. Miscellaneous Topics": {
-        "2019": 1,
-        "2026": 1
+        "2019": 1
       },
       "Analog Electronics (EC, EE, IN) / EE — Electrical Engineering / I. Diode Circuits and Applications": {
         "1991": 1,
@@ -28450,7 +28449,8 @@
         "2017": 3,
         "2018": 2,
         "2019": 2,
-        "2021": 1
+        "2021": 1,
+        "2026": 1
       },
       "Digital Electronics (EC, EE, IN) / EC — Electronics & Communication Engineering / VIII. Computer Organization and Architecture": {
         "1988": 4,
