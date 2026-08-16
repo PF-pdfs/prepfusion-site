@@ -1,15 +1,15 @@
 {
   "Aptitude/Questions/apti.pdf": {
-    "date": "2026-08-14",
-    "hash": "6cf65b252fb5"
+    "date": "2026-08-16",
+    "hash": "57d2667b2a0a"
   },
   "Aptitude/Solutions/apti_solutions.pdf": {
     "date": "2026-08-09",
     "hash": "456c5a6643ee"
   },
   "Maths/Questions/PrepFusion_Engineering_Mathematics.pdf": {
-    "date": "2026-08-14",
-    "hash": "710d5fa602dd"
+    "date": "2026-08-16",
+    "hash": "02f3b6d3732b"
   },
   "Maths/Solutions/maths_calculus_solutions.pdf": {
     "date": "2026-08-09",
@@ -48,20 +48,20 @@
     "hash": "a1de387374d3"
   },
   "NexusX/Questions/nexusx_v2.pdf": {
-    "date": "2026-08-13",
-    "hash": "6631bab51e1e"
+    "date": "2026-08-16",
+    "hash": "1a00e2111364"
   },
   "NexusX/Solutions/nexusx_analog_ec_solutions.pdf": {
-    "date": "2026-08-12",
-    "hash": "e1687daff67b"
+    "date": "2026-08-16",
+    "hash": "50729ffb5f05"
   },
   "NexusX/Solutions/nexusx_analog_ee_solutions.pdf": {
-    "date": "2026-08-12",
-    "hash": "13d389688328"
+    "date": "2026-08-16",
+    "hash": "b6bee78b4f07"
   },
   "NexusX/Solutions/nexusx_analog_in_solutions.pdf": {
-    "date": "2026-08-12",
-    "hash": "c021b4a286e0"
+    "date": "2026-08-16",
+    "hash": "69af804522d4"
   },
   "NexusX/Solutions/nexusx_control_ee_solutions.pdf": {
     "date": "2026-08-06",
@@ -72,12 +72,12 @@
     "hash": "541d1d91347e"
   },
   "NexusX/Solutions/nexusx_control_systems_ec_solutions.pdf": {
-    "date": "2026-08-12",
-    "hash": "8c81cca51f52"
+    "date": "2026-08-16",
+    "hash": "d344e85620b8"
   },
   "NexusX/Solutions/nexusx_digital_ec_solutions.pdf": {
-    "date": "2026-08-12",
-    "hash": "a7cda5bb98f3"
+    "date": "2026-08-16",
+    "hash": "fd1ccd304993"
   },
   "NexusX/Solutions/nexusx_digital_ee_solutions.pdf": {
     "date": "2026-08-12",
@@ -96,8 +96,8 @@
     "hash": "65381e1ddb0e"
   },
   "NexusX/Solutions/nexusx_network_theory_in_solutions.pdf": {
-    "date": "2026-08-11",
-    "hash": "3ca57d34a259"
+    "date": "2026-08-16",
+    "hash": "47c0e91ccec3"
   },
   "NexusX/Solutions/nexusx_signals_ec_solutions.pdf": {
     "date": "2026-08-12",
@@ -144,19 +144,19 @@
     "hash": "bf1f186d0516"
   },
   "SiliconX/Questions/siliconx.pdf": {
-    "date": "2026-08-13",
-    "hash": "4e5217d9287c"
+    "date": "2026-08-16",
+    "hash": "6f94b77cbb8c"
   },
   "SiliconX/Solutions/siliconx_communications_ec_solutions.pdf": {
-    "date": "2026-08-13",
-    "hash": "b20280b7f04d"
+    "date": "2026-08-16",
+    "hash": "5c9b752d2367"
   },
   "SiliconX/Solutions/siliconx_edc_ec_solutions.pdf": {
-    "date": "2026-08-12",
-    "hash": "afe6015bb514"
+    "date": "2026-08-16",
+    "hash": "75da8bd1b5dc"
   },
   "SiliconX/Solutions/siliconx_emft_ec_solutions.pdf": {
-    "date": "2026-08-12",
-    "hash": "2ab961589ebe"
+    "date": "2026-08-16",
+    "hash": "718cb00be1a0"
   }
 }
