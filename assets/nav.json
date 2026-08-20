@@ -13,12 +13,12 @@
     {
       "key": "courses",
       "label": "Courses",
-      "url": "https://prepfusion.in",
+      "url": "https://go.prepfusion.in",
       "same_site": false,
       "same_tab": false,
       "beta": false,
       "still_soon": false,
-      "note": "Full GATE courses on prepfusion.in."
+      "note": "Full GATE courses on go.prepfusion.in."
     },
     {
       "key": "study_hub",
