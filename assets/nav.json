@@ -52,11 +52,13 @@
     }
   ],
   "footer": {
-    "feedback_url": "https://forms.gle/KjeJHFvppH4TDoLu6",
-    "feedback_label": "Share feedback",
-    "report_error_url": "https://chat.whatsapp.com/CG6NeORAHLt54WcwivLP2U?s=cl&p=a&mlu=4",
-    "report_error_label": "Report an error",
+    "contact_email": "bookstore.prepfusion@gmail.com",
+    "contact_label": "Contact us",
+    "report_error_url": "https://hub.prepfusion.in/contribute",
+    "report_error_label": "Report an error / feedback",
     "about_url": "https://pyq.prepfusion.in/about/",
+    "guide_url": "https://hub.prepfusion.in/guide",
+    "guide_label": "Guide",
     "copyright": "PrepFusion"
   }
 }
