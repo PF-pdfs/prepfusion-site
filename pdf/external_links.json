@@ -4,7 +4,7 @@
       "download_url": "https://pyq.prepfusion.in/pdf/dl/pdf-nexusx_v1/nexusx_v1.pdf",
       "reader_relpath": "dl/pdf-nexusx_v1/nexusx_v1.pdf",
       "same_origin": true,
-      "size_bytes": 217951893,
+      "size_bytes": 218098971,
       "tag": "pdf-nexusx_v1",
       "target_dir": "NexusX/Questions"
     }
@@ -14,7 +14,7 @@
       "download_url": "https://pyq.prepfusion.in/pdf/dl/pdf-nexusx_v2/nexusx_v2.pdf",
       "reader_relpath": "dl/pdf-nexusx_v2/nexusx_v2.pdf",
       "same_origin": true,
-      "size_bytes": 122026779,
+      "size_bytes": 122027397,
       "tag": "pdf-nexusx_v2",
       "target_dir": "NexusX/Questions"
     }
