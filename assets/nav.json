@@ -33,12 +33,12 @@
     {
       "key": "bookstore",
       "label": "Bookstore",
-      "url": "https://forms.gle/MZSGsFXjh4ysxDps8",
+      "url": "https://store.prepfusion.in/",
       "same_site": false,
-      "same_tab": false,
+      "same_tab": true,
       "beta": false,
-      "still_soon": true,
-      "note": "Not live yet — tell us you're interested (quick form)."
+      "still_soon": false,
+      "note": "Printed editions of every series, delivered — live now."
     }
   ],
   "youtube": [
