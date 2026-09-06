@@ -26,7 +26,7 @@
       "url": "https://hub.prepfusion.in/",
       "same_site": false,
       "same_tab": true,
-      "beta": true,
+      "beta": false,
       "still_soon": false,
       "note": "Search, save and improve every GATE question and solution."
     },
