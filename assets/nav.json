@@ -39,6 +39,16 @@
       "beta": false,
       "still_soon": false,
       "note": "Printed editions of every series, delivered — live now."
+    },
+    {
+      "key": "notes",
+      "label": "Notes",
+      "url": "https://hub.prepfusion.in/notes",
+      "same_site": false,
+      "same_tab": true,
+      "beta": false,
+      "still_soon": false,
+      "note": "Download PrepFusion Notes — lecture notes for every course, as PDFs."
     }
   ],
   "youtube": [
