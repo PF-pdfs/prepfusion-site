@@ -294,6 +294,23 @@ if(!rel){
   fail('Nothing to read', 'That link is missing a valid file reference. Head back to the library and pick a book.');
 } else {
   const url   = './' + rel.split('/').map(encodeURIComponent).join('/') + (ver ? '?v=' + encodeURIComponent(ver) : '');
+  /* Where the reader actually reads the bytes from. A dl/... file (served by
+     a Worker) is read straight from the bucket's public R2 domain when this
+     build has one (FILES_ORIGINS in build_site.py): no Worker runs for those
+     requests at all. The origin is fixed at build time, never taken from the
+     link, and only the dl/ path already vetted by safeRel is appended, so a
+     crafted link can't point the reader anywhere else. `url` stays the
+     Worker address: the Download button and the fallback below use it. The
+     fallback carries c=0, telling the Notes Worker this open was already
+     counted by the beacon (the PYQ Worker ignores it). */
+  const FILES_ORIGIN = "https://pyq-files.prepfusion.in", FILES_KEY_PREFIX = "";
+  const relParts = rel.split('/');
+  const directUrl = FILES_ORIGIN && relParts[0] === 'dl' && relParts.length > 2 &&
+      !relParts.some(s => s === '' || s.startsWith('.') || s.startsWith('_'))
+    ? FILES_ORIGIN + '/' + (FILES_KEY_PREFIX + relParts.slice(1).join('/')).split('/').map(encodeURIComponent).join('/')
+      + (ver ? '?v=' + encodeURIComponent(ver) : '')
+    : null;
+  const workerReadUrl = relParts[0] === 'dl' ? url + (url.includes('?') ? '&' : '?') + 'c=0' : url;
   // The clean "<Subject> — <Branch>" title is computed server-side (see
   // reader_title() in build_site.py), which already knows the subject and
   // branch for this exact file rather than guessing from its filename. The
@@ -309,8 +326,7 @@ if(!rel){
   const safeName = name.replace(/[<>:"/\\|?*\x00-\x1f]/g, '').trim();
   $('dl').setAttribute('download', (safeName || 'download') + '.pdf');
 
-  /* Same browser id as the library page's DOWNLOAD_COUNTER_TAG (the
-     reader page doesn't carry that tag, so it reads the id itself). */
+  /* Same browser id as the library page's DOWNLOAD_COUNTER_TAG. */
   window.pfVisitorId = window.pfVisitorId || (() => {
     try{
       let v = localStorage.getItem('pf-vid');
@@ -548,27 +564,48 @@ if(!rel){
        request) cut it another 4x once real traffic showed 1 MB still left
        the notes Worker far busier than the rest of the account. The cost is
        a bigger first fetch on slow phones (the first chunk plus the one
-       holding the file's index at the end). */
-    const task = pdfjsLib.getDocument({
-      url,
-      rangeChunkSize: 4194304,
-      disableAutoFetch:true,
-      disableStream:false,
-      wasmUrl: './assets/pdfjs/wasm/',
-      standardFontDataUrl: './assets/pdfjs/standard_fonts/'
-    });
-    task.onProgress = ({ loaded, total }) => {
-      if(total){
-        loaderBar.classList.remove('indeterminate');
-        const pct = Math.min(100, Math.round((loaded / total) * 100));
-        loaderFill.style.width = pct + '%';
-        loaderText.textContent = 'Loading… ' + pct + '%';
-      } else {
-        loaderBar.classList.add('indeterminate');
-        loaderText.textContent = 'Loading… ' + humanSize(loaded);
-      }
+       holding the file's index at the end). With directUrl (above) those
+       requests no longer reach a Worker at all; the big chunks stay, since
+       they also mean fewer round trips on a slow phone. */
+    const open = (src) => {
+      const task = pdfjsLib.getDocument({
+        url: src,
+        rangeChunkSize: 4194304,
+        disableAutoFetch:true,
+        disableStream:false,
+        wasmUrl: './assets/pdfjs/wasm/',
+        standardFontDataUrl: './assets/pdfjs/standard_fonts/'
+      });
+      task.onProgress = ({ loaded, total }) => {
+        if(total){
+          loaderBar.classList.remove('indeterminate');
+          const pct = Math.min(100, Math.round((loaded / total) * 100));
+          loaderFill.style.width = pct + '%';
+          loaderText.textContent = 'Loading… ' + pct + '%';
+        } else {
+          loaderBar.classList.add('indeterminate');
+          loaderText.textContent = 'Loading… ' + humanSize(loaded);
+        }
+      };
+      return task.promise;
     };
-    doc = await task.promise;
+    if(!directUrl){
+      doc = await open(workerReadUrl);
+    } else {
+      try{
+        doc = await open(directUrl);
+      }catch(e){
+        /* The public domain didn't answer usably (not live yet, a CORS or
+           network problem, the object missing there). Read through the
+           Worker instead: that works as before, at the old cost of one
+           Worker invocation per range request, for this open only. A broken
+           or password-protected PDF is the same file either way, so it
+           isn't retried. */
+        if(e && (e.name === 'InvalidPDFException' || e.name === 'PasswordException')) throw e;
+        console.warn('Direct read failed, reading through the Worker', e);
+        doc = await open(workerReadUrl);
+      }
+    }
   }catch(e){
     fail('This book could not be opened',
          'The file may still be uploading, or your connection dropped part-way.', url);
