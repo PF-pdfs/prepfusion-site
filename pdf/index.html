@@ -258,6 +258,20 @@ a{color:var(--brand)}
 .statbox div+div{border-left:1.5px solid var(--line-strong)}
 .statbox b{display:block;font:800 28px "Sora",sans-serif;letter-spacing:-.03em;line-height:1}
 .statbox span{font:500 11px "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+/* GATE countdown strip under the hero (see the markup's comment). */
+.gate-cd{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:26px 0 0;padding:11px 16px;
+  border:1.5px solid var(--line-strong);border-radius:14px;background:var(--card);max-width:max-content}
+.gate-cd[hidden]{display:none}
+.gate-cd-pulse{width:9px;height:9px;border-radius:50%;background:var(--accent-ink);flex:none;
+  animation:gatecd 2s ease-out infinite}
+@keyframes gatecd{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent-ink) 55%,transparent)}
+  70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.gate-cd-title{font:600 15px "Sora",sans-serif;letter-spacing:-.01em}
+.gate-cd-title b{font:800 22px "Sora",sans-serif;color:var(--accent-ink);letter-spacing:-.03em}
+.gate-cd-clock{font:600 13px "IBM Plex Mono",monospace;padding:3px 9px;border-radius:7px;
+  background:var(--ink);color:var(--paper);letter-spacing:.06em}
+.gate-cd-meta{font:500 11px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){.gate-cd-pulse{animation:none}}
 
 /* NexusX / SiliconX / PowerX — the trailing X picked out in accent amber,
    wherever the series name renders as text (chip, shelf heading, cover
@@ -958,6 +972,43 @@ button.footer-link{background:var(--card);font:650 13px "Inter",sans-serif;curso
       <div><b>8,296</b><span>Questions</span></div>
     </div>
   </div>
+  <!-- GATE countdown. Same dates and wording as Study Hub's GateCountdown.jsx
+       (IIT Madras, gate2027.iitm.ac.in: Feb 6, 7, 13, 14, 20 & 21, 2027; first
+       session 9:30 AM IST). Hidden until the script fills it, and removed once
+       the exam window has passed, so a stale date never shows. -->
+  <div class="gate-cd" id="gateCd" hidden role="timer">
+    <span class="gate-cd-pulse" aria-hidden="true"></span>
+    <span class="gate-cd-title"><b id="gateCdDays"></b> <span id="gateCdWord">days</span> to GATE 2027</span>
+    <span class="gate-cd-clock" id="gateCdClock" aria-hidden="true"></span>
+    <span class="gate-cd-meta">Feb 6, 7, 13, 14, 20 &amp; 21, 2027 · IIT Madras</span>
+  </div>
+  <script>
+  (function () {
+    var START = Date.parse('2027-02-06T04:00:00Z'), END = Date.parse('2027-02-21T12:00:00Z');
+    var box = document.getElementById('gateCd');
+    if (!box) return;
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function tick() {
+      var now = Date.now();
+      if (now > END) { box.remove(); return; }
+      box.hidden = false;
+      if (now >= START) {
+        box.classList.add('is-live');
+        box.querySelector('.gate-cd-title').textContent = 'GATE 2027 is underway — all the best';
+        document.getElementById('gateCdClock').remove();
+        return;
+      }
+      var left = START - now, d = Math.floor(left / 864e5);
+      var h = Math.floor(left % 864e5 / 36e5), m = Math.floor(left % 36e5 / 6e4), s = Math.floor(left % 6e4 / 1e3);
+      document.getElementById('gateCdDays').textContent = d;
+      document.getElementById('gateCdWord').textContent = d === 1 ? 'day' : 'days';
+      document.getElementById('gateCdClock').textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+      box.setAttribute('aria-label', d + ' days until GATE 2027');
+      setTimeout(tick, 1000);
+    }
+    tick();
+  })();
+  </script>
   <div class="tools">
     <label class="search">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
