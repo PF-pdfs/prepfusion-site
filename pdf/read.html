@@ -372,9 +372,28 @@ if(!rel){
   const RENDER_CONCURRENCY = 2;
   let activeRenders = 0;
   const renderQueue = [];
+  // Same band the observer below uses. A page queued while it was near the
+  // screen may have been flicked far past by the time its turn comes (a
+  // fast scroll or a scrollbar drag queues every page in between). Drawing
+  // it anyway fetches its bytes: on a Worker-served PDF that's a
+  // Worker invocation per range for pages nobody looked at, which is how
+  // one drag to the end of a 117 MB book pulled most of it. So a page that
+  // is no longer near the screen goes back to waiting and draws if the
+  // reader scrolls back to it.
+  const NEAR_PX = 900;
+  function nearScreen(el){
+    const r = el.getBoundingClientRect();
+    const h = window.innerHeight || document.documentElement.clientHeight;
+    return r.bottom >= -NEAR_PX && r.top <= h + NEAR_PX;
+  }
   function pumpRenderQueue(){
     while(activeRenders < RENDER_CONCURRENCY && renderQueue.length){
       const [n, el] = renderQueue.shift();
+      if(!nearScreen(el)){
+        delete el.dataset.done;
+        io.observe(el);
+        continue;
+      }
       activeRenders++;
       draw(n, el).finally(() => { activeRenders--; pumpRenderQueue(); });
     }
@@ -525,11 +544,14 @@ if(!rel){
        pyq.prepfusion.in/pdf/dl), every one of those requests is a Worker
        invocation against the Workers Free 100k/day cap. A 150 MB, 476-page
        notes book is ~325 KB a page, so 64 KB chunks cost ~5 requests per page
-       scrolled past. 1 MB chunks cut that 16x (a few pages per request) and
-       still keep page one fast on a phone. */
+       scrolled past. 1 MB chunks cut that 16x; 4 MB (about a dozen pages per
+       request) cut it another 4x once real traffic showed 1 MB still left
+       the notes Worker far busier than the rest of the account. The cost is
+       a bigger first fetch on slow phones (the first chunk plus the one
+       holding the file's index at the end). */
     const task = pdfjsLib.getDocument({
       url,
-      rangeChunkSize: 1048576,
+      rangeChunkSize: 4194304,
       disableAutoFetch:true,
       disableStream:false,
       wasmUrl: './assets/pdfjs/wasm/',
