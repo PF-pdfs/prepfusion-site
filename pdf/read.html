@@ -646,6 +646,16 @@ if(!rel){
     try{ outline = await doc.getOutline(); }catch(e){}
     if(!outline || !outline.length) return;
 
+    /* Some PDFs carry a single junk entry — e.g. a page-break bookmark
+       literally titled "Blank Page", left over from whatever tool authored
+       the outline. That's not real navigation, so treat it the same as no
+       outline at all rather than opening a drawer with one useless row. */
+    outline = outline.filter((it) => {
+      const title = (it.title || '').trim().toLowerCase();
+      return title && title !== 'blank page';
+    });
+    if(!outline.length) return;
+
     const list = $('toclist'), panel = $('tocpanel'), btn = $('toc');
 
     /* An outline entry points at an internal destination, not a page number —
