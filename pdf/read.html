@@ -518,9 +518,18 @@ if(!rel){
        library: previous-year papers are frequently scans, and scans lean on
        the JBIG2/JPEG2000 decoders in wasm/. standard_fonts/ covers PDFs that
        never embedded their base-14 fonts. Both are fetched only when a file
-       actually needs them, so a clean digital PDF pays nothing for them. */
+       actually needs them, so a clean digital PDF pays nothing for them.
+
+       rangeChunkSize: pdf.js's default is 64 KB, and every chunk is its own
+       HTTP Range request. When a PDF is served by a Worker (notes.prepfusion.in,
+       pyq.prepfusion.in/pdf/dl), every one of those requests is a Worker
+       invocation against the Workers Free 100k/day cap. A 150 MB, 476-page
+       notes book is ~325 KB a page, so 64 KB chunks cost ~5 requests per page
+       scrolled past. 1 MB chunks cut that 16x (a few pages per request) and
+       still keep page one fast on a phone. */
     const task = pdfjsLib.getDocument({
       url,
+      rangeChunkSize: 1048576,
       disableAutoFetch:true,
       disableStream:false,
       wasmUrl: './assets/pdfjs/wasm/',
