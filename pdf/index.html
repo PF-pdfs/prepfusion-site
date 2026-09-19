@@ -264,6 +264,33 @@ a{color:var(--brand)}
 .hero-rating b{font:800 17px "Sora",sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
 .hero-rating-cta{font-weight:600;color:var(--wordmark)}
 .hero-rating:hover .hero-rating-cta{text-decoration:underline}
+/* Buttons to the other PrepFusion sites. Study Hub is the filled primary. */
+.hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.hero-cta a{display:inline-flex;align-items:center;gap:4px;padding:12px 20px;border-radius:12px;
+  font:650 15px "Inter",sans-serif;text-decoration:none;min-height:44px}
+.cta-primary{background:var(--brand);color:#fff;border:1.5px solid var(--brand)}
+.cta-primary:hover{filter:brightness(1.1)}
+.cta-secondary{background:var(--card);color:var(--ink);border:1.5px solid var(--line-strong)}
+.cta-secondary:hover{border-color:var(--ink-soft)}
+:root[data-theme="dark"] .cta-primary,.dark .cta-primary{color:#0a1020}
+/* "Keep going on PrepFusion" band after the shelves. */
+.explore{margin:56px auto 8px}
+.explore h2{font:750 24px "Sora",sans-serif;letter-spacing:-.02em;margin:0 0 6px}
+.explore-lede{color:var(--ink-soft);margin:0 0 18px;font-size:15px}
+.explore-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.explore-card{display:flex;flex-direction:column;gap:6px;padding:18px;border:1.5px solid var(--line-strong);
+  border-radius:16px;background:var(--card);color:var(--ink);text-decoration:none}
+.explore-card:hover{border-color:var(--brand);transform:translateY(-1px)}
+.explore-ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+  background:var(--chipbg,var(--shell));color:var(--wordmark)}
+.explore-ic svg{width:20px;height:20px}
+.explore-card b{font:700 17px "Sora",sans-serif}
+.explore-sub{color:var(--ink-soft);font-size:14px;line-height:1.5}
+.explore-go{margin-top:auto;padding-top:6px;font-weight:650;font-size:14px;color:var(--wordmark)}
+@media(max-width:760px){
+  .explore-grid{grid-template-columns:1fr}
+  .hero-cta a{flex:1 1 100%;justify-content:center}
+}
 /* GATE countdown strip under the hero (see the markup's comment). */
 .gate-cd{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:26px 0 0;padding:11px 16px;
   border:1.5px solid var(--line-strong);border-radius:14px;background:var(--card);max-width:max-content}
@@ -1000,6 +1027,7 @@ button.footer-link{background:var(--card);font:650 13px "Inter",sans-serif;curso
     <div>
       <h1>Every question, every solution — <em>on one shelf.</em></h1>
       <p class="lede">Previous-year questions and detailed solutions across every series — free to read, free to download, no sign-up.</p>
+      <div class="hero-cta"><a class="cta-primary" href="https://hub.prepfusion.in/">Practice on Study Hub<span aria-hidden="true"> →</span></a><a class="cta-secondary" href="https://store.prepfusion.in/">Buy printed books</a></div>
     </div>
     <div class="statbox">
       <div><b>5</b><span>Series</span></div>
@@ -1648,6 +1676,8 @@ button.footer-link{background:var(--card);font:650 13px "Inter",sans-serif;curso
     <button id="clearBtn" type="button">Clear filters</button>
   </div>
 </main>
+
+<section class="wrap explore" aria-labelledby="exploreTitle"><h2 id="exploreTitle">Keep going on PrepFusion</h2><p class="explore-lede">The library is for reading. These are for practising, buying and revising.</p><div class="explore-grid"><a class="explore-card" href="https://hub.prepfusion.in/"><span class="explore-ic"><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5a3 3 0 0 0-3 3 3 3 0 0 0-3 3 3 3 0 0 0 1 5.24A3 3 0 0 0 9 21a3 3 0 0 0 3-1.6A3 3 0 0 0 15 21a3 3 0 0 0 2-4.76A3 3 0 0 0 18 11a3 3 0 0 0-3-3 3 3 0 0 0-3-3Z"/><path d="M12 5v16"/></svg></span><b>Study Hub</b><span class="explore-sub">Practise every question, sit timed tests and follow full courses.</span><span class="explore-go" aria-hidden="true">Open →</span></a><a class="explore-card" href="https://store.prepfusion.in/"><span class="explore-ic"><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span><b>Bookstore</b><span class="explore-sub">Printed editions of every series, delivered to you.</span><span class="explore-go" aria-hidden="true">Open →</span></a><a class="explore-card" href="https://hub.prepfusion.in/notes"><span class="explore-ic"><svg class="nav-ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></span><b>Notes</b><span class="explore-sub">Free lecture notes as PDFs — open or download, no sign-up.</span><span class="explore-go" aria-hidden="true">Open →</span></a></div></section>
 
 <div id="analyticsModal" class="analytics-modal" hidden>
   <div class="analytics-backdrop" onclick="closeAnalyticsModal()"></div>
