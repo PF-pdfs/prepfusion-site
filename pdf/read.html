@@ -871,6 +871,7 @@ if(!rel){
     <label id="rpttopicwrap">Topic <select id="rpttopic"></select></label>
     <label id="rptqwrap" hidden>What is it about? <select id="rptq"></select></label>
     <label id="rptqtextwrap" hidden>Question number <input id="rptqtext" maxlength="60" placeholder="e.g. Q1.20.1"></label>
+    <p class="rpt-where" id="rptqinfo" hidden></p>
     <p class="rpt-where" id="rptheading" hidden></p>
     <div class="rpt-row">
       <label id="rptpagewrap">Page <input id="rptpage" inputmode="numeric" maxlength="5"></label>
@@ -995,20 +996,33 @@ if(!rel){
     }).catch(function(){});
   }
 
-  /* PYQ books: Subject > Branch > Chapter > "Q1.20.1" (or Year > "Q1.1"). The leaf bookmarks are the questions;
-     the ones starting on this page are listed first, then the most recent one before it, so a question that
-     runs over onto this page is still offered. */
+  /* PYQ books: Subject > Branch > Chapter > "Q1.20.1" (or Year > Session > "Q26.1.1"). The leaf bookmarks are the
+     questions. Only those on the page being read are offered (a book has thousands), plus the one just before it,
+     which may run over onto this page. Picking one fills in everything else: chapter and year come from the
+     question's own bookmark path and id, so no page number is asked for. */
   var qs_ = [];
-  function labelOf(e){ return e.title + (e.trail.length ? '  (' + e.trail[e.trail.length - 1] + ')' : ''); }
+  function labelOf(e){ return e.title; }
+  function yearOf(e){
+    var m = /^Q(\d+)\.(\d+)\.(\d+)$/.exec(e.title);
+    if (!m) return '';
+    var yy = /^\d{4}$/.test(e.trail[0] || '') ? Number(m[1]) : Number(m[2]);   // Year > Session > Qyy.s.n, else Qchapter.yy.n
+    return yy >= 0 && yy < 100 ? String(yy > 30 ? 1900 + yy : 2000 + yy) : '';
+  }
   function fillQuestions(page){
     var sel = $('rptq');
     sel.innerHTML = '';
     qs_ = [];
     function add(parent, text, value){ var o = document.createElement('option'); o.value = value; o.textContent = text; parent.appendChild(o); }
+    function group(label, list){
+      if (!list.length) return;
+      var g = document.createElement('optgroup'); g.label = label;
+      list.forEach(function(e){ qs_.push(e); add(g, labelOf(e), 'q' + (qs_.length - 1)); });
+      sel.appendChild(g);
+    }
     function rest(){
       add(sel, 'Another question (I will type its number)', 'other-q');
       add(sel, 'The book as a whole', 'book');
-      add(sel, 'Something else (layout, header, footer, text...)', 'other');
+      add(sel, 'Something else (layout, header, footer...)', 'other');
       sel.value = qs_.length ? 'q0' : 'book';
       showQ();
     }
@@ -1017,16 +1031,23 @@ if(!rel){
       var leaves = (o || []).filter(function(e){ return e.leaf; });
       var here = leaves.filter(function(e){ return e.page === page; });
       var before = leaves.filter(function(e){ return e.page < page; });
-      var list = here.length ? here : (before.length ? [before[before.length - 1]] : []);
-      if (list.length) {
-        var g = document.createElement('optgroup'); g.label = here.length ? 'On this page' : 'Carried over from the page before';
-        list.forEach(function(e, k){ qs_.push(e); add(g, labelOf(e), 'q' + k); });
-        sel.appendChild(g);
-      }
+      group('Questions on this page', here);
+      if (before.length && (!here.length || page > 1)) group('Started on an earlier page', [before[before.length - 1]]);
       rest();
     }).catch(function(){ rest(); });
   }
-  function showQ(){ $('rptqtextwrap').hidden = $('rptq').value !== 'other-q'; }
+  function showQ(){
+    var v = $('rptq').value, qe = v.charAt(0) === 'q' && v !== 'other-q' ? qs_[Number(v.slice(1))] : null;
+    $('rptqtextwrap').hidden = v !== 'other-q';
+    $('rptpagewrap').hidden = !(v === 'book' || v === 'other');
+    var info = $('rptqinfo');
+    if (qe) {
+      var bits = qe.trail.filter(function(t){ return !/^\d{4}$/.test(t); }).slice(-2);
+      var y = yearOf(qe);
+      if (y) bits.push('GATE ' + y);
+      info.textContent = bits.join(' · '); info.hidden = !bits.length;
+    } else info.hidden = true;
+  }
   $('rptq').addEventListener('change', showQ);
 
   function showChapter(){ $('rptchwrap').hidden = !(isRx && chapter === '' && $('rptkind').value === 'missing_topic' && !$('rpttopic').value); }
@@ -1057,7 +1078,7 @@ if(!rel){
     var pgNow = currentPage();
     $('rptpage').value = pgNow || '';
     $('rpttopicwrap').hidden = !isRx;
-    $('rptqwrap').hidden = source !== 'pyq'; $('rptqtextwrap').hidden = true; $('rptpagewrap').hidden = source === 'pyq';
+    $('rptqwrap').hidden = source !== 'pyq'; $('rptqtextwrap').hidden = true; $('rptpagewrap').hidden = source === 'pyq';   // a PYQ report names a question, not a page (showQ brings the page back for 'something else')
     if (isRx) fillTopics(pgNow); else if (source === 'pyq') fillQuestions(pgNow); else findHeading(pgNow);
     $('rpterr').hidden = true; $('rptok').hidden = true;
     $('rptsend').disabled = false;
@@ -1083,7 +1104,7 @@ if(!rel){
       var what = $('rptq').value;
       if (what.charAt(0) === 'q' && qs_[Number(what.slice(1))]) {
         var qe = qs_[Number(what.slice(1))];
-        heading = qe.title.slice(0, 190);
+        heading = (qe.title + (yearOf(qe) ? ' (GATE ' + yearOf(qe) + ')' : '')).slice(0, 190);
         if (qe.trail.length) notes.chapter = qe.trail.slice(-2).join(' > ').slice(0, 190);
         pyqWhere = qe.title;
       } else if (what === 'other-q') {
@@ -1099,7 +1120,7 @@ if(!rel){
     if (edition) notes.edition = edition;
     if (version) notes.version = version;
     if (heading) notes.heading = heading;
-    var pg = source === 'pyq' ? '' : $('rptpage').value.trim();
+    var pg = source === 'pyq' && $('rptpagewrap').hidden ? '' : $('rptpage').value.trim();
     if (pg) notes.page = pg;
     var label = $('rptkind').options[$('rptkind').selectedIndex].text;
     var where = isRx && $('rpttopic').selectedIndex > 0 ? $('rpttopic').options[$('rpttopic').selectedIndex].text : source === 'pyq' ? (pyqWhere + ' · ' + title) : title;
