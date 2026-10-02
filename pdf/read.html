@@ -190,10 +190,19 @@ main{padding:20px 10px 60px;display:flex;flex-direction:column;
 .msg h2{color:var(--ink);font-size:19px;margin:0 0 10px}
 .msg a{color:var(--ink);font-weight:650}
 @media(max-width:860px){ .brand{display:none} }
+.embedded .rbar a.back{display:none} /* framed by another app (the Guide): its own Close button is the way out */
+.rfold{display:none;align-items:center;justify-content:center;width:34px;height:30px;padding:0;
+  border:1.5px solid var(--line-strong);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer}
 @media(max-width:560px){
-  .rtitle{order:5;flex-basis:100%;white-space:normal}
+  .rtitle{order:5;flex:1 1 0;white-space:normal}
+  .rfold{display:inline-flex;order:6}
+  .rfold svg{transition:transform .2s}
+  .rbar.folded > :not(.rtitle):not(.rfold){display:none}
+  .rbar.folded .rtitle{white-space:nowrap;text-overflow:ellipsis}
+  .rbar.folded .rfold svg{transform:rotate(180deg)}
   main{padding:12px 6px 40px}
 }
+@media(prefers-reduced-motion:reduce){ .rfold svg{transition:none} }
 @media(prefers-reduced-motion:reduce){
   .spinner,.pg-spin{animation:none;border-top-color:var(--line-strong)}
   .loader-fill{transition:none;animation:none!important}
@@ -233,6 +242,18 @@ main{padding:20px 10px 60px;display:flex;flex-direction:column;
       <path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/>
     </svg>Download
   </a>
+  <!-- Shown only for RevisionX short notes (f=rx/...): see the report script at the foot of this page. -->
+  <button class="rbtn" id="rpt" type="button" hidden title="Report a mistake, a missing topic, or something that should go">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 22V4"/><path d="M4 4h13l-2 4 2 4H4"/>
+    </svg>Report
+  </button>
+  <!-- Phones only: folds the bar down to the title so the page gets the room. -->
+  <button class="rfold" id="rfold" type="button" aria-expanded="true" aria-label="Hide the toolbar" title="Hide or show the toolbar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>
+  </button>
 </header>
 <nav class="tocpanel" id="tocpanel" hidden aria-label="Contents">
   <div class="toc-tools" id="tocTools" hidden>
@@ -658,6 +679,27 @@ if(!rel){
 
     const list = $('toclist'), panel = $('tocpanel'), btn = $('toc');
 
+    /* The outline resolved to page numbers, for the Report form: eagerly for
+       RevisionX files (small), on demand for everything else (a PYQ book can
+       carry a four-figure outline, so it is only walked when someone reports). */
+    let flatOutline = null;
+    window.__rdGetOutline = async () => {
+      if(flatOutline) return flatOutline;
+      const flat = [];
+      const walk = async (items) => {
+        for(const it of items){
+          const n = await pageOf(it.dest);
+          if(n) flat.push({ title: (it.title || '').trim(), page: n });
+          if(it.items && it.items.length) await walk(it.items);
+        }
+      };
+      try{ await walk(outline); }catch(e){}
+      flat.sort((x, y) => x.page - y.page);
+      flatOutline = flat;
+      return flat;
+    };
+    if(/^rx\//.test(rel)) window.__rdGetOutline().then((o) => { window.__rdOutline = o; });
+
     /* An outline entry points at an internal destination, not a page number —
        it has to be resolved through the document to find the page. */
     async function pageOf(dest){
@@ -782,6 +824,273 @@ if(!rel){
     }, 200);
   });
 }
+</script>
+<!-- Report from inside the viewer, for every PDF it opens (RevisionX short notes,
+     lecture Notes, PYQ books). The reader and the report desk are on different
+     sites, so this posts straight to the Study Hub's open notes-reports
+     endpoint instead of sending the reader away. The file, page and (for
+     RevisionX) topic are filled in from where the reader is. Anonymous by
+     design while the notes are new. -->
+<style>
+.rpt-dlg{border:1px solid var(--line-strong,#c6cedd);border-radius:16px;padding:0;max-width:min(520px,94vw);width:100%;
+  background:var(--card);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.rpt-dlg::backdrop{background:rgba(8,12,24,.6)}
+.rpt-form{display:flex;flex-direction:column;gap:10px;padding:16px 18px 18px;font:14px/1.4 inherit}
+.rpt-form h2{margin:0;font-size:1.05rem}
+.rpt-form label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:13px}
+.rpt-form select,.rpt-form input,.rpt-form textarea{font:inherit;padding:8px 10px;border:1.5px solid var(--line-strong,#c6cedd);
+  border-radius:10px;background:var(--paper);color:var(--ink)}
+.rpt-form textarea{min-height:96px;resize:vertical}
+.rpt-where{margin:0;font-size:12.5px;color:var(--ink-soft)}
+.rpt-row{display:flex;gap:10px}.rpt-row label{flex:1}
+.rpt-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.rpt-actions button{font:650 13px/1 inherit;padding:10px 16px;border-radius:10px;border:1.5px solid var(--line-strong,#c6cedd);
+  background:var(--card);color:var(--ink);cursor:pointer}
+.rpt-actions .rpt-go{background:#2563eb;color:#fff;border-color:#2563eb}
+.rpt-actions .rpt-go:hover{background:#1d4ed8}
+.rpt-actions .rpt-go:disabled{opacity:.6;cursor:default}
+.rpt-msg{margin:0;font-size:13px}.rpt-err{color:#c0392b}
+.rpt-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+</style>
+<dialog class="rpt-dlg" id="rptdlg" aria-label="Report a problem with this document">
+  <form class="rpt-form" id="rptform" method="dialog" novalidate>
+    <h2>Report a problem</h2>
+    <p class="rpt-where" id="rptwhere"></p>
+    <label>What is it?
+      <select id="rptkind">
+        <option value="wrong_content">Something is wrong</option>
+        <option value="missing_topic">Something is missing</option>
+        <option value="remove_topic">Something should not be there</option>
+        <option value="unclear">Something is unclear</option>
+        <option value="typo_format">Typo or layout problem</option>
+        <option value="suggestion">Suggestion</option>
+      </select>
+    </label>
+    <label id="rpttopicwrap">Topic <select id="rpttopic"></select></label>
+    <p class="rpt-where" id="rptheading" hidden></p>
+    <div class="rpt-row">
+      <label>Page <input id="rptpage" inputmode="numeric" maxlength="5"></label>
+      <label id="rptchwrap" hidden>Which chapter? <input id="rptchapter" maxlength="120" placeholder="e.g. Ch 3 Network Theorems"></label>
+    </div>
+    <label>Details <textarea id="rptdetails" maxlength="2000" placeholder="What should it say, or what is wrong?"></textarea></label>
+    <label id="rptemailwrap">Your email (optional, only if we may ask a question) <input id="rptemail" type="email" maxlength="200" autocomplete="email"></label>
+    <p class="rpt-where" id="rptwho" hidden></p>
+    <div class="rpt-hp" aria-hidden="true"><label>Website <input id="rptweb" tabindex="-1" autocomplete="off"></label></div>
+    <p class="rpt-msg rpt-err" id="rpterr" role="alert" hidden></p>
+    <p class="rpt-msg" id="rptok" role="status" hidden>Thank you. Your report has been sent to the people who maintain this document.</p>
+    <div class="rpt-actions">
+      <button type="button" id="rptcancel">Close</button>
+      <button type="submit" class="rpt-go" id="rptsend">Send report</button>
+    </div>
+  </form>
+</dialog>
+<script>
+(function(){
+  var qs = new URLSearchParams(location.search);
+  var f = qs.get('f') || '';
+  if (!f) return;
+  var parts = f.split('/');
+  var fileName = decodeURIComponent(parts[parts.length - 1] || '');
+  var isRx = /^rx\//.test(f);
+  var source = isRx ? 'revisionx' : /^(dl|nd)\//.test(f) ? 'notes' : 'pyq';
+  /* What the report is about: the subject id for RevisionX, the course id for
+     Notes, the file itself for a PYQ book. */
+  var subject = isRx || source === 'notes' ? (parts[1] || '') : fileName.replace(/\.pdf$/i, '');
+  var chapter = isRx && parts.length >= 4 ? parts[2] : '';
+  var edition = !isRx ? '' : /formula sheet/i.test(fileName) ? 'formula_sheet' : /tablet/i.test(fileName) ? 'tablet' : /print/i.test(fileName) ? 'print' : '';
+  var title = (qs.get('t') || fileName.replace(/\.pdf$/i, '')).trim();
+  var HUB = 'https://hub.prepfusion.in';
+  var $ = function(id){ return document.getElementById(id); };
+  var btn = $('rpt'), dlg = $('rptdlg');
+  if (!btn || !dlg || !dlg.showModal) return;
+  btn.hidden = false;
+
+  var version = '', subj = null;
+  if (isRx) {
+    fetch('https://notes.prepfusion.in/rx/catalog.json').then(function(r){ return r.json(); }).then(function(c){
+      subj = (c.subjects || []).filter(function(x){ return x.id === subject; })[0] || null;
+      if (subj && subj.version) version = subj.version;
+    }).catch(function(){});
+  }
+
+  function norm(x){ return String(x || '').toLowerCase().replace(/^\s*(ch(apter)?\s*)?\d+(\.\d+)*[.)]?\s+/, '').replace(/[^a-z0-9]+/g, ' ').trim(); }
+  function currentPage(){
+    var pages = document.querySelectorAll('#pages [data-n]');
+    var mid = window.innerHeight * 0.35;
+    for (var i = 0; i < pages.length; i++) {
+      if (pages[i].getBoundingClientRect().bottom > mid) return Number(pages[i].getAttribute('data-n'));
+    }
+    return pages.length ? Number(pages[pages.length - 1].getAttribute('data-n')) : 0;
+  }
+
+  /* RevisionX: the subject's topics, each with the page it starts on (from the
+     PDF's bookmarks). A topic is "on" a page from where it starts to where the
+     next bookmark starts, so a page that holds the end of one topic and the
+     start of the next lists both. */
+  function topicSpans(){
+    var o = window.__rdOutline;
+    if (!subj || !o || !o.length) return [];
+    var byTitle = {};
+    subj.chapters.forEach(function(ch){
+      if (chapter && ch.id !== chapter) return;
+      ch.topics.forEach(function(tp){ byTitle[norm(tp.title)] = { key: ch.id + '|' + tp.id, ch: ch, tp: tp }; });
+    });
+    var spans = [];
+    o.forEach(function(e, i){
+      var hit = byTitle[norm(e.title)];
+      if (!hit) return;
+      var next = o[i + 1];
+      spans.push({ hit: hit, start: e.page, end: next ? Math.max(next.page, e.page) : 9999 });
+    });
+    return spans;
+  }
+
+  function fillTopics(page){
+    var sel = $('rpttopic');
+    sel.innerHTML = '';
+    var none = document.createElement('option');
+    none.value = ''; none.textContent = 'Not about one topic (whole chapter or subject)';
+    sel.appendChild(none);
+    if (!subj) return;
+    var onPage = {}, order = [];
+    topicSpans().forEach(function(sp){
+      if (sp.start <= page && page <= sp.end && !onPage[sp.hit.key]) { onPage[sp.hit.key] = true; order.push(sp.hit); }
+    });
+    function add(parent, hit){
+      var o = document.createElement('option');
+      o.value = hit.key; o.textContent = hit.tp.title; parent.appendChild(o);
+    }
+    if (order.length) {
+      var g = document.createElement('optgroup'); g.label = 'On this page';
+      order.forEach(function(h){ add(g, h); }); sel.appendChild(g);
+    }
+    subj.chapters.forEach(function(ch){
+      if (chapter && ch.id !== chapter) return;
+      var parent = sel, made = false;
+      ch.topics.forEach(function(tp){
+        var key = ch.id + '|' + tp.id;
+        if (onPage[key]) return;
+        if (!made) { made = true; if (!chapter) { parent = document.createElement('optgroup'); parent.label = (order.length ? 'Other: ' : '') + 'Ch ' + ch.number + ' ' + ch.title; sel.appendChild(parent); } }
+        add(parent, { key: key, tp: tp });
+      });
+    });
+    sel.value = order.length ? order[0].key : '';
+  }
+
+  /* Notes and PYQ books have no topic ids: name the nearest bookmark instead. */
+  var heading = '';
+  function findHeading(page){
+    heading = '';
+    $('rptheading').hidden = true;
+    if (isRx || !window.__rdGetOutline) return;
+    window.__rdGetOutline().then(function(o){
+      var best = '';
+      (o || []).forEach(function(e){ if (e.page <= page) best = e.title; });
+      heading = best.slice(0, 190);
+      if (heading) { $('rptheading').textContent = 'Near: ' + heading; $('rptheading').hidden = false; }
+    }).catch(function(){});
+  }
+
+  function showChapter(){ $('rptchwrap').hidden = !(isRx && chapter === '' && $('rptkind').value === 'missing_topic' && !$('rpttopic').value); }
+  $('rptkind').addEventListener('change', showChapter);
+  $('rpttopic').addEventListener('change', showChapter);
+
+  /* Signed in to PrepFusion? The Study Hub answers (cookie, same site) with the
+     name and a 10-minute pass; the report is then filed under that account so
+     the team can follow up. Not signed in, or the lookup fails: anonymous, with
+     the email box. Asked each time the form opens, so the pass is fresh. */
+  var pass = '';
+  function whoAmI(){
+    pass = '';
+    $('rptwho').hidden = true; $('rptemailwrap').hidden = false;
+    fetch(HUB + '/api/auth/report-identity', { credentials: 'include' })
+      .then(function(r){ return r.ok ? r.json() : { signedIn: false }; })
+      .then(function(j){
+        if (!j || !j.signedIn || !j.reportToken) return;
+        pass = j.reportToken;
+        $('rptwho').textContent = 'Reporting as ' + (j.name || j.email) + (j.name && j.email ? ' (' + j.email + ')' : '') + ', so we can follow up with you.';
+        $('rptwho').hidden = false; $('rptemailwrap').hidden = true;
+      }).catch(function(){});
+  }
+
+  btn.addEventListener('click', function(){
+    whoAmI();
+    $('rptwhere').textContent = title;
+    var pgNow = currentPage();
+    $('rptpage').value = pgNow || '';
+    $('rpttopicwrap').hidden = !isRx;
+    if (isRx) fillTopics(pgNow); else findHeading(pgNow);
+    $('rpterr').hidden = true; $('rptok').hidden = true;
+    $('rptsend').disabled = false;
+    showChapter();
+    dlg.showModal();
+    $('rptdetails').focus();
+  });
+  $('rptcancel').addEventListener('click', function(){ dlg.close(); });
+
+  $('rptform').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var err = $('rpterr');
+    var kind = $('rptkind').value;
+    var details = $('rptdetails').value.trim();
+    var pick = isRx ? $('rpttopic').value.split('|') : [''];
+    var chapterText = pick[0] || chapter || $('rptchapter').value.trim();
+    err.hidden = true;
+    if (!details) { err.textContent = 'Please say a little about it.'; err.hidden = false; return; }
+    if (isRx && kind === 'missing_topic' && !chapterText) { err.textContent = 'Which chapter is the topic missing from?'; err.hidden = false; return; }
+    var notes = { kind: kind, source: source, subject: subject || fileName, file: f.slice(0, 190) };
+    if (chapterText) notes.chapter = chapterText;
+    if (pick[1]) notes.topic = pick[1];
+    if (edition) notes.edition = edition;
+    if (version) notes.version = version;
+    if (heading) notes.heading = heading;
+    var pg = $('rptpage').value.trim();
+    if (pg) notes.page = pg;
+    var label = $('rptkind').options[$('rptkind').selectedIndex].text;
+    var where = isRx && $('rpttopic').selectedIndex > 0 ? $('rpttopic').options[$('rpttopic').selectedIndex].text : title;
+    var body = {
+      website: $('rptweb').value,
+      contactEmail: pass ? undefined : $('rptemail').value.trim() || undefined,
+      title: (label + ': ' + where).slice(0, 200),
+      details: details,
+      pageUrl: location.pathname + location.search,
+      notes: notes
+    };
+    $('rptsend').disabled = true;
+    var headers = { 'Content-Type': 'application/json' };
+    if (pass) headers['X-Report-Token'] = pass;
+    fetch(HUB + '/api/notes-reports', { method: 'POST', headers: headers, body: JSON.stringify(body) })
+      .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(j){ return { ok: r.ok, j: j }; }); })
+      .then(function(res){
+        if (res.ok) {
+          $('rptok').hidden = false; $('rptdetails').value = '';
+          setTimeout(function(){ if (dlg.open) dlg.close(); }, 2200);
+        } else {
+          err.textContent = (res.j && res.j.error) || 'Could not send the report. Please try again.';
+          err.hidden = false; $('rptsend').disabled = false;
+        }
+      })
+      .catch(function(){ err.textContent = 'Could not reach the server. Check your connection and try again.'; err.hidden = false; $('rptsend').disabled = false; });
+  });
+})();
+</script>
+<script>
+(function(){
+  /* Opened inside another page's frame (the Guide's notes pop-up)? The back link
+     leads to a Study Hub page that refuses to be framed, which showed as a
+     crash: hide it there. */
+  try{ if (window.top !== window.self) document.documentElement.classList.add('embedded'); }catch(e){ document.documentElement.classList.add('embedded'); }
+  var bar = document.querySelector('.rbar'), b = document.getElementById('rfold');
+  if (!bar || !b) return;
+  b.addEventListener('click', function(){
+    var folded = bar.classList.toggle('folded');
+    b.setAttribute('aria-expanded', folded ? 'false' : 'true');
+    b.setAttribute('aria-label', folded ? 'Show the toolbar' : 'Hide the toolbar');
+    /* The contents drawer and bookmark jumps measure the bar's height. */
+    document.documentElement.style.setProperty('--barh',
+      document.querySelector('.rtop').getBoundingClientRect().height + 'px');
+  });
+})();
 </script>
 </body>
 </html>
