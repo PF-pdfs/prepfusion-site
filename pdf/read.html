@@ -686,14 +686,16 @@ if(!rel){
     window.__rdGetOutline = async () => {
       if(flatOutline) return flatOutline;
       const flat = [];
-      const walk = async (items) => {
+      const walk = async (items, trail) => {
         for(const it of items){
           const n = await pageOf(it.dest);
-          if(n) flat.push({ title: (it.title || '').trim(), page: n });
-          if(it.items && it.items.length) await walk(it.items);
+          const title = (it.title || '').trim();
+          const kids = it.items && it.items.length;
+          if(n) flat.push({ title: title, page: n, trail: trail, leaf: !kids });
+          if(kids) await walk(it.items, trail.concat(title));
         }
       };
-      try{ await walk(outline); }catch(e){}
+      try{ await walk(outline, []); }catch(e){}
       flat.sort((x, y) => x.page - y.page);
       flatOutline = flat;
       return flat;
@@ -867,9 +869,11 @@ if(!rel){
       </select>
     </label>
     <label id="rpttopicwrap">Topic <select id="rpttopic"></select></label>
+    <label id="rptqwrap" hidden>What is it about? <select id="rptq"></select></label>
+    <label id="rptqtextwrap" hidden>Question number <input id="rptqtext" maxlength="60" placeholder="e.g. Q1.20.1"></label>
     <p class="rpt-where" id="rptheading" hidden></p>
     <div class="rpt-row">
-      <label>Page <input id="rptpage" inputmode="numeric" maxlength="5"></label>
+      <label id="rptpagewrap">Page <input id="rptpage" inputmode="numeric" maxlength="5"></label>
       <label id="rptchwrap" hidden>Which chapter? <input id="rptchapter" maxlength="120" placeholder="e.g. Ch 3 Network Theorems"></label>
     </div>
     <label>Details <textarea id="rptdetails" maxlength="2000" placeholder="What should it say, or what is wrong?"></textarea></label>
@@ -892,7 +896,7 @@ if(!rel){
   var parts = f.split('/');
   var fileName = decodeURIComponent(parts[parts.length - 1] || '');
   var isRx = /^rx\//.test(f);
-  var source = isRx ? 'revisionx' : /^(dl|nd)\//.test(f) ? 'notes' : 'pyq';
+  var source = isRx ? 'revisionx' : /^notes\./.test(location.hostname) ? 'notes' : 'pyq';
   /* What the report is about: the subject id for RevisionX, the course id for
      Notes, the file itself for a PYQ book. */
   var subject = isRx || source === 'notes' ? (parts[1] || '') : fileName.replace(/\.pdf$/i, '');
@@ -991,6 +995,40 @@ if(!rel){
     }).catch(function(){});
   }
 
+  /* PYQ books: Subject > Branch > Chapter > "Q1.20.1" (or Year > "Q1.1"). The leaf bookmarks are the questions;
+     the ones starting on this page are listed first, then the most recent one before it, so a question that
+     runs over onto this page is still offered. */
+  var qs_ = [];
+  function labelOf(e){ return e.title + (e.trail.length ? '  (' + e.trail[e.trail.length - 1] + ')' : ''); }
+  function fillQuestions(page){
+    var sel = $('rptq');
+    sel.innerHTML = '';
+    qs_ = [];
+    function add(parent, text, value){ var o = document.createElement('option'); o.value = value; o.textContent = text; parent.appendChild(o); }
+    function rest(){
+      add(sel, 'Another question (I will type its number)', 'other-q');
+      add(sel, 'The book as a whole', 'book');
+      add(sel, 'Something else (layout, header, footer, text...)', 'other');
+      sel.value = qs_.length ? 'q0' : 'book';
+      showQ();
+    }
+    if (!window.__rdGetOutline) { rest(); return; }
+    window.__rdGetOutline().then(function(o){
+      var leaves = (o || []).filter(function(e){ return e.leaf; });
+      var here = leaves.filter(function(e){ return e.page === page; });
+      var before = leaves.filter(function(e){ return e.page < page; });
+      var list = here.length ? here : (before.length ? [before[before.length - 1]] : []);
+      if (list.length) {
+        var g = document.createElement('optgroup'); g.label = here.length ? 'On this page' : 'Carried over from the page before';
+        list.forEach(function(e, k){ qs_.push(e); add(g, labelOf(e), 'q' + k); });
+        sel.appendChild(g);
+      }
+      rest();
+    }).catch(function(){ rest(); });
+  }
+  function showQ(){ $('rptqtextwrap').hidden = $('rptq').value !== 'other-q'; }
+  $('rptq').addEventListener('change', showQ);
+
   function showChapter(){ $('rptchwrap').hidden = !(isRx && chapter === '' && $('rptkind').value === 'missing_topic' && !$('rpttopic').value); }
   $('rptkind').addEventListener('change', showChapter);
   $('rpttopic').addEventListener('change', showChapter);
@@ -1019,7 +1057,8 @@ if(!rel){
     var pgNow = currentPage();
     $('rptpage').value = pgNow || '';
     $('rpttopicwrap').hidden = !isRx;
-    if (isRx) fillTopics(pgNow); else findHeading(pgNow);
+    $('rptqwrap').hidden = source !== 'pyq'; $('rptqtextwrap').hidden = true; $('rptpagewrap').hidden = source === 'pyq';
+    if (isRx) fillTopics(pgNow); else if (source === 'pyq') fillQuestions(pgNow); else findHeading(pgNow);
     $('rpterr').hidden = true; $('rptok').hidden = true;
     $('rptsend').disabled = false;
     showChapter();
@@ -1039,15 +1078,31 @@ if(!rel){
     if (!details) { err.textContent = 'Please say a little about it.'; err.hidden = false; return; }
     if (isRx && kind === 'missing_topic' && !chapterText) { err.textContent = 'Which chapter is the topic missing from?'; err.hidden = false; return; }
     var notes = { kind: kind, source: source, subject: subject || fileName, file: f.slice(0, 190) };
+    var pyqWhere = '';
+    if (source === 'pyq') {
+      var what = $('rptq').value;
+      if (what.charAt(0) === 'q' && qs_[Number(what.slice(1))]) {
+        var qe = qs_[Number(what.slice(1))];
+        heading = qe.title.slice(0, 190);
+        if (qe.trail.length) notes.chapter = qe.trail.slice(-2).join(' > ').slice(0, 190);
+        pyqWhere = qe.title;
+      } else if (what === 'other-q') {
+        var typed = $('rptqtext').value.trim();
+        if (!typed) { err.textContent = 'Type the question number, e.g. Q1.20.1.'; err.hidden = false; return; }
+        heading = typed.slice(0, 190); pyqWhere = typed;
+      } else {
+        heading = what === 'book' ? 'Whole book' : 'Layout / other'; pyqWhere = heading;
+      }
+    }
     if (chapterText) notes.chapter = chapterText;
     if (pick[1]) notes.topic = pick[1];
     if (edition) notes.edition = edition;
     if (version) notes.version = version;
     if (heading) notes.heading = heading;
-    var pg = $('rptpage').value.trim();
+    var pg = source === 'pyq' ? '' : $('rptpage').value.trim();
     if (pg) notes.page = pg;
     var label = $('rptkind').options[$('rptkind').selectedIndex].text;
-    var where = isRx && $('rpttopic').selectedIndex > 0 ? $('rpttopic').options[$('rpttopic').selectedIndex].text : title;
+    var where = isRx && $('rpttopic').selectedIndex > 0 ? $('rpttopic').options[$('rpttopic').selectedIndex].text : source === 'pyq' ? (pyqWhere + ' · ' + title) : title;
     var body = {
       website: $('rptweb').value,
       contactEmail: pass ? undefined : $('rptemail').value.trim() || undefined,
