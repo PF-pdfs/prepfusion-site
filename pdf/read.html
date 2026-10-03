@@ -878,7 +878,7 @@ if(!rel){
       <label id="rptchwrap" hidden>Which chapter? <input id="rptchapter" maxlength="120" placeholder="e.g. Ch 3 Network Theorems"></label>
     </div>
     <label>Details <textarea id="rptdetails" maxlength="2000" placeholder="What should it say, or what is wrong?"></textarea></label>
-    <label id="rptemailwrap">Your email (optional, only if we may ask a question) <input id="rptemail" type="email" maxlength="200" autocomplete="email"></label>
+    <label id="rptemailwrap">Your email (optional. Use your PrepFusion account email and a confirmed report credits your rating) <input id="rptemail" type="email" maxlength="200" autocomplete="email"></label>
     <p class="rpt-where" id="rptwho" hidden></p>
     <div class="rpt-hp" aria-hidden="true"><label>Website <input id="rptweb" tabindex="-1" autocomplete="off"></label></div>
     <p class="rpt-msg rpt-err" id="rpterr" role="alert" hidden></p>
@@ -1067,7 +1067,7 @@ if(!rel){
       .then(function(j){
         if (!j || !j.signedIn || !j.reportToken) return;
         pass = j.reportToken;
-        $('rptwho').textContent = 'Reporting as ' + (j.name || j.email) + (j.name && j.email ? ' (' + j.email + ')' : '') + ', so we can follow up with you.';
+        $('rptwho').textContent = 'Reporting as ' + (j.name || j.email) + (j.name && j.email ? ' (' + j.email + ')' : '') + ', so we can follow up with you. A confirmed report credits your rating.';
         $('rptwho').hidden = false; $('rptemailwrap').hidden = true;
       }).catch(function(){});
   }
