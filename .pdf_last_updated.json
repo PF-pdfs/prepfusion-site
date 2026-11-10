@@ -1,31 +1,7 @@
 {
-  "Aptitude/Questions/Aptitude_2014_2010_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "b81320edfd32"
-  },
-  "Aptitude/Questions/Aptitude_2020_2015_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "861d433f9fc9"
-  },
-  "Aptitude/Questions/Aptitude_2026_2021_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "de91882c8fad"
-  },
   "Aptitude/Questions/apti.pdf": {
     "date": "2026-09-19",
     "hash": "7f8a50bc41d8"
-  },
-  "Aptitude/Solutions/Aptitude_Solutions_2014_2010_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "64ae5ba34595"
-  },
-  "Aptitude/Solutions/Aptitude_Solutions_2020_2015_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "a7e5355fb71c"
-  },
-  "Aptitude/Solutions/Aptitude_Solutions_2026_2021_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "6119182e0222"
   },
   "Aptitude/Solutions/apti_solutions.pdf": {
     "date": "2026-09-20",
@@ -34,70 +10,6 @@
   "Maths/Questions/PrepFusion_Engineering_Mathematics.pdf": {
     "date": "2026-09-19",
     "hash": "5e4fbd4a40d5"
-  },
-  "Maths/Questions/PrepFusion_Maths_Calculus_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "0cdb7cba806f"
-  },
-  "Maths/Questions/PrepFusion_Maths_Complex_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "18497f5a4ae6"
-  },
-  "Maths/Questions/PrepFusion_Maths_Differential_Equations_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "af42552c39c1"
-  },
-  "Maths/Questions/PrepFusion_Maths_Linear_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "463281f27843"
-  },
-  "Maths/Questions/PrepFusion_Maths_Numerical_Questions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "f03ee9ce79f4"
-  },
-  "Maths/Questions/PrepFusion_Maths_Probability_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "e08b43ff0ff7"
-  },
-  "Maths/Questions/PrepFusion_Maths_Transform_Theory_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "089be4b44dc7"
-  },
-  "Maths/Questions/PrepFusion_Maths_Vector_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "1041995a1340"
-  },
-  "Maths/Solutions/PrepFusion_Maths_Calculus_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "2f32955c82e7"
-  },
-  "Maths/Solutions/PrepFusion_Maths_Complex_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "4403a7c76ee4"
-  },
-  "Maths/Solutions/PrepFusion_Maths_Differential_Equations_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "938e5d777abb"
-  },
-  "Maths/Solutions/PrepFusion_Maths_Linear_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "3bb8a1eb5f74"
-  },
-  "Maths/Solutions/PrepFusion_Maths_Numerical_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "37e1956569f6"
-  },
-  "Maths/Solutions/PrepFusion_Maths_Probability_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "c07944c82897"
-  },
-  "Maths/Solutions/PrepFusion_Maths_Transform_Theory_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "e33958e4cb5a"
-  },
-  "Maths/Solutions/PrepFusion_Vector_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "48675f0739b8"
   },
   "Maths/Solutions/maths_calculus_solutions.pdf": {
     "date": "2026-08-09",
@@ -131,66 +43,6 @@
     "date": "2026-08-06",
     "hash": "d6d3c17e0c96"
   },
-  "NexusX/Questions/GATE-EC-NW-V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "13ec854c16d8"
-  },
-  "NexusX/Questions/PrepFusion_Analog_EE_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "db455a5cbf39"
-  },
-  "NexusX/Questions/PrepFusion_Analog_Electronics_EC_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "c981890f151f"
-  },
-  "NexusX/Questions/PrepFusion_Analog_IN_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "f437518457c2"
-  },
-  "NexusX/Questions/PrepFusion_Control_Systems_EC_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "bf5aea98f8f2"
-  },
-  "NexusX/Questions/PrepFusion_Control_Systems_EE_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "bacad7a8da7f"
-  },
-  "NexusX/Questions/PrepFusion_Control_Systems_IN_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "b1eacc7e26d0"
-  },
-  "NexusX/Questions/PrepFusion_Digital_Electronics_EC_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "6e0139d11189"
-  },
-  "NexusX/Questions/PrepFusion_Digital_Electronics_EE_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "85aa312ee96f"
-  },
-  "NexusX/Questions/PrepFusion_Digital_Electronics_IN_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "c60d9ed341c3"
-  },
-  "NexusX/Questions/PrepFusion_Network_Theory_EE_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "37a934ccf9ac"
-  },
-  "NexusX/Questions/PrepFusion_Network_Theory_IN_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "9a60bd1a7b99"
-  },
-  "NexusX/Questions/PrepFusion_Signals_EC_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "e6349b5c911a"
-  },
-  "NexusX/Questions/PrepFusion_Signals_EE_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "f9769c5c8fe8"
-  },
-  "NexusX/Questions/PrepFusion_Signals_IN_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "f5dab75eef4d"
-  },
   "NexusX/Questions/nexusx_v1.pdf": {
     "date": "2026-09-19",
     "hash": "8eeb974173e0"
@@ -198,66 +50,6 @@
   "NexusX/Questions/nexusx_v2.pdf": {
     "date": "2026-09-19",
     "hash": "089537bab502"
-  },
-  "NexusX/Solutions/GATE-EC-NW-SOL-V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "17d831641fe6"
-  },
-  "NexusX/Solutions/PrepFusion_Analog_EC_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "ecc5519e36cd"
-  },
-  "NexusX/Solutions/PrepFusion_Analog_EE_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "9d6d6142f3d5"
-  },
-  "NexusX/Solutions/PrepFusion_Analog_IN_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "f163e62b9d08"
-  },
-  "NexusX/Solutions/PrepFusion_Control_EE_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "8d9c6d46307a"
-  },
-  "NexusX/Solutions/PrepFusion_Control_IN_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "67ef999d91f9"
-  },
-  "NexusX/Solutions/PrepFusion_Control_Systems_EC_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "a4ac7c72d7c0"
-  },
-  "NexusX/Solutions/PrepFusion_Digital_EC_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "fb461747a076"
-  },
-  "NexusX/Solutions/PrepFusion_Digital_EE_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "506fde70835b"
-  },
-  "NexusX/Solutions/PrepFusion_Digital_IN_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "a162ec07cbd4"
-  },
-  "NexusX/Solutions/PrepFusion_Network_Theory_EE_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "fc4461be0b13"
-  },
-  "NexusX/Solutions/PrepFusion_Network_Theory_IN_Solutions.pdf": {
-    "date": "2026-11-10",
-    "hash": "8b4d3a3572fc"
-  },
-  "NexusX/Solutions/PrepFusion_Signals_EC_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "f85a75ef8622"
-  },
-  "NexusX/Solutions/PrepFusion_Signals_EE_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "6971b11771cc"
-  },
-  "NexusX/Solutions/PrepFusion_Signals_IN_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "372839faf966"
   },
   "NexusX/Solutions/nexusx_analog_ec_solutions.pdf": {
     "date": "2026-09-03",
@@ -319,65 +111,9 @@
     "date": "2026-08-20",
     "hash": "a979f54b585f"
   },
-  "Other/Questions/PrepFusion_Electromagnetic_Field_IN_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "b55d00f81638"
-  },
-  "PowerX/Questions/PrepFusion_EMFT_EE_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "10feb778e04a"
-  },
-  "PowerX/Questions/PrepFusion_Electrical_Machines_IN_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "8b56331dde44"
-  },
-  "PowerX/Questions/PrepFusion_Machines_EE_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "aee28c302a33"
-  },
-  "PowerX/Questions/PrepFusion_Measurements_EE_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "d59441fce480"
-  },
-  "PowerX/Questions/PrepFusion_Power_Electronics_EE_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "768600147d58"
-  },
-  "PowerX/Questions/PrepFusion_Power_Systems_EE_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "6a569febfb20"
-  },
   "PowerX/Questions/powerx.pdf": {
     "date": "2026-09-19",
     "hash": "78ed228c01e4"
-  },
-  "PowerX/Solutions/PrepFusion_EMFT_EE_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "690a9059c74c"
-  },
-  "PowerX/Solutions/PrepFusion_EMFT_IN_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "cdc417e73cda"
-  },
-  "PowerX/Solutions/PrepFusion_Machines_EE_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "0b88bdd1bdff"
-  },
-  "PowerX/Solutions/PrepFusion_Machines_IN_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "8c266ee043d3"
-  },
-  "PowerX/Solutions/PrepFusion_Measurements_EE_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "3ab1497150bf"
-  },
-  "PowerX/Solutions/PrepFusion_Power_Electronics_EE_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "851f72dfe511"
-  },
-  "PowerX/Solutions/PrepFusion_Power_Systems_EE_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "8dec212e9eb0"
   },
   "PowerX/Solutions/powerx_emft_ee_solutions.pdf": {
     "date": "2026-08-06",
@@ -407,33 +143,9 @@
     "date": "2026-08-06",
     "hash": "bf1f186d0516"
   },
-  "SiliconX/Questions/PrepFusion_Communications_EC_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "e7c6abd61f0f"
-  },
-  "SiliconX/Questions/PrepFusion_EDC_EC_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "63c37c9fad3e"
-  },
-  "SiliconX/Questions/PrepFusion_EMFT_EC_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "9ae64ce513d5"
-  },
   "SiliconX/Questions/siliconx.pdf": {
     "date": "2026-09-19",
     "hash": "bca727b69630"
-  },
-  "SiliconX/Solutions/PrepFusion_Communications_EC_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "3c8647302158"
-  },
-  "SiliconX/Solutions/PrepFusion_EDC_EC_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "7db4bf24d1df"
-  },
-  "SiliconX/Solutions/PrepFusion_EMFT_EC_Solutions_V1.pdf": {
-    "date": "2026-11-10",
-    "hash": "800c9c98a934"
   },
   "SiliconX/Solutions/siliconx_communications_ec_solutions.pdf": {
     "date": "2026-09-19",
