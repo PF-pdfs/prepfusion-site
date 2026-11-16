@@ -1,35 +1,35 @@
 {
   "Aptitude/Questions/apti.pdf": {
-    "date": "2026-11-11",
-    "hash": "36b30c02a190"
+    "date": "2026-11-16",
+    "hash": "32549517c012"
   },
   "Aptitude/Solutions/apti_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "1f341e44883a"
+    "date": "2026-11-16",
+    "hash": "936666e8b435"
   },
   "Maths/Questions/PrepFusion_Engineering_Mathematics.pdf": {
-    "date": "2026-11-11",
-    "hash": "eb03e2015f84"
+    "date": "2026-11-16",
+    "hash": "a6502847a6c6"
   },
   "Maths/Solutions/maths_calculus_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "323944d0ea1c"
+    "date": "2026-11-16",
+    "hash": "eff21a26989a"
   },
   "Maths/Solutions/maths_complex_solutions.pdf": {
-    "date": "2026-08-09",
-    "hash": "74eb860da984"
+    "date": "2026-11-16",
+    "hash": "b0c3f67c25cf"
   },
   "Maths/Solutions/maths_differential_equations_solutions.pdf": {
-    "date": "2026-08-06",
-    "hash": "bd4b11860328"
+    "date": "2026-11-16",
+    "hash": "8293314aeccd"
   },
   "Maths/Solutions/maths_linear_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "2468fd2bd812"
+    "date": "2026-11-16",
+    "hash": "ccb8d28036f1"
   },
   "Maths/Solutions/maths_numerical_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "67f2a605842e"
+    "date": "2026-11-16",
+    "hash": "98b0a7c7cfb5"
   },
   "Maths/Solutions/maths_probability_solutions.pdf": {
     "date": "2026-08-06",
@@ -40,80 +40,80 @@
     "hash": "0d3a7ae8c584"
   },
   "Maths/Solutions/maths_vector_solutions.pdf": {
-    "date": "2026-08-06",
-    "hash": "d6d3c17e0c96"
+    "date": "2026-11-16",
+    "hash": "325d754a62b1"
   },
   "NexusX/Questions/nexusx_v1.pdf": {
-    "date": "2026-11-11",
-    "hash": "64f2ec74424e"
+    "date": "2026-11-16",
+    "hash": "a33dc9ecb86c"
   },
   "NexusX/Questions/nexusx_v2.pdf": {
-    "date": "2026-11-11",
-    "hash": "cf064b94d6bd"
+    "date": "2026-11-16",
+    "hash": "90f37737cb72"
   },
   "NexusX/Solutions/nexusx_analog_ec_solutions.pdf": {
     "date": "2026-09-03",
     "hash": "d362d6468312"
   },
   "NexusX/Solutions/nexusx_analog_ee_solutions.pdf": {
-    "date": "2026-11-15",
-    "hash": "4676795f4c31"
+    "date": "2026-11-16",
+    "hash": "dd431d6e7bfd"
   },
   "NexusX/Solutions/nexusx_analog_in_solutions.pdf": {
-    "date": "2026-08-16",
-    "hash": "69af804522d4"
+    "date": "2026-11-16",
+    "hash": "af33cef47d54"
   },
   "NexusX/Solutions/nexusx_control_ee_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "6f001d8e9bf1"
+    "date": "2026-11-16",
+    "hash": "9f8b29ef8927"
   },
   "NexusX/Solutions/nexusx_control_in_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "0b803d1692c9"
+    "date": "2026-11-16",
+    "hash": "3411e6a54317"
   },
   "NexusX/Solutions/nexusx_control_systems_ec_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "c55a3d200feb"
+    "date": "2026-11-16",
+    "hash": "45ea14e27789"
   },
   "NexusX/Solutions/nexusx_digital_ec_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "260519ea3e38"
+    "date": "2026-11-16",
+    "hash": "5cdbd047947f"
   },
   "NexusX/Solutions/nexusx_digital_ee_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "fcc178422468"
+    "date": "2026-11-16",
+    "hash": "bea19ab0dfcf"
   },
   "NexusX/Solutions/nexusx_digital_in_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "a0d1bad6a46d"
+    "date": "2026-11-16",
+    "hash": "0787518079b8"
   },
   "NexusX/Solutions/nexusx_gate_ec_nw_sol.pdf": {
-    "date": "2026-11-11",
-    "hash": "374ec06a1fda"
+    "date": "2026-11-16",
+    "hash": "61b188641bd4"
   },
   "NexusX/Solutions/nexusx_network_theory_ee_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "70519a75ff78"
+    "date": "2026-11-16",
+    "hash": "b85af58d35b4"
   },
   "NexusX/Solutions/nexusx_network_theory_in_solutions.pdf": {
-    "date": "2026-08-16",
-    "hash": "47c0e91ccec3"
+    "date": "2026-11-16",
+    "hash": "94efa38d4dde"
   },
   "NexusX/Solutions/nexusx_signals_ec_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "a688ed670cfa"
+    "date": "2026-11-16",
+    "hash": "21eef60065f1"
   },
   "NexusX/Solutions/nexusx_signals_ee_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "17312a954015"
+    "date": "2026-11-16",
+    "hash": "284fc9b53bb8"
   },
   "NexusX/Solutions/nexusx_signals_in_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "dabd895fefdb"
+    "date": "2026-11-16",
+    "hash": "808bd9efa8b9"
   },
   "PowerX/Questions/powerx.pdf": {
-    "date": "2026-11-11",
-    "hash": "69a63d24a048"
+    "date": "2026-11-16",
+    "hash": "ca31f6173e7c"
   },
   "PowerX/Solutions/powerx_emft_ee_solutions.pdf": {
     "date": "2026-08-06",
@@ -124,8 +124,8 @@
     "hash": "0ff19efa0d2b"
   },
   "PowerX/Solutions/powerx_machines_ee_solutions.pdf": {
-    "date": "2026-08-12",
-    "hash": "4be4137a289b"
+    "date": "2026-11-16",
+    "hash": "9d93537a4a31"
   },
   "PowerX/Solutions/powerx_machines_in_solutions.pdf": {
     "date": "2026-08-06",
@@ -136,27 +136,27 @@
     "hash": "e6d8a367d1a6"
   },
   "PowerX/Solutions/powerx_power_electronics_ee_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "60a7501a2e7c"
+    "date": "2026-11-16",
+    "hash": "f402028ff4ce"
   },
   "PowerX/Solutions/powerx_power_systems_ee_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "2bc4c0dfeba8"
+    "date": "2026-11-16",
+    "hash": "96b844f9b382"
   },
   "SiliconX/Questions/siliconx.pdf": {
-    "date": "2026-11-11",
-    "hash": "9ddecb8c44e6"
+    "date": "2026-11-16",
+    "hash": "f9a3e260ffe4"
   },
   "SiliconX/Solutions/siliconx_communications_ec_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "4492184ffe36"
+    "date": "2026-11-16",
+    "hash": "67b65ffb77d6"
   },
   "SiliconX/Solutions/siliconx_edc_ec_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "6f369a4e9657"
+    "date": "2026-11-16",
+    "hash": "fe9925712466"
   },
   "SiliconX/Solutions/siliconx_emft_ec_solutions.pdf": {
-    "date": "2026-11-11",
-    "hash": "1b16cdccaf69"
+    "date": "2026-11-16",
+    "hash": "9807072f4a12"
   }
 }
